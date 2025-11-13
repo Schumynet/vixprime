@@ -6,7 +6,7 @@ VixFlix è una piattaforma web che consente la **visione gratuita di film e seri
 ---
 
 ## 🚀 Funzionalità
-
+🤣
 - 🎥 **Film e Serie TV in italiano**
 - 🔥 Sezioni dinamiche:
   - Trending
@@ -26,7 +26,7 @@ VixFlix è una piattaforma web che consente la **visione gratuita di film e seri
 - [VixSrc.to](https://vixsrc.to) per la visione dei contenuti
 
 # 🎬 Come usare il progetto
--- **Guarda ora** (https://kastromugnaio.github.io/VixFlix/)
+-- **Guarda ora** (https://schumynet.github.io/vixprime/)
 
 
 
