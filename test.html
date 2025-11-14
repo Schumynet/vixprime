@@ -19,9 +19,9 @@
 
     async function caricaJsonStatici() {
       const [movieRes, tvRes, episodeRes] = await Promise.all([
-        fetch('data/tmdbidmovie.json').then(r => r.json()),
-        fetch('data/tmdbidtv.json').then(r => r.json()),
-        fetch('data/tmdbidepisode.json').then(r => r.json())
+        fetch('tmdbidmovie.json').then(r => r.json()),
+        fetch('tmdbidtv.json').then(r => r.json()),
+        fetch('tmdbidepisode.json').then(r => r.json())
       ]);
 
       const catalogo = [
