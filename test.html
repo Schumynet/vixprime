@@ -17,31 +17,24 @@
   <script>
     const tmdbApiKey = '1e8c9083f94c62dd66fb2105cd7b613b';
 
-    async function fetchCatalogo() {
-      const endpoints = [
-        { url: 'https://vixsrc.to/api/list/movie?lang=it', type: 'movie' },
-        { url: 'https://vixsrc.to/api/list/tv?lang=it', type: 'tv' },
-        { url: 'https://vixsrc.to/api/list/episode?lang=it', type: 'episode' }
+    async function caricaJsonStatici() {
+      const [movieRes, tvRes, episodeRes] = await Promise.all([
+        fetch('data/tmdbidmovie.json').then(r => r.json()),
+        fetch('data/tmdbidtv.json').then(r => r.json()),
+        fetch('data/tmdbidepisode.json').then(r => r.json())
+      ]);
+
+      const catalogo = [
+        ...movieRes.map(item => ({ ...item, type: 'movie' })),
+        ...tvRes.map(item => ({ ...item, type: 'tv' })),
+        ...episodeRes.map(item => ({ ...item, type: 'tv' })) // episode trattato come tv
       ];
 
-      const results = await Promise.all(
-        endpoints.map(async ({ url, type }) => {
-          try {
-            const res = await fetch(url);
-            const data = await res.json();
-            return data.map(item => ({ tmdb_id: item.tmdb_id, type }));
-          } catch (e) {
-            console.error(`Errore nel caricamento ${type}:`, e);
-            return [];
-          }
-        })
-      );
-
-      return results.flat();
+      caricaCatalogoAzione(catalogo);
     }
 
     async function fetchDettagli(tmdb_id, type) {
-      const tipo = type === 'movie' ? 'movie' : 'tv'; // episode trattato come tv
+      const tipo = type === 'movie' ? 'movie' : 'tv';
       const url = `https://api.themoviedb.org/3/${tipo}/${tmdb_id}?api_key=${tmdbApiKey}&language=it-IT`;
       try {
         const res = await fetch(url);
@@ -52,8 +45,7 @@
       }
     }
 
-    async function caricaCatalogoAzione() {
-      const catalogo = await fetchCatalogo();
+    async function caricaCatalogoAzione(catalogo) {
       const azione = [];
 
       for (const item of catalogo) {
@@ -94,7 +86,7 @@
       container.appendChild(sezione);
     }
 
-    caricaCatalogoAzione();
+    caricaJsonStatici();
   </script>
 </body>
 </html>
