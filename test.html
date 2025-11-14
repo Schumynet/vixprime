@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Catalogo Azione</title>
+  <style>
+    body { background: #111; color: #eee; font-family: sans-serif; padding: 20px; }
+    h1, h2 { color: #00bcd4; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <h1>Genere: Azione</h1>
+  <div id="generi-container">Caricamento in corso...</div>
+
+  <script>
+    const tmdbApiKey = '1e8c9083f94c62dd66fb2105cd7b613b';
+
+    async function fetchCatalogo() {
+      const endpoints = [
+        { url: 'https://vixsrc.to/api/list/movie?lang=it', type: 'movie' },
+        { url: 'https://vixsrc.to/api/list/tv?lang=it', type: 'tv' },
+        { url: 'https://vixsrc.to/api/list/episode?lang=it', type: 'episode' }
+      ];
+
+      const results = await Promise.all(
+        endpoints.map(async ({ url, type }) => {
+          try {
+            const res = await fetch(url);
+            const data = await res.json();
+            return data.map(item => ({ tmdb_id: item.tmdb_id, type }));
+          } catch (e) {
+            console.error(`Errore nel caricamento ${type}:`, e);
+            return [];
+          }
+        })
+      );
+
+      return results.flat();
+    }
+
+    async function fetchDettagli(tmdb_id, type) {
+      const tipo = type === 'movie' ? 'movie' : 'tv'; // episode trattato come tv
+      const url = `https://api.themoviedb.org/3/${tipo}/${tmdb_id}?api_key=${tmdbApiKey}&language=it-IT`;
+      try {
+        const res = await fetch(url);
+        return res.ok ? res.json() : null;
+      } catch (e) {
+        console.error(`Errore TMDB per ${tmdb_id}:`, e);
+        return null;
+      }
+    }
+
+    async function caricaCatalogoAzione() {
+      const catalogo = await fetchCatalogo();
+      const azione = [];
+
+      for (const item of catalogo) {
+        const tipoEtichetta = item.type === 'movie' ? 'movie' : 'tv';
+        const dati = await fetchDettagli(item.tmdb_id, item.type);
+        if (dati && dati.genres?.some(g => g.name === 'Azione')) {
+          azione.push({
+            titolo: dati.title || dati.name,
+            anno: dati.release_date?.slice(0, 4) || dati.first_air_date?.slice(0, 4),
+            tipo: tipoEtichetta
+          });
+        }
+      }
+
+      mostraGenereAzione(azione);
+    }
+
+    function mostraGenereAzione(lista) {
+      const container = document.getElementById('generi-container');
+      container.innerHTML = '';
+
+      if (lista.length === 0) {
+        container.innerHTML = '<p>Nessun contenuto trovato per il genere Azione.</p>';
+        return;
+      }
+
+      const sezione = document.createElement('section');
+      sezione.innerHTML = `<h2>Azione</h2>`;
+      const ul = document.createElement('ul');
+
+      for (const titolo of lista) {
+        const li = document.createElement('li');
+        li.textContent = `${titolo.titolo} (${titolo.anno}) - ${titolo.tipo}`;
+        ul.appendChild(li);
+      }
+
+      sezione.appendChild(ul);
+      container.appendChild(sezione);
+    }
+
+    caricaCatalogoAzione();
+  </script>
+</body>
+</html>
