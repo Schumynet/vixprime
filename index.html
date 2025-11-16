@@ -468,11 +468,15 @@
       }
 
       .video-js .vjs-control-bar {
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-        backdrop-filter: blur(10px);
-        height: 4em;
-        padding: 0 1em;
-      }
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  backdrop-filter: blur(10px);
+  height: 3em;
+  padding: 0 0.5em;
+  max-width: 90%;
+  margin: 0 auto;
+  touch-action: manipulation;
+  z-index: 5;
+}
 
       .video-js .vjs-progress-control .vjs-progress-holder {
         height: 0.5em;
@@ -1724,4 +1728,5 @@
     </script>
   </body>
 </html>
+
 
