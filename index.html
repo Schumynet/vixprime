@@ -735,6 +735,47 @@
   border-radius: 6px !important;
 }
 
+      @media (max-width: 768px) {
+  .header-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .search-container {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  #search {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .cors-selector {
+    width: 100%;
+  }
+
+  #cors-select {
+    width: 100%;
+    min-width: unset;
+    font-size: 0.95rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem 2%;
+  }
+}
+
     </style>
   </head>
   <body>
@@ -1740,6 +1781,7 @@
     </script>
   </body>
 </html>
+
 
 
 
