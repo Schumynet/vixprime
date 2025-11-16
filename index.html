@@ -736,43 +736,38 @@
 }
 
       @media (max-width: 768px) {
-  .header-controls {
+  header {
     flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-    width: 20%;
-  }
-
-  .search-container {
-    flex: 1 1 auto;
-    width: 20%;
-  }
-
-  #search {
-    width: 40%;
-    font-size: 1rem;
-  }
-
-  .cors-selector {
-    width: 20%;
-  }
-
-  #cors-select {
-    width: 20%;
-    min-width: unset;
-    font-size: 0.95rem;
+    align-items: center;
+    padding: 1rem 4%;
+    gap: 1rem;
   }
 
   .logo {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     text-align: center;
     width: 100%;
   }
 
-  header {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 1rem 2%;
+  .header-controls {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .cors-selector,
+  .search-container {
+    flex: 1 1 45%;
+    min-width: 140px;
+  }
+
+  #cors-select,
+  #search {
+    width: 100%;
+    font-size: 0.95rem;
   }
 }
 
@@ -1781,6 +1776,7 @@
     </script>
   </body>
 </html>
+
 
 
 
