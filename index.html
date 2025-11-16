@@ -722,8 +722,8 @@
     justify-content: center !important;
     height: auto !important;
     padding: 0.5em !important;
-    overflow-x: visible !important;
-    overflow-y: visible !important;
+    overflow: visible !important;
+    z-index: 10 !important;
   }
 
   .video-js .vjs-control {
@@ -732,6 +732,7 @@
     font-size: 16px !important;
     min-width: 36px;
     min-height: 36px;
+    pointer-events: auto !important;
   }
 
   .video-js .vjs-button > .vjs-icon-placeholder:before {
@@ -740,14 +741,22 @@
   }
 
   .video-js .vjs-menu-button-popup .vjs-menu {
+    position: absolute !important;
+    bottom: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 9999 !important;
+    background-color: rgba(0, 0, 0, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
     max-height: 250px !important;
     overflow-y: auto !important;
-    font-size: 0.95em !important;
+    pointer-events: auto !important;
   }
 
   .video-js .vjs-menu-button .vjs-menu .vjs-menu-content {
     max-height: 250px !important;
     overflow-y: auto !important;
+    pointer-events: auto !important;
   }
 
   .video-js .vjs-quality-selector,
@@ -760,6 +769,7 @@
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    pointer-events: auto !important;
   }
 }
 
