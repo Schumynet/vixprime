@@ -716,30 +716,50 @@
         background: #b20710;
       }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 600px) {
   .video-js .vjs-control-bar {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 0.3em;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    height: auto !important;
+    padding: 0.5em !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
   }
 
   .video-js .vjs-control {
-    flex: 1 1 20%;
-    margin: 2px;
-    font-size: 14px;
+    flex: 0 0 auto !important;
+    margin: 4px !important;
+    font-size: 16px !important;
+    min-width: 36px;
+    min-height: 36px;
   }
 
   .video-js .vjs-button > .vjs-icon-placeholder:before {
-    font-size: 1.2em;
+    font-size: 1.5em !important;
+    line-height: 1.5 !important;
   }
 
-  .episode-selector {
-    padding: 1rem;
+  .video-js .vjs-menu-button-popup .vjs-menu {
+    max-height: 250px !important;
+    overflow-y: auto !important;
+    font-size: 0.95em !important;
   }
 
-  .episode-item {
-    font-size: 0.85rem;
+  .video-js .vjs-menu-button .vjs-menu .vjs-menu-content {
+    max-height: 250px !important;
+    overflow-y: auto !important;
+  }
+
+  .video-js .vjs-quality-selector,
+  .video-js .vjs-subs-caps-button,
+  .video-js .vjs-audio-button,
+  .video-js .vjs-fullscreen-control {
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 }
 
