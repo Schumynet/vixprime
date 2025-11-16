@@ -470,10 +470,13 @@
       .video-js .vjs-control-bar {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
   backdrop-filter: blur(10px);
-  height: 3em;
-  padding: 0 0.5em;
-  max-width: 90%;
-  margin: 0 auto;
+  height: auto;
+  padding: 0.5em 0.5em;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5em;
   touch-action: manipulation;
   z-index: 5;
 }
@@ -1728,5 +1731,6 @@
     </script>
   </body>
 </html>
+
 
 
