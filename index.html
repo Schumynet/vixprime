@@ -1728,22 +1728,26 @@
       });
 
       async function performSearch(query) {
-  const q = query.trim().toLowerCase();
+  const res = await fetch(
+    `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=it-IT&query=${encodeURIComponent(query)}`
+  );
+  const data = await res.json();
 
-  if (q === "hercai") {
-    // Nascondi le altre sezioni
-    document.getElementById("home").style.display = "none";
-    document.getElementById("results").style.display = "none";
-    document.getElementById("player").style.display = "none";
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML =
+    '<h2>Risultati della ricerca</h2><div class="carousel"></div>';
 
-    // Mostra la sezione Hercai
-    const hercaiSection = document.getElementById("hercai");
-    if (hercaiSection) {
-      hercaiSection.scrollIntoView({ behavior: "smooth" });
-    }
+  const carousel = resultsDiv.querySelector(".carousel");
+  (data.results || [])
+    .filter((item) => item.media_type !== "person" && item.poster_path)
+    .forEach((item) => {
+      carousel.appendChild(createCard(item));
+    });
 
-    return;
-  }
+  document.getElementById("home").style.display = "none";
+  document.getElementById("player").style.display = "none";
+  resultsDiv.style.display = "block";
+}
 
   // Altrimenti esegui la ricerca TMDb
   const res = await fetch(
@@ -1896,6 +1900,7 @@
     
   </body>
 </html>
+
 
 
 
