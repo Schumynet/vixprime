@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>vixprime</title>
+    <title>VixPrime</title>
 
-    <!-- Video.js CDN - Latest stable version -->
+    <!-- Video.js CDN -->
     <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
     <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
 
@@ -15,6 +15,7 @@
       href="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@2.0.0/dist/videojs-hls-quality-selector.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@2.0.0/dist/videojs-hls-quality-selector.min.js"></script>
+
     <style>
       * {
         margin: 0;
@@ -894,20 +895,20 @@
             </button>
           </div>
         </section>
-        
+
+        <!-- Hercai section placed under the last section as requested -->
         <section id="hercai">
-  <h2>📺 Episodi di Hercai</h2>
-  <div class="carousel-container" style="padding: 0 4%;">
-    <div class="episode-selector" style="margin: 1rem 0;">
-      <div class="season-selector" style="margin-bottom: 1rem;">
-        <label for="hercai-season-select">Stagione:</label>
-        <select id="hercai-season-select"></select>
-      </div>
-      <div id="hercai-episodes-list" class="episodes-list"></div>
-    </div>
-  </div>
-</section>
-        
+          <h2>📺 Episodi di Hercai</h2>
+          <div class="carousel-container" style="padding: 0 4%;">
+            <div class="episode-selector" style="margin: 1rem 0;">
+              <div class="season-selector" style="margin-bottom: 1rem;">
+                <label for="hercai-season-select">Stagione:</label>
+                <select id="hercai-season-select"></select>
+              </div>
+              <div id="hercai-episodes-list" class="episodes-list"></div>
+            </div>
+          </div>
+        </section>
       </div>
 
       <div id="results"></div>
@@ -974,6 +975,9 @@
     </main>
 
     <script>
+      /* ===========================
+         Config & Globals
+         =========================== */
       const API_KEY = "8265bd1679663a7ea12ac168da84d2e8";
       const VIXSRC_URL = "vixsrc.to";
       const CORS_PROXIES_REQUIRING_ENCODING = [""];
@@ -999,52 +1003,15 @@
       let baseStreamUrl = "";
       let requestHookInstalled = false;
 
-      document.getElementById("cors-select").addEventListener("change", (e) => {
-        CORS = e.target.value;
-        console.log("🌐 CORS proxy changed to:", CORS);
-
-        const notification = document.createElement("div");
-        notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: rgba(229, 9, 20, 0.95);
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        z-index: 1000;
-        animation: slideIn 0.3s ease;
-      `;
-        notification.textContent = `CORS proxy cambiato: ${CORS.replace(/\/|\?|=/g, "")}`;
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-          notification.style.animation = "slideOut 0.3s ease";
-          setTimeout(() => notification.remove(), 300);
-        }, 2000);
-      });
-
-      const originalConsoleWarn = console.warn;
-      console.warn = function (...args) {
-        const message = args[0];
-        if (
-          typeof message === "string" &&
-          (message.includes("videojs.mergeOptions is deprecated") ||
-            message.includes("MouseEvent.mozPressure") ||
-            message.includes("MouseEvent.mozInputSource"))
-        ) {
-          return;
-        }
-        originalConsoleWarn.apply(console, args);
-      };
-
+      /* ===========================
+         Utility functions
+         =========================== */
       function extractBaseUrl(url) {
         try {
-          const CORS = document.getElementById("cors-select").value;
+          const selectedCORS = document.getElementById("cors-select")?.value || CORS;
           let cleanUrl = url;
-          if (url.includes(CORS)) {
-            cleanUrl = url.split(CORS)[1];
+          if (url.includes(selectedCORS)) {
+            cleanUrl = url.split(selectedCORS)[1];
           }
 
           const urlObj = new URL(cleanUrl);
@@ -1056,6 +1023,7 @@
       }
 
       function resolveUrl(url, baseUrl = "https://vixsrc.to") {
+        if (!url) return url;
         if (url.startsWith("http://") || url.startsWith("https://")) {
           return url;
         }
@@ -1068,16 +1036,16 @@
       }
 
       function applyCorsProxy(url) {
-        const CORS = document.getElementById("cors-select").value;
+        const selectedCORS = document.getElementById("cors-select")?.value || CORS;
         const requiresEncoding = CORS_PROXIES_REQUIRING_ENCODING.some(
-          (proxy) => CORS === proxy
+          (proxy) => selectedCORS === proxy
         );
         let cleanUrl = url;
-        if (url.includes(CORS)) {
+        if (url.includes(selectedCORS)) {
           if (requiresEncoding) {
-            cleanUrl = decodeURIComponent(url.split(CORS)[1]);
+            cleanUrl = decodeURIComponent(url.split(selectedCORS)[1]);
           } else {
-            cleanUrl = url.split(CORS)[1];
+            cleanUrl = url.split(selectedCORS)[1];
           }
         }
         if (
@@ -1097,9 +1065,9 @@
 
         console.log("🔒 Applying CORS proxy to:", cleanUrl);
         if (requiresEncoding) {
-          return `https://${CORS}${encodeURIComponent(cleanUrl)}`;
+          return `https://${selectedCORS}${encodeURIComponent(cleanUrl)}`;
         } else {
-          return `https://${CORS}${cleanUrl}`;
+          return `https://${selectedCORS}${cleanUrl}`;
         }
       }
 
@@ -1152,12 +1120,15 @@
         }
       });
 
+      /* ===========================
+         TMDb fetch helpers
+         =========================== */
       async function fetchList(type) {
         const res = await fetch(
           `https://api.themoviedb.org/3/${endpoints[type]}?api_key=${API_KEY}&language=it-IT`
         );
         const j = await res.json();
-        return j.results;
+        return j.results || [];
       }
 
       async function fetchTVSeasons(tvId) {
@@ -1176,6 +1147,9 @@
         return j.episodes || [];
       }
 
+      /* ===========================
+         UI helpers & cards
+         =========================== */
       function createCard(item) {
         const card = document.createElement("div");
         card.className = "card";
@@ -1184,7 +1158,7 @@
           ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
           : "https://via.placeholder.com/200x300?text=No+Image";
 
-        const title = item.title || item.name;
+        const title = item.title || item.name || "Senza titolo";
 
         card.innerHTML = `
         <img src="${poster}" alt="${title}">
@@ -1276,6 +1250,9 @@
         });
       }
 
+      /* ===========================
+         VixSrc parsing & stream extraction
+         =========================== */
       async function getDirectStream(
         tmdbId,
         isMovie,
@@ -1375,14 +1352,16 @@
         }
       }
 
+      /* ===========================
+         Keyboard shortcuts & feedback
+         =========================== */
       function setupKeyboardShortcuts() {
         document.removeEventListener("keydown", handleKeyboardShortcuts);
-
         document.addEventListener("keydown", handleKeyboardShortcuts);
       }
 
       function handleKeyboardShortcuts(event) {
-        if (!player || !player.readyState()) {
+        if (!player || !player.readyState) {
           return;
         }
 
@@ -1415,7 +1394,6 @@
             );
             player.currentTime(newTimeForward);
             console.log("⌨️ Seek forward +5s to", newTimeForward.toFixed(2));
-
             showSeekFeedback("+5s");
             break;
 
@@ -1424,7 +1402,6 @@
             const newTimeBackward = Math.max(player.currentTime() - 5, 0);
             player.currentTime(newTimeBackward);
             console.log("⌨️ Seek backward -5s to", newTimeBackward.toFixed(2));
-
             showSeekFeedback("-5s");
             break;
 
@@ -1436,7 +1413,6 @@
               "⌨️ Volume increased to",
               Math.round(newVolumeUp * 100) + "%"
             );
-
             showVolumeFeedback(Math.round(newVolumeUp * 100));
             break;
 
@@ -1448,15 +1424,14 @@
               "⌨️ Volume decreased to",
               Math.round(newVolumeDown * 100) + "%"
             );
-
             showVolumeFeedback(Math.round(newVolumeDown * 100));
             break;
 
           case "f":
             event.preventDefault();
-            if (player.isFullscreen()) {
+            if (player.isFullscreen && player.isFullscreen()) {
               player.exitFullscreen();
-            } else {
+            } else if (player.requestFullscreen) {
               player.requestFullscreen();
             }
             console.log("⌨️ Fullscreen toggled");
@@ -1567,6 +1542,9 @@
 `;
       document.head.appendChild(feedbackStyles);
 
+      /* ===========================
+         Player loader
+         =========================== */
       async function loadVideo(isMovie, id, season = null, episode = null) {
         showLoading(true);
 
@@ -1574,7 +1552,11 @@
           setupVideoJsXhrHook();
 
           if (player) {
-            player.dispose();
+            try {
+              player.dispose();
+            } catch (e) {
+              console.warn("Error disposing player:", e);
+            }
             player = null;
 
             const videoContainer = document.querySelector(".video-container");
@@ -1582,19 +1564,20 @@
             if (oldVideo) {
               oldVideo.remove();
             }
-
-            const newVideo = document.createElement("video");
-            newVideo.id = "player-video";
-            newVideo.className =
-              "video-js vjs-theme-vixflix vjs-big-play-centered";
-            newVideo.setAttribute("controls", "");
-            newVideo.setAttribute("preload", "auto");
-            newVideo.setAttribute("playsinline", "");
-            newVideo.setAttribute("crossorigin", "anonymous");
-
-            const loadingOverlay = document.getElementById("loading-overlay");
-            videoContainer.insertBefore(newVideo, loadingOverlay);
           }
+
+          const videoContainer = document.querySelector(".video-container");
+          const newVideo = document.createElement("video");
+          newVideo.id = "player-video";
+          newVideo.className =
+            "video-js vjs-theme-vixflix vjs-big-play-centered";
+          newVideo.setAttribute("controls", "");
+          newVideo.setAttribute("preload", "auto");
+          newVideo.setAttribute("playsinline", "");
+          newVideo.setAttribute("crossorigin", "anonymous");
+
+          const loadingOverlay = document.getElementById("loading-overlay");
+          videoContainer.insertBefore(newVideo, loadingOverlay);
 
           const streamData = await getDirectStream(
             id,
@@ -1648,7 +1631,13 @@
             type: "application/x-mpegURL",
           });
 
-          player.hlsQualitySelector();
+          if (typeof player.hlsQualitySelector === "function") {
+            try {
+              player.hlsQualitySelector();
+            } catch (e) {
+              console.warn("hlsQualitySelector init error:", e);
+            }
+          }
 
           player.ready(function () {
             setupKeyboardShortcuts();
@@ -1695,7 +1684,11 @@
 
       function goBack() {
         if (player) {
-          player.dispose();
+          try {
+            player.dispose();
+          } catch (e) {
+            console.warn("Error disposing player:", e);
+          }
           player = null;
         }
 
@@ -1713,88 +1706,96 @@
         });
       }
 
+      /* ===========================
+         Search
+         =========================== */
       let searchTimeout;
-      document.getElementById("search").addEventListener("input", (e) => {
-        clearTimeout(searchTimeout);
-        const query = e.target.value.trim();
 
-        if (query.length < 2) {
-          document.getElementById("results").style.display = "none";
-          document.getElementById("home").style.display = "block";
+      async function performSearch(query) {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=it-IT&query=${encodeURIComponent(query)}`
+        );
+        const data = await res.json();
+
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML =
+          '<h2>Risultati della ricerca</h2><div class="carousel"></div>';
+
+        const carousel = resultsDiv.querySelector(".carousel");
+        (data.results || [])
+          .filter((item) => item.media_type !== "person" && item.poster_path)
+          .forEach((item) => {
+            carousel.appendChild(createCard(item));
+          });
+
+        document.getElementById("home").style.display = "none";
+        document.getElementById("player").style.display = "none";
+        resultsDiv.style.display = "block";
+      }
+
+      /* ===========================
+         Hercai specific (standalone selector)
+         =========================== */
+      function renderHercaiEpisodesWithSelector() {
+        const totalSeasons = 3;
+        const episodesPerSeason = [44, 100, 86];
+
+        const seasonSelect = document.getElementById("hercai-season-select");
+        const episodesList = document.getElementById("hercai-episodes-list");
+
+        if (!seasonSelect || !episodesList) {
+          console.warn("❌ Elementi DOM mancanti per Hercai");
           return;
         }
 
-        searchTimeout = setTimeout(() => performSearch(query), 500);
-      });
+        seasonSelect.innerHTML = "";
+        for (let i = 0; i < totalSeasons; i++) {
+          const opt = document.createElement("option");
+          opt.value = i + 1;
+          opt.textContent = `Stagione ${i + 1}`;
+          seasonSelect.appendChild(opt);
+        }
 
-      async function performSearch(query) {
-  const res = await fetch(
-    `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=it-IT&query=${encodeURIComponent(query)}`
-  );
-  const data = await res.json();
+        function showEpisodes(season) {
+          episodesList.innerHTML = "";
+          const count = episodesPerSeason[season - 1];
 
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML =
-    '<h2>Risultati della ricerca</h2><div class="carousel"></div>';
+          for (let ep = 1; ep <= count; ep++) {
+            const episodeItem = document.createElement("div");
+            episodeItem.className = "episode-item";
+            episodeItem.innerHTML = `
+              <div class="episode-number">S${season}E${ep}</div>
+              <div class="episode-title">Episodio ${ep}</div>
+            `;
+            episodeItem.addEventListener("click", () => playHercaiEpisode(season, ep));
+            episodesList.appendChild(episodeItem);
+          }
+        }
 
-  const carousel = resultsDiv.querySelector(".carousel");
-  (data.results || [])
-    .filter((item) => item.media_type !== "person" && item.poster_path)
-    .forEach((item) => {
-      carousel.appendChild(createCard(item));
-    });
+        showEpisodes(1);
 
-  document.getElementById("home").style.display = "none";
-  document.getElementById("player").style.display = "none";
-  resultsDiv.style.display = "block";
-}
-
-  // Altrimenti esegui la ricerca TMDb
-  const res = await fetch(
-    `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=it-IT&query=${encodeURIComponent(query)}`
-  );
-  const data = await res.json();
-
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML =
-    '<h2>Risultati della ricerca</h2><div class="carousel"></div>';
-
-  const carousel = resultsDiv.querySelector(".carousel");
-  (data.results || [])
-    .filter((item) => item.media_type !== "person" && item.poster_path)
-    .forEach((item) => {
-      carousel.appendChild(createCard(item));
-    });
-
-  document.getElementById("home").style.display = "none";
-  document.getElementById("player").style.display = "none";
-  resultsDiv.style.display = "block";
-}
-    return;
-  }
-
-  // Altrimenti esegui la ricerca TMDb
-  const res = await fetch(
-    `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=it-IT&query=${encodeURIComponent(query)}`
-  );
-  const data = await res.json();
-
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML =
-    '<h2>Risultati della ricerca</h2><div class="carousel"></div>';
-
-  const carousel = resultsDiv.querySelector(".carousel");
-  (data.results || [])
-    .filter((item) => item.media_type !== "person" && item.poster_path)
-    .forEach((item) => {
-      carousel.appendChild(createCard(item));
-    });
-
-  document.getElementById("home").style.display = "none";
-  document.getElementById("player").style.display = "none";
-  resultsDiv.style.display = "block";
+        seasonSelect.addEventListener("change", (e) => {
+          const selectedSeason = parseInt(e.target.value);
+          showEpisodes(selectedSeason);
+        });
       }
 
+      async function playHercaiEpisode(season, ep) {
+        document.getElementById("home").style.display = "none";
+        document.getElementById("results").style.display = "none";
+        document.getElementById("player").style.display = "block";
+        document.getElementById("player-title").textContent = `Hercai S${season}E${ep}`;
+        document.getElementById("player-meta").textContent = "";
+        document.getElementById("player-overview").textContent = "";
+        document.getElementById("episode-warning").style.display = "none";
+        document.getElementById("episode-selector").style.display = "none";
+
+        await loadVideo(false, 87623, season, ep); // ID TMDb di Hercai
+      }
+
+      /* ===========================
+         Small UI animations
+         =========================== */
       const style = document.createElement("style");
       style.textContent = `
       @keyframes slideIn {
@@ -1808,105 +1809,89 @@
     `;
       document.head.appendChild(style);
 
+      /* ===========================
+         Initialization
+         =========================== */
       window.addEventListener("DOMContentLoaded", async () => {
+        // Populate CORS select
         const corsSelect = document.getElementById("cors-select");
-        CORS_LIST.forEach((proxy) => {
-          const option = document.createElement("option");
-          option.value = proxy;
-          option.textContent = proxy.replace(/\/|\?|=/g, "");
-          corsSelect.appendChild(option);
-        });
-        corsSelect.value = CORS;
+        if (corsSelect) {
+          CORS_LIST.forEach((proxy) => {
+            const option = document.createElement("option");
+            option.value = proxy;
+            option.textContent = proxy.replace(/\/|\?|=/g, "");
+            corsSelect.appendChild(option);
+          });
+          corsSelect.value = CORS;
+
+          corsSelect.addEventListener("change", (e) => {
+            CORS = e.target.value;
+            console.log("🌐 CORS proxy changed to:", CORS);
+
+            const notification = document.createElement("div");
+            notification.style.cssText = `
+              position: fixed;
+              top: 100px;
+              right: 20px;
+              background: rgba(229, 9, 20, 0.95);
+              color: white;
+              padding: 1rem 1.5rem;
+              border-radius: 8px;
+              box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+              z-index: 1000;
+              animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = `CORS proxy cambiato: ${CORS.replace(/\/|\?|=/g, "")}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+              notification.style.animation = "slideOut 0.3s ease";
+              setTimeout(() => notification.remove(), 300);
+            }, 2000);
+          });
+        }
+
+        // Setup Video.js XHR hook
         if (typeof videojs !== "undefined") {
           setupVideoJsXhrHook();
         } else {
           window.addEventListener("load", setupVideoJsXhrHook);
         }
 
-        for (const [key, endpoint] of Object.entries(endpoints)) {
-          const items = await fetchList(key);
-          const section = document.getElementById(key);
-          const carousel = section.querySelector(".carousel");
+        // Load TMDb sections
+        try {
+          for (const [key, endpoint] of Object.entries(endpoints)) {
+            const items = await fetchList(key);
+            const section = document.getElementById(key);
+            const carousel = section?.querySelector(".carousel");
+            items.forEach((item) => {
+              carousel?.appendChild(createCard(item));
+            });
+          }
+        } catch (err) {
+          console.warn("Errore nel caricamento delle sezioni TMDb:", err);
+        }
 
-          items.forEach((item) => {
-            carousel.appendChild(createCard(item));
+        // Hook search input
+        const searchInput = document.getElementById("search");
+        if (searchInput) {
+          searchInput.addEventListener("input", (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+
+            if (query.length < 2) {
+              document.getElementById("results").style.display = "none";
+              document.getElementById("home").style.display = "block";
+              return;
+            }
+
+            searchTimeout = setTimeout(() => performSearch(query), 500);
           });
         }
+
+        // Start Hercai section
+        renderHercaiEpisodesWithSelector();
       });
     </script>
-   
-    <script>
-  function renderHercaiEpisodesWithSelector() {
-    const totalSeasons = 3;
-    const episodesPerSeason = [44, 100, 86];
-
-    const seasonSelect = document.getElementById("hercai-season-select");
-    const episodesList = document.getElementById("hercai-episodes-list");
-
-    if (!seasonSelect || !episodesList) {
-      console.warn("❌ Elementi DOM mancanti per Hercai");
-      return;
-    }
-
-    seasonSelect.innerHTML = "";
-    for (let i = 0; i < totalSeasons; i++) {
-      const opt = document.createElement("option");
-      opt.value = i + 1;
-      opt.textContent = `Stagione ${i + 1}`;
-      seasonSelect.appendChild(opt);
-    }
-
-    function showEpisodes(season) {
-      episodesList.innerHTML = "";
-      const count = episodesPerSeason[season - 1];
-
-      for (let ep = 1; ep <= count; ep++) {
-        const episodeItem = document.createElement("div");
-        episodeItem.className = "episode-item";
-        episodeItem.innerHTML = `
-          <div class="episode-number">S${season}E${ep}</div>
-          <div class="episode-title">Episodio ${ep}</div>
-        `;
-        episodeItem.addEventListener("click", () => playHercaiEpisode(season, ep));
-        episodesList.appendChild(episodeItem);
-      }
-    }
-
-    showEpisodes(1);
-
-    seasonSelect.addEventListener("change", (e) => {
-      const selectedSeason = parseInt(e.target.value);
-      showEpisodes(selectedSeason);
-    });
-  }
-
-  async function playHercaiEpisode(season, ep) {
-    document.getElementById("home").style.display = "none";
-    document.getElementById("results").style.display = "none";
-    document.getElementById("player").style.display = "block";
-    document.getElementById("player-title").textContent = `Hercai S${season}E${ep}`;
-    document.getElementById("player-meta").textContent = "";
-    document.getElementById("player-overview").textContent = "";
-    document.getElementById("episode-warning").style.display = "none";
-    document.getElementById("episode-selector").style.display = "none";
-
-    await loadVideo(false, 87623, season, ep); // ID TMDb di Hercai
-  }
-
-  window.addEventListener("DOMContentLoaded", () => {
-    renderHercaiEpisodesWithSelector();
-  });
-</script> 
-    
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-
