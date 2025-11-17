@@ -913,6 +913,7 @@
 
       <div id="results"></div>
 
+      <!-- Player section: static <video> removed, player created dynamically -->
       <div id="player">
         <div class="player-header">
           <button class="back-btn" onclick="goBack()">← Torna indietro</button>
@@ -940,14 +941,7 @@
               </p>
             </div>
 
-            <video
-              id="player-video"
-              class="video-js vjs-theme-vixflix vjs-big-play-centered"
-              controls
-              preload="auto"
-              playsinline
-              crossorigin="anonymous"
-            ></video>
+            <!-- Il player video verrà creato dinamicamente via JavaScript -->
 
             <div
               id="loading-overlay"
@@ -958,6 +952,7 @@
               <div class="loading-text">Caricamento stream...</div>
             </div>
           </div>
+
           <div
             class="episode-selector"
             id="episode-selector"
@@ -1551,6 +1546,7 @@
         try {
           setupVideoJsXhrHook();
 
+          // Dispose previous player if exists
           if (player) {
             try {
               player.dispose();
@@ -1558,19 +1554,23 @@
               console.warn("Error disposing player:", e);
             }
             player = null;
+          }
 
-            const videoContainer = document.querySelector(".video-container");
-            const oldVideo = document.getElementById("player-video");
-            if (oldVideo) {
+          // Remove any existing video element
+          const videoContainer = document.querySelector(".video-container");
+          const oldVideo = document.getElementById("player-video");
+          if (oldVideo) {
+            try {
               oldVideo.remove();
+            } catch (e) {
+              console.warn("Error removing old video element:", e);
             }
           }
 
-          const videoContainer = document.querySelector(".video-container");
+          // Create new video element dynamically
           const newVideo = document.createElement("video");
           newVideo.id = "player-video";
-          newVideo.className =
-            "video-js vjs-theme-vixflix vjs-big-play-centered";
+          newVideo.className = "video-js vjs-theme-vixflix vjs-big-play-centered";
           newVideo.setAttribute("controls", "");
           newVideo.setAttribute("preload", "auto");
           newVideo.setAttribute("playsinline", "");
