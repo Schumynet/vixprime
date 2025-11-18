@@ -85,6 +85,7 @@
       .video-js { width:100%; height:auto; aspect-ratio:16/9; font-family:inherit; }
 
       /* 🎛️ Video.js: solo la barra di progresso nella prima riga */
+.video/* 🎛️ Responsive Video.js controls: icone compatte su due righe per tutti gli schermi */
 .video-js .vjs-control-bar {
   display: flex;
   flex-wrap: wrap;
@@ -132,11 +133,17 @@
   padding: 4px;
 }
 
+.video-js .vjs-playback-rate,
+.video-js .vjs-volume-panel,
+.video-js .vjs-fullscreen-control {
+  min-width: 28px;
+}
+
 .video-js .vjs-control-bar .vjs-time-control {
   min-width: 50px;
 }
 
-/* 📱 Ottimizzazione per schermi piccoli */
+/* 📱 Ottimizzazione per schermi molto piccoli */
 @media (max-width: 480px) {
   .video-js .vjs-control-bar {
     padding: 4px;
