@@ -84,93 +84,27 @@
       @keyframes pulse { 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.75; transform:scale(1.06);} }
       .video-js { width:100%; height:auto; aspect-ratio:16/9; font-family:inherit; }
 
-      /* 🎛️ Responsive Video.js controls: barra + tempo in prima riga, icone compatte su due righe */
+      /* Responsive Video.js controls: icone compatte su due righe per tutti gli schermi */
 .video-js .vjs-control-bar {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   row-gap: 6px;
   padding: 6px;
 }
 
-/* Prima riga: barra di avanzamento + tempo digitale */
-.video-js .vjs-progress-control,
-.video-js .vjs-current-time,
-.video-js .vjs-time-divider,
-.video-js .vjs-duration {
-  order: 1;
-}
-
-/* Estensione completa della riga per la barra */
-.video-js .vjs-progress-control {
-  flex: 1 1 100%;
-  height: 18px; /* 🔥 Spessore aumentato */
-  margin-bottom: 6px;
-}
-
-/* Tempo digitale allineato */
-.video-js .vjs-current-time,
-.video-js .vjs-time-divider,
-.video-js .vjs-duration {
-  flex: 0 1 auto;
-  margin-left: 8px;
-  font-weight: 500;
-}
-
-/* Seconda riga: tutte le altre icone */
+/* Prima riga: controlli principali */
 .video-js .vjs-play-toggle,
 .video-js .vjs-volume-panel,
-.video-js .vjs-remaining-time,
-.video-js .vjs-playback-rate,
-.video-js .vjs-chapters-button,
-.video-js .vjs-descriptions-button,
-.video-js .vjs-subs-caps-button,
-.video-js .vjs-audio-button,
-.video-js .vjs-quality-selector,
-.video-js .vjs-fullscreen-control {
-  order: 2;
-  flex: 0 1 auto;
-/* 🎛️ Video.js: tasto play + barra + tempo nella prima riga, icone compatte su due righe */
-.video-js .vjs-control-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  row-gap: 6px;
-  padding: 6px;
-}
-
-/* Prima riga: tasto play + barra + tempo digitale */
-.video-js .vjs-play-toggle,
-.video-js .vjs-progress-control,
 .video-js .vjs-current-time,
 .video-js .vjs-time-divider,
-.video-js .vjs-duration {
-  order: 1;
-}
-
-/* Layout flessibile per la prima riga */
-.video-js .vjs-play-toggle {
-  flex: 0 0 auto;
-  margin-right: 8px;
-}
-
+.video-js .vjs-duration,
 .video-js .vjs-progress-control {
-  flex: 1 1 auto;
-  height: 14px; /* 🔥 Spessore aumentato */
-  margin-right: 8px;
+  order: 1;
+  flex: 0 1 auto;
 }
 
-.video-js .vjs-current-time,
-.video-js .vjs-time-divider,
-.video-js .vjs-duration {
-  flex: 0 0 auto;
-  font-weight: 500;
-}
-
-/* Seconda riga: tutte le altre icone */
-.video-js .vjs-volume-panel,
-.video-js .vjs-remaining-time,
+/* Seconda riga: da velocità (1x) a fullscreen */
 .video-js .vjs-playback-rate,
 .video-js .vjs-chapters-button,
 .video-js .vjs-descriptions-button,
@@ -197,38 +131,24 @@
   padding: 4px;
 }
 
-.video-js .vjs-playback-rate,
-.video-js .vjs-volume-panel,
-.video-js .vjs-fullscreen-control {
-  min-width: 28px;
-}
-
 .video-js .vjs-control-bar .vjs-time-control {
   min-width: 50px;
 }
 
-/* 📱 Ottimizzazione per schermi molto piccoli */
+/* Ottimizzazione per schermi molto piccoli */
 @media (max-width: 480px) {
   .video-js .vjs-control-bar {
     padding: 4px;
-    flex-direction: column;
-    align-items: stretch;
   }
-
   .video-js .vjs-control {
     font-size: 11px;
     min-width: 24px;
   }
-
   .video-js .vjs-icon-placeholder:before {
     font-size: 14px;
   }
-
-  .video-js .vjs-progress-control {
-    height: 16px;
-    margin: 6px 0;
-  }
 }
+
       .episode-selector { background:rgba(255,255,255,0.06); border-radius:12px; padding:1.25rem; backdrop-filter:blur(8px); height:fit-content; }
       .episode-selector h3 { margin-bottom:0.75rem; color:#e50914; }
       .season-selector { margin-bottom:1rem; }
