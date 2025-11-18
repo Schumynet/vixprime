@@ -84,50 +84,42 @@
       @keyframes pulse { 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.75; transform:scale(1.06);} }
       .video-js { width:100%; height:auto; aspect-ratio:16/9; font-family:inherit; }
 
-      /* Responsive Video.js controls: scale icons and layout to avoid hiding */
-      .video-js .vjs-control-bar {
-        flex-wrap: wrap;
-        row-gap: 6px;
-        padding: 8px;
-      }
-
+      /* Responsive Video.js controls: scale icons and allow wrapping so icons are never hidden */
       .video-js .vjs-control {
         font-size: clamp(12px, 1.6vw, 18px);
-        min-width: 36px;
       }
 
       .video-js .vjs-icon-placeholder:before {
         font-size: clamp(14px, 2.2vw, 24px);
       }
 
-      .video-js .vjs-control.vjs-button {
-        padding: 6px;
+      .video-js .vjs-control-bar {
+        flex-wrap: wrap;
+        row-gap: 6px;
+        padding: 8px;
       }
 
-      .video-js .vjs-playback-rate,
-      .video-js .vjs-volume-panel,
-      .video-js .vjs-fullscreen-control {
+      .video-js .vjs-control-bar > .vjs-control {
+        flex: 0 1 auto;
         min-width: 36px;
       }
 
-      .video-js .vjs-control-bar .vjs-control.vjs-volume-panel {
-        display: flex;
-        align-items: center;
-        gap: 6px;
+      /* Ensure playback rate and quality buttons remain usable on small screens */
+      .video-js .vjs-playback-rate,
+      .video-js .vjs-menu-button {
+        min-width: 44px;
+        padding: 6px 8px;
       }
 
-      /* Ensure control icons don't overflow on very small screens */
-      @media (max-width: 480px) {
-        .video-js .vjs-control-bar {
-          padding: 6px;
-        }
-        .video-js .vjs-control {
-          font-size: 13px;
-          min-width: 30px;
-        }
-        .video-js .vjs-icon-placeholder:before {
-          font-size: 16px;
-        }
+      .video-js .vjs-big-play-button {
+        width: clamp(56px, 8vw, 96px);
+        height: clamp(56px, 8vw, 96px);
+        line-height: clamp(52px, 7.8vw, 92px);
+        font-size: clamp(1.6rem, 3.2vw, 3.2rem);
+      }
+
+      .video-js .vjs-control-bar .vjs-time-control {
+        min-width: 60px;
       }
 
       .episode-selector { background:rgba(255,255,255,0.06); border-radius:12px; padding:1.25rem; backdrop-filter:blur(8px); height:fit-content; }
@@ -604,7 +596,7 @@
             break;
           case "arrowdown":
             event.preventDefault();
-            player.volume(Math.max(player.volume() - 5, 0));
+            player.volume(Math.max(player.volume() - 0.1, 0));
             showVolumeFeedback(Math.round(player.volume() * 100));
             break;
           case "f":
