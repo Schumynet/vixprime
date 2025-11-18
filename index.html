@@ -31,7 +31,7 @@
       #cors-select { padding:10px 35px 10px 15px; font-size:0.95rem; min-width:180px; border:2px solid rgba(255,255,255,0.12); border-radius:20px; background:rgba(0,0,0,0.7); color:#fff; cursor:pointer; outline:none; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23fff' d='M6 9L1 4h10z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; }
       main { margin-top: 80px; }
 
-      /* HERO: restored original style with background image + overlay */
+      /* HERO: original style with background image + overlay */
       .hero {
         height: 70vh;
         background: url('https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg') center center / cover no-repeat;
@@ -84,42 +84,48 @@
       @keyframes pulse { 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.75; transform:scale(1.06);} }
       .video-js { width:100%; height:auto; aspect-ratio:16/9; font-family:inherit; }
 
-      /* Responsive Video.js controls: scale icons and allow wrapping so icons are never hidden */
-      .video-js .vjs-control {
-        font-size: clamp(12px, 1.6vw, 18px);
-      }
-
-      .video-js .vjs-icon-placeholder:before {
-        font-size: clamp(14px, 2.2vw, 24px);
-      }
-
+      /* Responsive Video.js controls: scale icons and layout to avoid hiding */
       .video-js .vjs-control-bar {
         flex-wrap: wrap;
         row-gap: 6px;
         padding: 8px;
       }
 
-      .video-js .vjs-control-bar > .vjs-control {
-        flex: 0 1 auto;
+      .video-js .vjs-control {
+        font-size: clamp(12px, 1.6vw, 18px);
         min-width: 36px;
       }
 
-      /* Ensure playback rate and quality buttons remain usable on small screens */
-      .video-js .vjs-playback-rate,
-      .video-js .vjs-menu-button {
-        min-width: 44px;
-        padding: 6px 8px;
+      .video-js .vjs-icon-placeholder:before {
+        font-size: clamp(14px, 2.2vw, 24px);
       }
 
-      .video-js .vjs-big-play-button {
-        width: clamp(56px, 8vw, 96px);
-        height: clamp(56px, 8vw, 96px);
-        line-height: clamp(52px, 7.8vw, 92px);
-        font-size: clamp(1.6rem, 3.2vw, 3.2rem);
+      .video-js .vjs-control.vjs-button {
+        padding: 6px;
+      }
+
+      .video-js .vjs-playback-rate,
+      .video-js .vjs-volume-panel,
+      .video-js .vjs-fullscreen-control {
+        min-width: 36px;
       }
 
       .video-js .vjs-control-bar .vjs-time-control {
         min-width: 60px;
+      }
+
+      /* Small screens adjustments */
+      @media (max-width: 480px) {
+        .video-js .vjs-control-bar {
+          padding: 6px;
+        }
+        .video-js .vjs-control {
+          font-size: 13px;
+          min-width: 30px;
+        }
+        .video-js .vjs-icon-placeholder:before {
+          font-size: 16px;
+        }
       }
 
       .episode-selector { background:rgba(255,255,255,0.06); border-radius:12px; padding:1.25rem; backdrop-filter:blur(8px); height:fit-content; }
@@ -743,7 +749,6 @@
           carousel.appendChild(createCard(item));
         });
 
-        // If user searched "hercai" and TMDb didn't return it, still allow opening custom view via createCard logic
         document.getElementById("home").style.display = "none";
         document.getElementById("player").style.display = "none";
         resultsDiv.style.display = "block";
