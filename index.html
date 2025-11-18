@@ -84,70 +84,49 @@
       @keyframes pulse { 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.75; transform:scale(1.06);} }
       .video-js { width:100%; height:auto; aspect-ratio:16/9; font-family:inherit; }
 
-      /* Responsive Video.js controls: icone compatte su due righe per tutti gli schermi */
-.video-js .vjs-control-bar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  row-gap: 6px;
-  padding: 6px;
-}
+      /* Responsive Video.js controls: scale icons and layout to avoid hiding */
+      .video-js .vjs-control-bar {
+        flex-wrap: wrap;
+        row-gap: 6px;
+        padding: 8px;
+      }
 
-/* Prima riga: controlli principali */
-.video-js .vjs-play-toggle,
-.video-js .vjs-volume-panel,
-.video-js .vjs-current-time,
-.video-js .vjs-time-divider,
-.video-js .vjs-duration,
-.video-js .vjs-progress-control {
-  order: 1;
-  flex: 0 1 auto;
-}
+      .video-js .vjs-control {
+        font-size: clamp(12px, 1.6vw, 18px);
+        min-width: 36px;
+      }
 
-/* Seconda riga: da velocità (1x) a fullscreen */
-.video-js .vjs-playback-rate,
-.video-js .vjs-chapters-button,
-.video-js .vjs-descriptions-button,
-.video-js .vjs-subs-caps-button,
-.video-js .vjs-audio-button,
-.video-js .vjs-quality-selector,
-.video-js .vjs-fullscreen-control {
-  order: 2;
-  flex: 0 1 auto;
-}
+      .video-js .vjs-icon-placeholder:before {
+        font-size: clamp(14px, 2.2vw, 24px);
+      }
 
-/* Stile compatto e responsive */
-.video-js .vjs-control {
-  font-size: clamp(10px, 1.2vw, 14px);
-  min-width: 28px;
-  padding: 4px;
-}
+      .video-js .vjs-control.vjs-button {
+        padding: 6px;
+      }
 
-.video-js .vjs-icon-placeholder:before {
-  font-size: clamp(12px, 1.6vw, 18px);
-}
+      .video-js .vjs-playback-rate,
+      .video-js .vjs-volume-panel,
+      .video-js .vjs-fullscreen-control {
+        min-width: 36px;
+      }
 
-.video-js .vjs-control.vjs-button {
-  padding: 4px;
-}
+      .video-js .vjs-control-bar .vjs-time-control {
+        min-width: 60px;
+      }
 
-.video-js .vjs-control-bar .vjs-time-control {
-  min-width: 50px;
-}
-
-/* Ottimizzazione per schermi molto piccoli */
-@media (max-width: 480px) {
-  .video-js .vjs-control-bar {
-    padding: 4px;
-  }
-  .video-js .vjs-control {
-    font-size: 11px;
-    min-width: 24px;
-  }
-  .video-js .vjs-icon-placeholder:before {
-    font-size: 14px;
-  }
-}
+      /* Small screens adjustments */
+      @media (max-width: 480px) {
+        .video-js .vjs-control-bar {
+          padding: 6px;
+        }
+        .video-js .vjs-control {
+          font-size: 13px;
+          min-width: 30px;
+        }
+        .video-js .vjs-icon-placeholder:before {
+          font-size: 16px;
+        }
+      }
 
       .episode-selector { background:rgba(255,255,255,0.06); border-radius:12px; padding:1.25rem; backdrop-filter:blur(8px); height:fit-content; }
       .episode-selector h3 { margin-bottom:0.75rem; color:#e50914; }
