@@ -130,6 +130,56 @@
 .video-js .vjs-fullscreen-control {
   order: 2;
   flex: 0 1 auto;
+/* 🎛️ Video.js: tasto play + barra + tempo nella prima riga, icone compatte su due righe */
+.video-js .vjs-control-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  row-gap: 6px;
+  padding: 6px;
+}
+
+/* Prima riga: tasto play + barra + tempo digitale */
+.video-js .vjs-play-toggle,
+.video-js .vjs-progress-control,
+.video-js .vjs-current-time,
+.video-js .vjs-time-divider,
+.video-js .vjs-duration {
+  order: 1;
+}
+
+/* Layout flessibile per la prima riga */
+.video-js .vjs-play-toggle {
+  flex: 0 0 auto;
+  margin-right: 8px;
+}
+
+.video-js .vjs-progress-control {
+  flex: 1 1 auto;
+  height: 14px; /* 🔥 Spessore aumentato */
+  margin-right: 8px;
+}
+
+.video-js .vjs-current-time,
+.video-js .vjs-time-divider,
+.video-js .vjs-duration {
+  flex: 0 0 auto;
+  font-weight: 500;
+}
+
+/* Seconda riga: tutte le altre icone */
+.video-js .vjs-volume-panel,
+.video-js .vjs-remaining-time,
+.video-js .vjs-playback-rate,
+.video-js .vjs-chapters-button,
+.video-js .vjs-descriptions-button,
+.video-js .vjs-subs-caps-button,
+.video-js .vjs-audio-button,
+.video-js .vjs-quality-selector,
+.video-js .vjs-fullscreen-control {
+  order: 2;
+  flex: 0 1 auto;
 }
 
 /* Stile compatto e responsive */
@@ -161,13 +211,22 @@
 @media (max-width: 480px) {
   .video-js .vjs-control-bar {
     padding: 4px;
+    flex-direction: column;
+    align-items: stretch;
   }
+
   .video-js .vjs-control {
     font-size: 11px;
     min-width: 24px;
   }
+
   .video-js .vjs-icon-placeholder:before {
     font-size: 14px;
+  }
+
+  .video-js .vjs-progress-control {
+    height: 16px;
+    margin: 6px 0;
   }
 }
       .episode-selector { background:rgba(255,255,255,0.06); border-radius:12px; padding:1.25rem; backdrop-filter:blur(8px); height:fit-content; }
