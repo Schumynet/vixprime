@@ -313,6 +313,11 @@
         return await res.json();
       }
 
+      async function fetchMovieDetails(movieId) {
+        const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=it-IT`);
+        return await res.json();
+      }
+
       async function fetchTVSeasons(tvId) {
         const res = await fetch(`https://api.themoviedb.org/3/tv/${tvId}?api_key=${API_KEY}&language=it-IT`);
         const j = await res.json();
@@ -343,52 +348,73 @@
         card.addEventListener("click", async () => {
           card.classList.add("clicked");
           setTimeout(async () => {
-            // If Hercai, open player with custom flag but still fetch TMDb details for description
             if (isHercai) {
-              const tmdbItem = { id: HERCAI_TMDB_ID, name: "Hercai", isHercaiCustom: true };
-              if (item.overview) tmdbItem.overview = item.overview;
+              // Open Hercai as TV explicitly
+              const tmdbItem = {
+                id: HERCAI_TMDB_ID,
+                name: "Hercai",
+                media_type: "tv",
+                isHercaiCustom: true,
+                overview: item.overview || undefined
+              };
               await openPlayer(tmdbItem);
               return;
             }
-            await openPlayer(item);
+
+            // Preserve media_type when present (search results include it)
+            const payload = {
+              ...item,
+              media_type: item.media_type || (item.title ? "movie" : "tv")
+            };
+            await openPlayer(payload);
           }, 220);
         });
 
         return card;
       }
 
+      /* Open player: robust media type handling (movie vs tv) */
       async function openPlayer(item) {
         currentItem = item;
         document.getElementById("home").style.display = "none";
         document.getElementById("results").style.display = "none";
         document.getElementById("player").style.display = "block";
 
-        // If we have a TMDb id and need details, fetch them (keeps logic identical for other series)
+        // Determine media type reliably
+        let mediaType = item.media_type;
+        if (!mediaType) {
+          if (item.isHercaiCustom) mediaType = "tv";
+          else mediaType = item.title ? "movie" : "tv";
+        }
+
+        // Fetch proper details based on media type
         let details = item;
-        if ((item.isHercaiCustom || item.media_type === "tv" || item.id) && (!item.overview || !item.name)) {
-          try {
+        try {
+          if (mediaType === "tv") {
             details = await fetchTVDetails(item.id);
-          } catch (e) {
-            console.warn("Errore fetching details:", e);
+          } else if (mediaType === "movie") {
+            details = await fetchMovieDetails(item.id);
           }
+        } catch (e) {
+          console.warn("Errore fetching details:", e);
+          details = { ...item };
         }
 
         const title = details.title || details.name || item.title || item.name || "Senza titolo";
         const releaseDate = details.release_date || details.first_air_date || "N/A";
-        const mediaType = details.media_type || (details.title ? "movie" : "tv");
 
         document.getElementById("player-title").textContent = title;
         document.getElementById("player-meta").innerHTML = `Data: ${releaseDate}`;
-        document.getElementById("player-overview").textContent = details.overview || "...";
+        document.getElementById("player-overview").textContent = details.overview || item.overview || "...";
 
         if (mediaType === "tv") {
           document.getElementById("episode-warning").style.display = "flex";
           // If this is the custom Hercai card, pass the flag so seasons/episodes are built from custom data
-          await loadTVSeasons(details.id, !!item.isHercaiCustom);
+          await loadTVSeasons(details.id || item.id, !!item.isHercaiCustom);
         } else {
           document.getElementById("episode-warning").style.display = "none";
           document.getElementById("episode-selector").style.display = "none";
-          await loadVideo(true, details.id);
+          await loadVideo(true, details.id || item.id);
         }
 
         window.scrollTo(0, 0);
@@ -677,6 +703,8 @@
         (data.results || []).filter((item) => item.media_type !== "person" && (item.poster_path || item.name || item.title)).forEach((item) => {
           carousel.appendChild(createCard(item));
         });
+
+        // If user searched "hercai" and TMDb didn't return it, still allow opening custom view via createCard logic
         document.getElementById("home").style.display = "none";
         document.getElementById("player").style.display = "none";
         resultsDiv.style.display = "block";
@@ -720,7 +748,7 @@
           const popularTVSection = document.getElementById("popularTV");
           const popularCarousel = popularTVSection?.querySelector(".carousel");
           if (popularCarousel) {
-            const hercaiObj = { id: HERCAI_TMDB_ID, name: "Hercai", poster_path: null };
+            const hercaiObj = { id: HERCAI_TMDB_ID, name: "Hercai", poster_path: null, media_type: "tv", isHercaiCustom: true };
             popularCarousel.insertBefore(createCard(hercaiObj), popularCarousel.firstChild);
           }
         } catch (err) {
