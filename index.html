@@ -93,6 +93,30 @@
   padding: 6px;
 }
 
+/* Prima riga: controlli principali */
+.video-js .vjs-play-toggle,
+.video-js .vjs-volume-panel,
+.video-js .vjs-current-time,
+.video-js .vjs-time-divider,
+.video-js .vjs-duration,
+.video-js .vjs-progress-control {
+  order: 1;
+  flex: 0 1 auto;
+}
+
+/* Seconda riga: da velocità (1x) a fullscreen */
+.video-js .vjs-playback-rate,
+.video-js .vjs-chapters-button,
+.video-js .vjs-descriptions-button,
+.video-js .vjs-subs-caps-button,
+.video-js .vjs-audio-button,
+.video-js .vjs-quality-selector,
+.video-js .vjs-fullscreen-control {
+  order: 2;
+  flex: 0 1 auto;
+}
+
+/* Stile compatto e responsive */
 .video-js .vjs-control {
   font-size: clamp(10px, 1.2vw, 14px);
   min-width: 28px;
@@ -105,12 +129,6 @@
 
 .video-js .vjs-control.vjs-button {
   padding: 4px;
-}
-
-.video-js .vjs-playback-rate,
-.video-js .vjs-volume-panel,
-.video-js .vjs-fullscreen-control {
-  min-width: 28px;
 }
 
 .video-js .vjs-control-bar .vjs-time-control {
