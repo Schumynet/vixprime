@@ -6,8 +6,8 @@
     <title>VixPrime</title>
 
     <!-- Video.js -->
-    <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
-    <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
+    <link href="https://vjs.zencdn.net/8.20.0/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/8.20.0/video.min.js"></script>
 
     <!-- HLS quality selector plugin -->
     <link
@@ -15,6 +15,9 @@
       href="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@2.0.0/dist/videojs-hls-quality-selector.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@2.0.0/dist/videojs-hls-quality-selector.min.js"></script>
+
+    <!-- FontAwesome for gear icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,7 +34,6 @@
       #cors-select { padding:10px 35px 10px 15px; font-size:0.95rem; min-width:180px; border:2px solid rgba(255,255,255,0.12); border-radius:20px; background:rgba(0,0,0,0.7); color:#fff; cursor:pointer; outline:none; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23fff' d='M6 9L1 4h10z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; }
       main { margin-top: 80px; }
 
-      /* HERO: original style with background image + overlay */
       .hero {
         height: 70vh;
         background: url('https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg') center center / cover no-repeat;
@@ -51,11 +53,7 @@
         z-index: 1;
       }
 
-      .hero-content {
-        position: relative;
-        z-index: 2;
-      }
-
+      .hero-content { position: relative; z-index: 2; }
       .hero-content h1 { font-size:4rem; margin-bottom:1rem; text-shadow:3px 3px 6px rgba(0,0,0,0.6); }
       .hero-content p { font-size:1.25rem; opacity:0.95; max-width:700px; margin:0 auto; }
 
@@ -84,48 +82,17 @@
       @keyframes pulse { 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.75; transform:scale(1.06);} }
       .video-js { width:100%; height:auto; aspect-ratio:16/9; font-family:inherit; }
 
-      /* Responsive Video.js controls: scale icons and layout to avoid hiding */
-      .video-js .vjs-control-bar {
-        flex-wrap: wrap;
-        row-gap: 6px;
-        padding: 8px;
-      }
+      .video-js .vjs-control-bar { flex-wrap: wrap; row-gap: 6px; padding: 8px; }
+      .video-js .vjs-control { font-size: clamp(12px, 1.6vw, 18px); min-width: 36px; }
+      .video-js .vjs-icon-placeholder:before { font-size: clamp(14px, 2.2vw, 24px); }
+      .video-js .vjs-control.vjs-button { padding: 6px; }
+      .video-js .vjs-playback-rate, .video-js .vjs-volume-panel, .video-js .vjs-fullscreen-control { min-width: 36px; }
+      .video-js .vjs-control-bar .vjs-time-control { min-width: 60px; }
 
-      .video-js .vjs-control {
-        font-size: clamp(12px, 1.6vw, 18px);
-        min-width: 36px;
-      }
-
-      .video-js .vjs-icon-placeholder:before {
-        font-size: clamp(14px, 2.2vw, 24px);
-      }
-
-      .video-js .vjs-control.vjs-button {
-        padding: 6px;
-      }
-
-      .video-js .vjs-playback-rate,
-      .video-js .vjs-volume-panel,
-      .video-js .vjs-fullscreen-control {
-        min-width: 36px;
-      }
-
-      .video-js .vjs-control-bar .vjs-time-control {
-        min-width: 60px;
-      }
-
-      /* Small screens adjustments */
       @media (max-width: 480px) {
-        .video-js .vjs-control-bar {
-          padding: 6px;
-        }
-        .video-js .vjs-control {
-          font-size: 13px;
-          min-width: 30px;
-        }
-        .video-js .vjs-icon-placeholder:before {
-          font-size: 16px;
-        }
+        .video-js .vjs-control-bar { padding: 6px; }
+        .video-js .vjs-control { font-size: 13px; min-width: 30px; }
+        .video-js .vjs-icon-placeholder:before { font-size: 16px; }
       }
 
       .episode-selector { background:rgba(255,255,255,0.06); border-radius:12px; padding:1.25rem; backdrop-filter:blur(8px); height:fit-content; }
@@ -145,8 +112,41 @@
       .loading-text { color:#fff; opacity:0.95; }
       .error-message { background:rgba(229,9,20,0.12); border:2px solid #e50914; color:#fff; padding:1rem; border-radius:8px; margin:1rem 0; text-align:center; }
       @media (max-width: 900px) { .player-content { grid-template-columns:1fr; } .card { min-width:150px; } header { flex-direction:column; gap:0.75rem; } .header-controls { width:100%; justify-content:center; flex-wrap:wrap; } .search-container { flex:1 1 100%; } #cors-select { min-width:140px; } }
+
+      /* Custom settings button + menu (fallback) */
+      .vix-settings-btn {
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        width:36px;
+        height:36px;
+        border-radius:6px;
+        background:transparent;
+        color:#fff;
+        cursor:pointer;
+        border:0;
+      }
+      .vix-settings-menu {
+        position:absolute;
+        right:12px;
+        bottom:64px;
+        background:rgba(10,10,10,0.95);
+        border:1px solid rgba(255,255,255,0.06);
+        padding:10px;
+        border-radius:8px;
+        z-index:9999;
+        min-width:180px;
+        box-shadow:0 8px 30px rgba(0,0,0,0.6);
+        display:none;
+        color:#fff;
+      }
+      .vix-settings-menu h4 { margin:0 0 8px 0; font-size:0.95rem; color:#e50914; }
+      .vix-settings-menu label { display:flex; align-items:center; gap:8px; margin:6px 0; font-size:0.95rem; }
+      .vix-settings-menu select { width:100%; padding:6px 8px; border-radius:6px; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.06); }
+      .vix-settings-menu .close { margin-top:8px; display:block; text-align:right; color:#e50914; cursor:pointer; font-weight:700; }
     </style>
   </head>
+
   <body>
     <header id="header">
       <div class="logo">VixPrime</div>
@@ -242,6 +242,16 @@
               <div class="loading"></div>
               <div class="loading-text">Caricamento stream...</div>
             </div>
+
+            <!-- fallback settings menu (will be toggled by JS if plugin missing) -->
+            <div id="vix-settings-menu" class="vix-settings-menu" aria-hidden="true">
+              <h4>Impostazioni</h4>
+              <div id="vix-quality-container"><label>Qualità<select id="vix-quality-select"></select></label></div>
+              <div id="vix-audio-container"><label>Audio<select id="vix-audio-select"></select></label></div>
+              <div id="vix-sub-container"><label>Sottotitoli<select id="vix-sub-select"><option value="off">Off</option></select></label></div>
+              <div id="vix-rate-container"><label>Velocità<select id="vix-rate-select"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option><option>2</option></select></label></div>
+              <div class="close" id="vix-settings-close">Chiudi</div>
+            </div>
           </div>
 
           <div class="episode-selector" id="episode-selector" style="display:none;">
@@ -272,10 +282,8 @@
         popularTV: `tv/popular`,
       };
 
-      // Hercai custom data
       const HERCAI_TMDB_ID = 87623;
       const HERCAI_EPISODES_PER_SEASON = [44, 100, 86];
-      const HERCAI_TOTAL_SEASONS = HERCAI_EPISODES_PER_SEASON.length;
 
       let currentItem = null;
       let currentSeasons = [];
@@ -393,20 +401,6 @@
         card.addEventListener("click", async () => {
           card.classList.add("clicked");
           setTimeout(async () => {
-            if (isHercai) {
-              // Open Hercai as TV explicitly
-              const tmdbItem = {
-                id: HERCAI_TMDB_ID,
-                name: "Hercai",
-                media_type: "tv",
-                isHercaiCustom: true,
-                overview: item.overview || undefined
-              };
-              await openPlayer(tmdbItem);
-              return;
-            }
-
-            // Preserve media_type when present (search results include it)
             const payload = {
               ...item,
               media_type: item.media_type || (item.title ? "movie" : "tv")
@@ -418,28 +412,23 @@
         return card;
       }
 
-      /* Open player: robust media type handling (movie vs tv) */
+      /* Open player */
       async function openPlayer(item) {
         currentItem = item;
         document.getElementById("home").style.display = "none";
         document.getElementById("results").style.display = "none";
         document.getElementById("player").style.display = "block";
 
-        // Determine media type reliably
         let mediaType = item.media_type;
         if (!mediaType) {
           if (item.isHercaiCustom) mediaType = "tv";
           else mediaType = item.title ? "movie" : "tv";
         }
 
-        // Fetch proper details based on media type
         let details = item;
         try {
-          if (mediaType === "tv") {
-            details = await fetchTVDetails(item.id);
-          } else if (mediaType === "movie") {
-            details = await fetchMovieDetails(item.id);
-          }
+          if (mediaType === "tv") details = await fetchTVDetails(item.id);
+          else if (mediaType === "movie") details = await fetchMovieDetails(item.id);
         } catch (e) {
           console.warn("Errore fetching details:", e);
           details = { ...item };
@@ -454,7 +443,6 @@
 
         if (mediaType === "tv") {
           document.getElementById("episode-warning").style.display = "flex";
-          // If this is the custom Hercai card, pass the flag so seasons/episodes are built from custom data
           await loadTVSeasons(details.id || item.id, !!item.isHercaiCustom);
         } else {
           document.getElementById("episode-warning").style.display = "none";
@@ -465,13 +453,12 @@
         window.scrollTo(0, 0);
       }
 
-      /* Load seasons (normal TMDb or custom Hercai) */
+      /* Load seasons */
       async function loadTVSeasons(tvId, isHercai = false) {
         const selector = document.getElementById("season-select");
         selector.innerHTML = "";
 
         if (isHercai) {
-          // Use custom seasons/episodes
           currentSeasons = HERCAI_EPISODES_PER_SEASON.map((count, idx) => ({ season_number: idx + 1, episode_count: count }));
           currentSeasons.forEach((s) => {
             const opt = document.createElement("option");
@@ -485,7 +472,6 @@
           return;
         }
 
-        // Default TMDb logic
         const seasons = await fetchTVSeasons(tvId);
         currentSeasons = seasons.filter((s) => s.season_number > 0);
         currentSeasons.forEach((season) => {
@@ -499,7 +485,7 @@
         if (currentSeasons.length > 0) await loadEpisodes(tvId, currentSeasons[0].season_number);
       }
 
-      /* Load episodes (normal TMDb or custom Hercai) */
+      /* Load episodes */
       async function loadEpisodes(tvId, seasonNum, isHercai = false) {
         const container = document.getElementById("episodes-list");
         container.innerHTML = "";
@@ -639,13 +625,6 @@
         volumeDisplay.timeoutId = setTimeout(() => { volumeDisplay.style.opacity = "0"; }, 1000);
       }
 
-      const feedbackStyles = document.createElement("style");
-      feedbackStyles.textContent = `
-        @keyframes feedbackFade { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.9);}20%{opacity:1;transform:translate(-50%,-50%) scale(1);}80%{opacity:1;}100%{opacity:0;transform:translate(-50%,-50%) scale(0.9);} }
-        #volume-feedback { transition: opacity 0.25s ease; }
-      `;
-      document.head.appendChild(feedbackStyles);
-
       /* Player loader */
       async function loadVideo(isMovie, id, season = null, episode = null) {
         showLoading(true);
@@ -681,15 +660,20 @@
             html5: { vhs: { overrideNative: true, bandwidth: 1000000 } },
             controlBar: {
               children: [
-                "playToggle","volumePanel","currentTimeDisplay","timeDivider","durationDisplay",
-                "progressControl","remainingTimeDisplay","playbackRateMenuButton","chaptersButton",
-                "descriptionsButton","subsCapsButton","audioTrackButton","qualitySelector","fullscreenToggle"
+                "playToggle",
+                "progressControl",
+                "currentTimeDisplay",
+                "timeDivider",
+                "durationDisplay",
+                "volumePanel",
+                "fullscreenToggle"
               ]
             }
           });
 
           player.src({ src: proxiedM3u8Url, type: "application/x-mpegURL" });
 
+          // Try to initialize hls quality selector plugin
           if (typeof player.hlsQualitySelector === "function") {
             try { player.hlsQualitySelector(); } catch (e) { console.warn(e); }
           }
@@ -697,6 +681,8 @@
           player.ready(function () {
             setupKeyboardShortcuts();
             showLoading(false);
+            // Initialize settings UI: prefer plugin if available, otherwise fallback
+            initSettingsUI(player);
             player.play().catch(() => {});
           });
 
@@ -705,6 +691,160 @@
           console.error("Error loading video:", err);
           showError("Impossibile caricare il video. Riprova più tardi.");
         }
+      }
+
+      /* Settings UI: if plugin settingsMenu exists it will be used automatically when available.
+         Otherwise we provide a lightweight fallback menu that groups quality, audio, subs and rate. */
+      function initSettingsUI(playerInstance) {
+        // Attempt to add a settings button into the control bar area
+        try {
+          const controlBarEl = playerInstance.el().querySelector(".vjs-control-bar");
+          if (!controlBarEl) return;
+
+          // Create gear button (if not already present)
+          if (!controlBarEl.querySelector(".vix-settings-btn")) {
+            const btn = document.createElement("button");
+            btn.className = "vix-settings-btn vjs-control vjs-button";
+            btn.title = "Impostazioni";
+            btn.innerHTML = '<span class="vjs-icon-placeholder"><i class="fa-solid fa-gear"></i></span>';
+            btn.onclick = (e) => {
+              e.stopPropagation();
+              toggleSettingsMenu();
+            };
+            // insert before fullscreen toggle if present
+            const fs = controlBarEl.querySelector(".vjs-fullscreen-control");
+            controlBarEl.insertBefore(btn, fs || null);
+          }
+
+          // Populate fallback menu when player has tracks/representations
+          populateFallbackMenu(playerInstance);
+        } catch (e) {
+          console.warn("initSettingsUI error:", e);
+        }
+      }
+
+      function toggleSettingsMenu() {
+        const menu = document.getElementById("vix-settings-menu");
+        if (!menu) return;
+        const isHidden = menu.style.display === "none" || menu.style.display === "";
+        if (isHidden) {
+          populateFallbackMenu(player);
+          menu.style.display = "block";
+          menu.setAttribute("aria-hidden", "false");
+        } else {
+          menu.style.display = "none";
+          menu.setAttribute("aria-hidden", "true");
+        }
+      }
+
+      function populateFallbackMenu(playerInstance) {
+        // Quality options (from VHS representations if available)
+        const qSelect = document.getElementById("vix-quality-select");
+        qSelect.innerHTML = '<option value="auto">Auto</option>';
+        try {
+          const tech = playerInstance.tech && playerInstance.tech({ IWillNotUseThisInPlugins: true });
+          const vhs = playerInstance?.vhs || (playerInstance?.tech && playerInstance.tech().vhs);
+          const reps = (vhs && vhs.representations && vhs.representations()) || [];
+          // dedupe by height/bitrate
+          const qualities = [];
+          reps.forEach(r => {
+            const label = r.height ? `${r.height}p` : (r.bandwidth ? `${Math.round(r.bandwidth/1000)}kbps` : r.id);
+            if (!qualities.find(q => q.label === label)) qualities.push({ id: r.id, label, bandwidth: r.bandwidth });
+          });
+          qualities.sort((a,b) => (b.bandwidth||0)-(a.bandwidth||0));
+          qualities.forEach(q => {
+            const opt = document.createElement("option");
+            opt.value = q.label;
+            opt.textContent = q.label;
+            qSelect.appendChild(opt);
+          });
+        } catch (e) {
+          console.warn("Quality populate error:", e);
+        }
+
+        // Audio tracks
+        const aSelect = document.getElementById("vix-audio-select");
+        aSelect.innerHTML = '<option value="default">Default</option>';
+        try {
+          const audioTracks = playerInstance.audioTracks && playerInstance.audioTracks();
+          if (audioTracks && audioTracks.length) {
+            for (let i=0;i<audioTracks.length;i++) {
+              const t = audioTracks[i];
+              const opt = document.createElement("option");
+              opt.value = i;
+              opt.textContent = t.label || t.language || `Track ${i+1}`;
+              aSelect.appendChild(opt);
+            }
+          }
+        } catch (e) { console.warn("Audio tracks error:", e); }
+
+        // Subtitle tracks
+        const sSelect = document.getElementById("vix-sub-select");
+        sSelect.innerHTML = '<option value="off">Off</option>';
+        try {
+          const textTracks = playerInstance.textTracks && playerInstance.textTracks();
+          if (textTracks && textTracks.length) {
+            for (let i=0;i<textTracks.length;i++) {
+              const t = textTracks[i];
+              const opt = document.createElement("option");
+              opt.value = i;
+              opt.textContent = t.label || t.language || `Sub ${i+1}`;
+              sSelect.appendChild(opt);
+            }
+          }
+        } catch (e) { console.warn("Sub tracks error:", e); }
+
+        // Playback rate already present in select
+        const rateSelect = document.getElementById("vix-rate-select");
+        rateSelect.value = String(playerInstance.playbackRate && playerInstance.playbackRate() || "1");
+
+        // Wire up change handlers
+        qSelect.onchange = () => {
+          const val = qSelect.value;
+          if (val === "auto") {
+            // let VHS auto select
+            try { playerInstance.vhs && playerInstance.vhs.representations && playerInstance.vhs.representations().forEach(r => r.enabled(true)); } catch(e){}
+          } else {
+            // try to match by label (height)
+            try {
+              const reps = playerInstance.vhs && playerInstance.vhs.representations && playerInstance.vhs.representations();
+              if (reps && reps.length) {
+                reps.forEach(r => {
+                  const label = r.height ? `${r.height}p` : (r.bandwidth ? `${Math.round(r.bandwidth/1000)}kbps` : r.id);
+                  r.enabled(label === val);
+                });
+              }
+            } catch (e) { console.warn(e); }
+          }
+        };
+
+        aSelect.onchange = () => {
+          const idx = aSelect.value;
+          try {
+            const audioTracks = playerInstance.audioTracks && playerInstance.audioTracks();
+            if (audioTracks && audioTracks.length) {
+              for (let i=0;i<audioTracks.length;i++) audioTracks[i].enabled = (i == idx);
+            }
+          } catch (e) { console.warn(e); }
+        };
+
+        sSelect.onchange = () => {
+          const idx = sSelect.value;
+          try {
+            const textTracks = playerInstance.textTracks && playerInstance.textTracks();
+            if (textTracks && textTracks.length) {
+              for (let i=0;i<textTracks.length;i++) textTracks[i].mode = (i == idx ? "showing" : "disabled");
+            }
+          } catch (e) { console.warn(e); }
+        };
+
+        rateSelect.onchange = () => {
+          const r = parseFloat(rateSelect.value);
+          try { playerInstance.playbackRate(r); } catch (e) { console.warn(e); }
+        };
+
+        // close button
+        document.getElementById("vix-settings-close").onclick = () => toggleSettingsMenu();
       }
 
       function showLoading(show, message = "Caricamento stream...") {
@@ -779,7 +919,7 @@
         // Setup Video.js XHR hook when available
         if (typeof videojs !== "undefined") setupVideoJsXhrHook(); else window.addEventListener("load", setupVideoJsXhrHook);
 
-        // Load TMDb sections (unchanged logic for other series/films)
+        // Load TMDb sections
         try {
           for (const [key] of Object.entries(endpoints)) {
             const items = await fetchList(key);
@@ -788,7 +928,7 @@
             items.forEach((item) => carousel?.appendChild(createCard(item)));
           }
 
-          // Insert a dedicated Hercai card into popularTV (so it's visible on homepage)
+          // Insert a dedicated Hercai card into popularTV
           const popularTVSection = document.getElementById("popularTV");
           const popularCarousel = popularTVSection?.querySelector(".carousel");
           if (popularCarousel) {
