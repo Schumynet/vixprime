@@ -974,27 +974,21 @@
         resultsDiv.style.display = "block";
       }
 
-      /* Initialization */
-window.addEventListener("DOMContentLoaded", async () => {
-  // Populate CORS select
-  const corsSelect = document.getElementById("cors-select");
-  if (corsSelect) {
-    CORS_LIST.forEach((proxy) => {
-      const option = document.createElement("option");
-      option.value = proxy;
-      option.textContent = proxy.replace(/\/|\?|=/g, "");
-      corsSelect.appendChild(option);
-    });
-    corsSelect.value = CORS;
-    corsSelect.addEventListener("change", (e) => {
-      CORS = e.target.value;
-      const notification = document.createElement("div");
-      notification.style.cssText = "position:fixed;top:100px;right:20px;background:rgba(229,9,20,0.95);color:#fff;padding:10px 14px;border-radius:8px;z-index:1000;box-shadow:0 6px 18px rgba(0,0,0,0.3);";
-      notification.textContent = `CORS proxy: ${CORS.replace(/\/|\?|=/g, "")}`;
-      document.body.appendChild(notification);
-      setTimeout(() => { notification.remove(); }, 1800);
-    });
-  }
+document.addEventListener("DOMContentLoaded", () => {
+  const icon = document.getElementById("vix-settings-icon");
+  const menu = document.getElementById("vix-settings-menu");
+  const close = document.getElementById("vix-settings-close");
+
+  icon.addEventListener("click", () => {
+    menu.style.display = "block";
+    menu.setAttribute("aria-hidden", "false");
+  });
+
+  close.addEventListener("click", () => {
+    menu.style.display = "none";
+    menu.setAttribute("aria-hidden", "true");
+  });
+});
 
   // Setup Video.js XHR hook when available
   if (typeof videojs !== "undefined") setupVideoJsXhrHook();
