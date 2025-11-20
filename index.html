@@ -974,17 +974,20 @@
         resultsDiv.style.display = "block";
       }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const icon = document.getElementById("vix-settings-icon");
-  const menu = document.getElementById("vix-settings-menu");
-  const close = document.getElementById("vix-settings-close");
-  const corsSelect = document.getElementById("cors-select");
-
-  // Apertura menu impostazioni
-  icon.addEventListener("click", () => {
-    menu.style.display = "block";
-    menu.setAttribute("aria-hidden", "false");
-  });
+window.addEventListener("DOMContentLoaded", async () => {
+        const corsSelect = document.getElementById("cors-select");
+        CORS_LIST.forEach((proxy) => {
+          const option = document.createElement("option");
+          option.value = proxy;
+          option.textContent = proxy.replace(/\/|\?|=/g, "");
+          corsSelect.appendChild(option);
+        });
+        corsSelect.value = CORS;
+        if (typeof videojs !== "undefined") {
+          setupVideoJsXhrHook();
+        } else {
+          window.addEventListener("load", setupVideoJsXhrHook);
+        }
 
   // Chiusura menu impostazioni
   close.addEventListener("click", () => {
