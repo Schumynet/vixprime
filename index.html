@@ -130,54 +130,51 @@
       .vix-settings-menu {
   display: none;
   position: absolute;
-  top: 60px;
+  top: 70px;
   right: 20px;
-  background-color: #1a1a1a;
-  color: #f0f0f0;
+  background: #222;
+  color: #fff;
   padding: 16px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  z-index: 99999;
-  width: 260px;
-  font-family: 'Segoe UI', sans-serif;
-  font-size: 15px;
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.vix-settings-menu.show {
-  display: block;
-  opacity: 1;
-  transform: scale(1);
+  border-radius: 6px;
+  z-index: 10000;
+  width: 240px;
+  font-size: 14px;
+  font-family: sans-serif;
 }
 
 .vix-settings-menu h4 {
-  margin-bottom: 12px;
-  font-size: 17px;
-  font-weight: 600;
-  border-bottom: 1px solid #333;
-  padding-bottom: 6px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 4px;
 }
 
 .vix-settings-menu label {
   display: block;
-  margin: 12px 0 6px;
-  font-weight: 500;
+  margin: 10px 0 6px;
 }
 
 .vix-settings-menu select {
   width: 100%;
-  padding: 8px;
-  background-color: #2a2a2a;
+  padding: 6px;
+  background: #333;
   color: #fff;
-  border: 1px solid #444;
-  border-radius: 6px;
-  font-size: 14px;
+  border: 1px solid #555;
+  border-radius: 4px;
+}
+
+.settings-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 22px;
+  color: #fff;
+  cursor: pointer;
+  z-index: 10001;
 }
 
 .vix-settings-menu .close {
-  margin-top: 16px;
+  margin-top: 12px;
   text-align: center;
   font-weight: bold;
   color: #e50914;
@@ -271,7 +268,7 @@
         </div>
 
         <div class="player-content">
-          <div class="video-container" id="fullscreen-target">
+          <div class="video-container">
             <div id="episode-warning" class="select-episode-warning" style="display:none;">
               <div class="icon">📺</div>
               <h3>Seleziona un episodio</h3>
