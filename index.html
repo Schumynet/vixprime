@@ -1767,6 +1767,69 @@ async function loadSeason(tvId, seasonNumber) {
 
 
     </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Episodi personalizzati per Hercai
+  const hercaiCustomEpisodes = {
+    1: 44,
+    2: 100,
+    3: 86
+  };
+
+  // Selettore stagione
+  const seasonSelect = document.createElement("select");
+  seasonSelect.id = "season-select";
+  seasonSelect.style.margin = "20px";
+  seasonSelect.innerHTML = `
+    <option value="1">Stagione 1</option>
+    <option value="2">Stagione 2</option>
+    <option value="3">Stagione 3</option>
+  `;
+  document.body.appendChild(seasonSelect);
+
+  // Contenitore episodi
+  const episodeList = document.createElement("div");
+  episodeList.id = "episode-list";
+  episodeList.style.margin = "20px";
+  episodeList.style.padding = "10px";
+  episodeList.style.background = "#1a1a1a";
+  episodeList.style.color = "#fff";
+  episodeList.style.borderRadius = "8px";
+  document.body.appendChild(episodeList);
+
+  // Funzione per generare episodi
+  function generateVixEpisodes(seasonNumber) {
+    const total = hercaiCustomEpisodes[seasonNumber] || 12;
+    episodeList.innerHTML = `<h3>Stagione ${seasonNumber} — ${total} episodi</h3>`;
+
+    for (let i = 1; i <= total; i++) {
+      const ep = document.createElement("a");
+      ep.className = "episode-item";
+      ep.href = `https://vixsrc.to/movie/hercai-s${seasonNumber}-e${i}`;
+      ep.innerText = `Episodio ${i}`;
+      ep.style.display = "block";
+      ep.style.padding = "6px 10px";
+      ep.style.margin = "4px 0";
+      ep.style.background = "#2a2a2a";
+      ep.style.color = "#fff";
+      ep.style.borderRadius = "4px";
+      ep.style.textDecoration = "none";
+      episodeList.appendChild(ep);
+    }
+  }
+
+  // Inizializza con stagione 1
+  generateVixEpisodes(1);
+
+  // Cambia stagione
+  seasonSelect.addEventListener("change", (e) => {
+    const season = parseInt(e.target.value);
+    generateVixEpisodes(season);
+  });
+});
+</script>
+
   </body>
 
 </html>
