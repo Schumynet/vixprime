@@ -905,88 +905,91 @@
       }
 
       /* Initialization */
-      window.addEventListener("DOMContentLoaded", async () => {
-        // Populate CORS select
-        const corsSelect = document.getElementById("cors-select");
-        if (corsSelect) {
-          CORS_LIST.forEach((proxy) => {
-            const option = document.createElement("option");
-            option.value = proxy;
-            option.textContent = proxy.replace(/\/|\?|=/g, "");
-            corsSelect.appendChild(option);
-          });
-          corsSelect.value = CORS;
-          corsSelect.addEventListener("change", (e) => {
-            CORS = e.target.value;
-            const notification = document.createElement("div");
-            notification.style.cssText = "position:fixed;top:100px;right:20px;background:rgba(229,9,20,0.95);color:#fff;padding:10px 14px;border-radius:8px;z-index:1000;box-shadow:0 6px 18px rgba(0,0,0,0.3);";
-            notification.textContent = `CORS proxy: ${CORS.replace(/\/|\?|=/g, "")}`;
-            document.body.appendChild(notification);
-            setTimeout(() => { notification.remove(); }, 1800);
-            function toggleSettingsMenu() {
-  const menu = document.getElementById("vix-settings-menu");
-  const isVisible = menu.style.display === "block";
-  menu.style.display = isVisible ? "none" : "block";
-  menu.setAttribute("aria-hidden", isVisible ? "true" : "false");
-
-  if (document.fullscreenElement) {
-    menu.style.position = "absolute";
-    menu.style.zIndex = "9999";
-    menu.style.top = "60px";
-    menu.style.right = "20px";
-  } else {
-    menu.style.position = "";
-    menu.style.zIndex = "";
-    menu.style.top = "";
-    menu.style.right = "";
+window.addEventListener("DOMContentLoaded", async () => {
+  // Populate CORS select
+  const corsSelect = document.getElementById("cors-select");
+  if (corsSelect) {
+    CORS_LIST.forEach((proxy) => {
+      const option = document.createElement("option");
+      option.value = proxy;
+      option.textContent = proxy.replace(/\/|\?|=/g, "");
+      corsSelect.appendChild(option);
+    });
+    corsSelect.value = CORS;
+    corsSelect.addEventListener("change", (e) => {
+      CORS = e.target.value;
+      const notification = document.createElement("div");
+      notification.style.cssText = "position:fixed;top:100px;right:20px;background:rgba(229,9,20,0.95);color:#fff;padding:10px 14px;border-radius:8px;z-index:1000;box-shadow:0 6px 18px rgba(0,0,0,0.3);";
+      notification.textContent = `CORS proxy: ${CORS.replace(/\/|\?|=/g, "")}`;
+      document.body.appendChild(notification);
+      setTimeout(() => { notification.remove(); }, 1800);
+    });
   }
-}
 
-const settingsIcon = document.getElementById("vix-settings-icon");
-if (settingsIcon) {
-  settingsIcon.addEventListener("click", toggleSettingsMenu);
-}
-          });
-        }
+  // Setup Video.js XHR hook when available
+  if (typeof videojs !== "undefined") setupVideoJsXhrHook();
+  else window.addEventListener("load", setupVideoJsXhrHook);
 
-        // Setup Video.js XHR hook when available
-        if (typeof videojs !== "undefined") setupVideoJsXhrHook(); else window.addEventListener("load", setupVideoJsXhrHook);
+  // Load TMDb sections
+  try {
+    for (const [key] of Object.entries(endpoints)) {
+      const items = await fetchList(key);
+      const section = document.getElementById(key);
+      const carousel = section?.querySelector(".carousel");
+      items.forEach((item) => carousel?.appendChild(createCard(item)));
+    }
 
-        // Load TMDb sections
-        try {
-          for (const [key] of Object.entries(endpoints)) {
-            const items = await fetchList(key);
-            const section = document.getElementById(key);
-            const carousel = section?.querySelector(".carousel");
-            items.forEach((item) => carousel?.appendChild(createCard(item)));
-          }
+    // Insert a dedicated Hercai card into popularTV
+    const popularTVSection = document.getElementById("popularTV");
+    const popularCarousel = popularTVSection?.querySelector(".carousel");
+    if (popularCarousel) {
+      const hercaiObj = { id: HERCAI_TMDB_ID, name: "Hercai", poster_path: null, media_type: "tv", isHercaiCustom: true };
+      popularCarousel.insertBefore(createCard(hercaiObj), popularCarousel.firstChild);
+    }
+  } catch (err) {
+    console.warn("Errore caricamento sezioni TMDb:", err);
+  }
 
-          // Insert a dedicated Hercai card into popularTV
-          const popularTVSection = document.getElementById("popularTV");
-          const popularCarousel = popularTVSection?.querySelector(".carousel");
-          if (popularCarousel) {
-            const hercaiObj = { id: HERCAI_TMDB_ID, name: "Hercai", poster_path: null, media_type: "tv", isHercaiCustom: true };
-            popularCarousel.insertBefore(createCard(hercaiObj), popularCarousel.firstChild);
-          }
-        } catch (err) {
-          console.warn("Errore caricamento sezioni TMDb:", err);
-        }
+  // Hook search input
+  const searchInput = document.getElementById("search");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      clearTimeout(searchTimeout);
+      const query = e.target.value.trim();
+      if (query.length < 2) {
+        document.getElementById("results").style.display = "none";
+        document.getElementById("home").style.display = "block";
+        return;
+      }
+      searchTimeout = setTimeout(() => performSearch(query), 450);
+    });
+  }
 
-        // Hook search input
-        const searchInput = document.getElementById("search");
-        if (searchInput) {
-          searchInput.addEventListener("input", (e) => {
-            clearTimeout(searchTimeout);
-            const query = e.target.value.trim();
-            if (query.length < 2) {
-              document.getElementById("results").style.display = "none";
-              document.getElementById("home").style.display = "block";
-              return;
-            }
-            searchTimeout = setTimeout(() => performSearch(query), 450);
-          });
-        }
-      });
+  // Impostazioni menu toggle
+  function toggleSettingsMenu() {
+    const menu = document.getElementById("vix-settings-menu");
+    const isVisible = menu.style.display === "block";
+    menu.style.display = isVisible ? "none" : "block";
+    menu.setAttribute("aria-hidden", isVisible ? "true" : "false");
+
+    if (document.fullscreenElement) {
+      menu.style.position = "absolute";
+      menu.style.zIndex = "9999";
+      menu.style.top = "60px";
+      menu.style.right = "20px";
+    } else {
+      menu.style.position = "";
+      menu.style.zIndex = "";
+      menu.style.top = "";
+      menu.style.right = "";
+    }
+  }
+
+  const settingsIcon = document.getElementById("vix-settings-icon");
+  if (settingsIcon) {
+    settingsIcon.addEventListener("click", toggleSettingsMenu);
+  }
+});
     </script>
   </body>
 </html>
