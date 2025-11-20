@@ -1765,7 +1765,30 @@ async function loadSeason(tvId, seasonNumber) {
   }
 }
 
+function updateSettingsPanelTracks() {
+  const subtitleSelect = document.getElementById("subtitles");
+  const audioSelect = document.getElementById("audio");
 
+  // Sottotitoli
+  const tracks = player.textTracks();
+  subtitleSelect.innerHTML = `<option value="none">Nessuno</option>`;
+  for (let i = 0; i < tracks.length; i++) {
+    const option = document.createElement("option");
+    option.value = tracks[i].label;
+    option.textContent = tracks[i].label;
+    subtitleSelect.appendChild(option);
+  }
+
+  // Audio
+  const audioTracks = player.audioTracks();
+  audioSelect.innerHTML = `<option value="default">Predefinito</option>`;
+  for (let i = 0; i < audioTracks.length; i++) {
+    const option = document.createElement("option");
+    option.value = audioTracks[i].label;
+    option.textContent = audioTracks[i].label;
+    audioSelect.appendChild(option);
+  }
+}
  
 
   
