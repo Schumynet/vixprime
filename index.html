@@ -1766,29 +1766,23 @@ async function loadSeason(tvId, seasonNumber) {
 }
 
 
-    </script>
+ <script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const apiKey = "TUO_API_KEY_TMDB"; // Inserisci la tua API key TMDB
+  const cors = "https://corsproxy.io/?";
+  const hercaiQuery = "Hercai amore e vendetta";
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  // Episodi personalizzati per Hercai
-  const hercaiCustomEpisodes = {
+  const customEpisodes = {
     1: 44,
     2: 100,
     3: 86
   };
 
-  // Selettore stagione
   const seasonSelect = document.createElement("select");
   seasonSelect.id = "season-select";
   seasonSelect.style.margin = "20px";
-  seasonSelect.innerHTML = `
-    <option value="1">Stagione 1</option>
-    <option value="2">Stagione 2</option>
-    <option value="3">Stagione 3</option>
-  `;
   document.body.appendChild(seasonSelect);
 
-  // Contenitore episodi
   const episodeList = document.createElement("div");
   episodeList.id = "episode-list";
   episodeList.style.margin = "20px";
@@ -1798,9 +1792,36 @@ document.addEventListener("DOMContentLoaded", () => {
   episodeList.style.borderRadius = "8px";
   document.body.appendChild(episodeList);
 
-  // Funzione per generare episodi
-  function generateVixEpisodes(seasonNumber) {
-    const total = hercaiCustomEpisodes[seasonNumber] || 12;
+  // Cerca la serie TV
+  const searchUrl = `${cors}https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&query=${encodeURIComponent(hercaiQuery)}&language=it-IT`;
+  const searchRes = await fetch(searchUrl);
+  const searchData = await searchRes.json();
+  const hercai = searchData.results.find(item => item.name.toLowerCase().includes("hercai"));
+
+  if (!hercai) {
+    episodeList.innerHTML = "Serie non trovata.";
+    return;
+  }
+
+  const tvId = hercai.id;
+
+  // Recupera le stagioni
+  const detailsUrl = `${cors}https://api.themoviedb.org/3/tv/${tvId}?api_key=${apiKey}&language=it-IT`;
+  const detailsRes = await fetch(detailsUrl);
+  const detailsData = await detailsRes.json();
+
+  detailsData.seasons.forEach(season => {
+    const sNum = season.season_number;
+    if (customEpisodes[sNum]) {
+      const option = document.createElement("option");
+      option.value = sNum;
+      option.text = `Stagione ${sNum}`;
+      seasonSelect.appendChild(option);
+    }
+  });
+
+  function renderEpisodes(seasonNumber) {
+    const total = customEpisodes[seasonNumber];
     episodeList.innerHTML = `<h3>Stagione ${seasonNumber} — ${total} episodi</h3>`;
 
     for (let i = 1; i <= total; i++) {
@@ -1819,14 +1840,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Inizializza con stagione 1
-  generateVixEpisodes(1);
-
-  // Cambia stagione
   seasonSelect.addEventListener("change", (e) => {
     const season = parseInt(e.target.value);
-    generateVixEpisodes(season);
+    renderEpisodes(season);
   });
+
+  // Inizializza con la prima stagione
+  renderEpisodes(1);
 });
 </script>
 
