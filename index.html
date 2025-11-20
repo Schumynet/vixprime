@@ -126,33 +126,62 @@
         cursor:pointer;
         border:0;
       }
+      
       .vix-settings-menu {
-        position:absolute;
-        right:12px;
-        bottom:64px;
-        background:rgba(10,10,10,0.95);
-        border:1px solid rgba(255,255,255,0.06);
-        padding:10px;
-        border-radius:8px;
-        z-index:9999;
-        min-width:180px;
-        box-shadow:0 8px 30px rgba(0,0,0,0.6);
-        display:none;
-        color:#fff;
-      }
-      .vix-settings-menu h4 { margin:0 0 8px 0; font-size:0.95rem; color:#e50914; }
-      .vix-settings-menu label { display:flex; align-items:center; gap:8px; margin:6px 0; font-size:0.95rem; }
-      .vix-settings-menu select { width:100%; padding:6px 8px; border-radius:6px; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.06); }
-      .vix-settings-menu .close { margin-top:8px; display:block; text-align:right; color:#e50914; cursor:pointer; font-weight:700; }
-
-
-.settings-icon {
+  display: none;
   position: absolute;
-  top: 20px;
+  top: 60px;
   right: 20px;
-  font-size: 24px;
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  z-index: 99999;
+  width: 260px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 15px;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.vix-settings-menu.show {
+  display: block;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.vix-settings-menu h4 {
+  margin-bottom: 12px;
+  font-size: 17px;
+  font-weight: 600;
+  border-bottom: 1px solid #333;
+  padding-bottom: 6px;
+}
+
+.vix-settings-menu label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 500;
+}
+
+.vix-settings-menu select {
+  width: 100%;
+  padding: 8px;
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.vix-settings-menu .close {
+  margin-top: 16px;
+  text-align: center;
+  font-weight: bold;
+  color: #e50914;
   cursor: pointer;
-  z-index: 9999;
 }
 
       
@@ -967,30 +996,55 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Impostazioni menu toggle
-  function toggleSettingsMenu() {
+function toggleSettingsMenu() {
+  const menu = document.getElementById("vix-settings-menu");
+  const isVisible = menu.classList.contains("show");
+
+  if (isVisible) {
+    menu.classList.remove("show");
+    menu.setAttribute("aria-hidden", "true");
+  } else {
+    menu.classList.add("show");
+    menu.setAttribute("aria-hidden", "false");
+  }
+
+  if (document.fullscreenElement) {
+    menu.style.position = "absolute";
+    menu.style.zIndex = "99999";
+    menu.style.top = "60px";
+    menu.style.right = "20px";
+  } else {
+    menu.style.position = "";
+    menu.style.zIndex = "";
+    menu.style.top = "";
+    menu.style.right = "";
+  }
+}
+
+// Chiudi cliccando fuori
+document.addEventListener("click", (e) => {
+  const menu = document.getElementById("vix-settings-menu");
+  const icon = document.getElementById("vix-settings-icon");
+  if (!menu.contains(e.target) && e.target !== icon) {
+    menu.classList.remove("show");
+    menu.setAttribute("aria-hidden", "true");
+  }
+});
+
+// Chiudi con ESC
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
     const menu = document.getElementById("vix-settings-menu");
-    const isVisible = menu.style.display === "block";
-    menu.style.display = isVisible ? "none" : "block";
-    menu.setAttribute("aria-hidden", isVisible ? "true" : "false");
-
-    if (document.fullscreenElement) {
-      menu.style.position = "absolute";
-      menu.style.zIndex = "9999";
-      menu.style.top = "60px";
-      menu.style.right = "20px";
-    } else {
-      menu.style.position = "";
-      menu.style.zIndex = "";
-      menu.style.top = "";
-      menu.style.right = "";
-    }
+    menu.classList.remove("show");
+    menu.setAttribute("aria-hidden", "true");
   }
+});
 
-  const settingsIcon = document.getElementById("vix-settings-icon");
-  if (settingsIcon) {
-    settingsIcon.addEventListener("click", toggleSettingsMenu);
-  }
+// Attiva icona
+const settingsIcon = document.getElementById("vix-settings-icon");
+if (settingsIcon) {
+  settingsIcon.addEventListener("click", toggleSettingsMenu);
+}
 });
     </script>
   </body>
