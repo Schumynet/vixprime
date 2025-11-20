@@ -281,16 +281,58 @@
               <div class="loading-text">Caricamento stream...</div>
             </div>
 
-            <!-- fallback settings menu (will be toggled by JS if plugin missing) -->
-            <div id="vix-settings-menu" class="vix-settings-menu" aria-hidden="true">
-              <h4>Impostazioni</h4>
-              <div id="vix-quality-container"><label>Qualità<select id="vix-quality-select"></select></label></div>
-              <div id="vix-audio-container"><label>Audio<select id="vix-audio-select"></select></label></div>
-              <div id="vix-sub-container"><label>Sottotitoli<select id="vix-sub-select"><option value="off">Off</option></select></label></div>
-              <div id="vix-rate-container"><label>Velocità<select id="vix-rate-select"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option><option>2</option></select></label></div>
-              <div class="close" id="vix-settings-close">Chiudi</div>
-            </div>
-          </div>
+            <!-- Icona impostazioni -->
+<div id="vix-settings-icon" class="settings-icon">⚙️</div>
+
+<!-- Menu impostazioni -->
+<div id="vix-settings-menu" class="vix-settings-menu" aria-hidden="true">
+  <h4>Impostazioni</h4>
+
+  <div id="vix-quality-container">
+    <label>Qualità
+      <select id="vix-quality-select">
+        <option value="auto">Auto</option>
+        <option value="1080p">1080p</option>
+        <option value="720p">720p</option>
+        <option value="480p">480p</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="vix-audio-container">
+    <label>Audio
+      <select id="vix-audio-select">
+        <option value="default">Default</option>
+        <option value="alt">Alternativo</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="vix-sub-container">
+    <label>Sottotitoli
+      <select id="vix-sub-select">
+        <option value="off">Off</option>
+        <option value="it">Italiano</option>
+        <option value="en">English</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="vix-rate-container">
+    <label>Velocità
+      <select id="vix-rate-select">
+        <option>0.5</option>
+        <option>0.75</option>
+        <option selected>1</option>
+        <option>1.25</option>
+        <option>1.5</option>
+        <option>2</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="close" id="vix-settings-close">Chiudi</div>
+</div>
 
           <div class="episode-selector" id="episode-selector" style="display:none;">
             <h3>Seleziona episodio</h3>
