@@ -923,6 +923,29 @@
             notification.textContent = `CORS proxy: ${CORS.replace(/\/|\?|=/g, "")}`;
             document.body.appendChild(notification);
             setTimeout(() => { notification.remove(); }, 1800);
+            function toggleSettingsMenu() {
+  const menu = document.getElementById("vix-settings-menu");
+  const isVisible = menu.style.display === "block";
+  menu.style.display = isVisible ? "none" : "block";
+  menu.setAttribute("aria-hidden", isVisible ? "true" : "false");
+
+  if (document.fullscreenElement) {
+    menu.style.position = "absolute";
+    menu.style.zIndex = "9999";
+    menu.style.top = "60px";
+    menu.style.right = "20px";
+  } else {
+    menu.style.position = "";
+    menu.style.zIndex = "";
+    menu.style.top = "";
+    menu.style.right = "";
+  }
+}
+
+const settingsIcon = document.getElementById("vix-settings-icon");
+if (settingsIcon) {
+  settingsIcon.addEventListener("click", toggleSettingsMenu);
+}
           });
         }
 
