@@ -1717,6 +1717,36 @@
           });
         }
       });
+
+
+const customEpisodeCounts = {
+  1: 12,   // Stagione 1 (come da TMDB)
+  2: 44,   // Stagione 2 (personalizzato)
+  3: 100,  // Stagione 3 (personalizzato)
+  4: 86    // Stagione 4 (personalizzato)
+};
+
+async function loadSeason(tvId, seasonNumber) {
+  const apiKey = "TUO_API_KEY_TMDB";
+  const cors = "https://corsproxy.io/?";
+  const seasonUrl = `${cors}https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${apiKey}&language=it-IT`;
+
+  const res = await fetch(seasonUrl);
+  const data = await res.json();
+
+  const totalEpisodes = customEpisodeCounts[seasonNumber] || data.episodes.length;
+  const container = document.getElementById("episode-list");
+  container.innerHTML = `<h3>Stagione ${seasonNumber} — ${totalEpisodes} episodi</h3>`;
+
+  for (let i = 1; i <= totalEpisodes; i++) {
+    const epBox = document.createElement("div");
+    epBox.className = "episode-item";
+    epBox.innerText = `Episodio ${i}`;
+    container.appendChild(epBox);
+  }
+}
+
+
     </script>
   </body>
 </html>
