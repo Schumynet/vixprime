@@ -978,15 +978,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const icon = document.getElementById("vix-settings-icon");
   const menu = document.getElementById("vix-settings-menu");
   const close = document.getElementById("vix-settings-close");
+  const corsSelect = document.getElementById("cors-select");
 
+  // Apertura menu impostazioni
   icon.addEventListener("click", () => {
     menu.style.display = "block";
     menu.setAttribute("aria-hidden", "false");
   });
 
+  // Chiusura menu impostazioni
   close.addEventListener("click", () => {
     menu.style.display = "none";
     menu.setAttribute("aria-hidden", "true");
+  });
+
+  // Gestione CORS Proxy
+  window.selectedCorsProxy = corsSelect.value; // iniziale
+
+  corsSelect.addEventListener("change", () => {
+    window.selectedCorsProxy = corsSelect.value;
+    console.log("CORS selezionato:", window.selectedCorsProxy);
   });
 });
 
