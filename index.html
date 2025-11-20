@@ -715,6 +715,23 @@
       .episodes-list::-webkit-scrollbar-thumb:hover {
         background: #b20710;
       }
+
+      #episode-list {
+  margin-top: 20px;
+  padding: 10px;
+  background: #1a1a1a;
+  color: #fff;
+  border-radius: 8px;
+}
+
+.episode-item {
+  padding: 6px 10px;
+  margin: 4px 0;
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+
+      
     </style>
   </head>
   <body>
@@ -839,6 +856,8 @@
           </div>
         </section>
       </div>
+
+      <div id="episode-list"></div>
 
       <div id="results"></div>
 
@@ -1749,4 +1768,5 @@ async function loadSeason(tvId, seasonNumber) {
 
     </script>
   </body>
+
 </html>
