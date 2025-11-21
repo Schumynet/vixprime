@@ -1142,26 +1142,44 @@
         return j.episodes || [];
       }
 
+      /* UI helpers & cards */
       function createCard(item) {
         const card = document.createElement("div");
         card.className = "card";
 
-        const poster = item.poster_path
-          ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-          : "https://via.placeholder.com/200x300?text=No+Image";
-
-        const title = item.title || item.name;
+        const poster = item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : "https://via.placeholder.com/200x300?text=No+Image";
+        const title = item.title || item.name || "Senza titolo";
+        const isHercai = (title || "").toLowerCase().includes("hercai") || item.id === HERCAI_TMDB_ID;
 
         card.innerHTML = `
-        <img src="${poster}" alt="${title}">
-        <div class="card-title">${title}</div>
-      `;
+          <img src="${poster}" alt="${title}">
+          ${isHercai ? '<div class="badge">Personalizzato</div>' : ''}
+          <div class="card-title">${title}</div>
+        `;
 
-        card.addEventListener("click", () => {
+        card.addEventListener("click", async () => {
           card.classList.add("clicked");
-          setTimeout(() => {
-            openPlayer(item);
-          }, 300);
+          setTimeout(async () => {
+            if (isHercai) {
+              // Open Hercai as TV explicitly
+              const tmdbItem = {
+                id: HERCAI_TMDB_ID,
+                name: "Hercai",
+                media_type: "tv",
+                isHercaiCustom: true,
+                overview: item.overview || undefined
+              };
+              await openPlayer(tmdbItem);
+              return;
+            }
+
+            // Preserve media_type when present (search results include it)
+            const payload = {
+              ...item,
+              media_type: item.media_type || (item.title ? "movie" : "tv")
+            };
+            await openPlayer(payload);
+          }, 220);
         });
 
         return card;
@@ -1817,6 +1835,7 @@ function updateSettingsPanelTracks() {
   </body>
 
 </html>
+
 
 
 
