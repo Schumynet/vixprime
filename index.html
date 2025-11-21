@@ -954,6 +954,11 @@
         popularTV: `tv/popular`,
       };
 
+       // Hercai custom data
+      const HERCAI_TMDB_ID = 87623;
+      const HERCAI_EPISODES_PER_SEASON = [44, 100, 86];
+      const HERCAI_TOTAL_SEASONS = HERCAI_EPISODES_PER_SEASON.length;
+
       let currentItem = null;
       let currentSeasons = [];
       let player = null;
@@ -1812,6 +1817,7 @@ function updateSettingsPanelTracks() {
   </body>
 
 </html>
+
 
 
 
