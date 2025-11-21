@@ -1192,6 +1192,13 @@
         document.getElementById("results").style.display = "none";
         document.getElementById("player").style.display = "block";
 
+        // Determine media type reliably
+        let mediaType = item.media_type;
+        if (!mediaType) {
+          if (item.isHercaiCustom) mediaType = "tv";
+          else mediaType = item.title ? "movie" : "tv";
+        }
+
         const title = item.title || item.name;
         const releaseDate = item.release_date || item.first_air_date || "N/A";
         const mediaType = item.media_type || (item.title ? "movie" : "tv");
@@ -1828,13 +1835,40 @@ function updateSettingsPanelTracks() {
   }
 }
  
+// Insert a dedicated Hercai card into popularTV (so it's visible on homepage)
+          const popularTVSection = document.getElementById("popularTV");
+          const popularCarousel = popularTVSection?.querySelector(".carousel");
+          if (popularCarousel) {
+            const hercaiObj = { id: HERCAI_TMDB_ID, name: "Hercai", poster_path: null, media_type: "tv", isHercaiCustom: true };
+            popularCarousel.insertBefore(createCard(hercaiObj), popularCarousel.firstChild);
+          }
+        } catch (err) {
+          console.warn("Errore caricamento sezioni TMDb:", err);
+        }
 
+        // Hook search input
+        const searchInput = document.getElementById("search");
+        if (searchInput) {
+          searchInput.addEventListener("input", (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+            if (query.length < 2) {
+              document.getElementById("results").style.display = "none";
+              document.getElementById("home").style.display = "block";
+              return;
+            }
+            searchTimeout = setTimeout(() => performSearch(query), 450);
+          });
+        }
+      });
+    setting-menu
   
 </script>
 
   </body>
 
 </html>
+
 
 
 
