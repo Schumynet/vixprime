@@ -1746,6 +1746,7 @@ async function loadAllowedContent() {
       document.head.appendChild(style);
 
       window.addEventListener("DOMContentLoaded", async () => {
+        await loadAllowedContent();
         const corsSelect = document.getElementById("cors-select");
         CORS_LIST.forEach((proxy) => {
           const option = document.createElement("option");
@@ -1774,6 +1775,7 @@ async function loadAllowedContent() {
   </body>
 
 </html>
+
 
 
 
