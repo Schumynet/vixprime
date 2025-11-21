@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VixPrime</title>
+    <title>VixFlix</title>
 
     <!-- Video.js CDN - Latest stable version -->
     <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
@@ -715,33 +715,6 @@
       .episodes-list::-webkit-scrollbar-thumb:hover {
         background: #b20710;
       }
-
-      #episode-list {
-  margin-top: 20px;
-  padding: 10px;
-  background: #1a1a1a;
-  color: #fff;
-  border-radius: 8px;
-}
-
-.episode-item {
-  padding: 6px 10px;
-  margin: 4px 0;
-  background: #2a2a2a;
-  border-radius: 4px;
-}
-
-.vjs-settings-button {
-  font-size: 1.2rem;
-  color: white;
-  background: none;
-  border: none;
-}
-.vjs-settings-button:hover {
-  color: #e50914;
-}
-
-      
     </style>
   </head>
   <body>
@@ -766,7 +739,7 @@
       <div id="home">
         <section class="hero">
           <div class="hero-content">
-            <h1>Benvenuto su VixPrime</h1>
+            <h1>Benvenuto su VixFlix</h1>
             <p>Scopri migliaia di film e serie TV in streaming</p>
           </div>
         </section>
@@ -867,8 +840,6 @@
         </section>
       </div>
 
-      <div id="episode-list"></div>
-
       <div id="results"></div>
 
       <div id="player">
@@ -906,8 +877,6 @@
               playsinline
               crossorigin="anonymous"
             ></video>
-
-            
 
             <div
               id="loading-overlay"
@@ -953,11 +922,6 @@
         onTheAir: `tv/on_the_air`,
         popularTV: `tv/popular`,
       };
-
-       // Hercai custom data
-      const HERCAI_TMDB_ID = 87623;
-      const HERCAI_EPISODES_PER_SEASON = [44, 100, 86];
-      const HERCAI_TOTAL_SEASONS = HERCAI_EPISODES_PER_SEASON.length;
 
       let currentItem = null;
       let currentSeasons = [];
@@ -1142,44 +1106,26 @@
         return j.episodes || [];
       }
 
-      /* UI helpers & cards */
       function createCard(item) {
         const card = document.createElement("div");
         card.className = "card";
 
-        const poster = item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : "https://via.placeholder.com/200x300?text=No+Image";
-        const title = item.title || item.name || "Senza titolo";
-        const isHercai = (title || "").toLowerCase().includes("hercai") || item.id === HERCAI_TMDB_ID;
+        const poster = item.poster_path
+          ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+          : "https://via.placeholder.com/200x300?text=No+Image";
+
+        const title = item.title || item.name;
 
         card.innerHTML = `
-          <img src="${poster}" alt="${title}">
-          ${isHercai ? '<div class="badge">Personalizzato</div>' : ''}
-          <div class="card-title">${title}</div>
-        `;
+        <img src="${poster}" alt="${title}">
+        <div class="card-title">${title}</div>
+      `;
 
-        card.addEventListener("click", async () => {
+        card.addEventListener("click", () => {
           card.classList.add("clicked");
-          setTimeout(async () => {
-            if (isHercai) {
-              // Open Hercai as TV explicitly
-              const tmdbItem = {
-                id: HERCAI_TMDB_ID,
-                name: "Hercai",
-                media_type: "tv",
-                isHercaiCustom: true,
-                overview: item.overview || undefined
-              };
-              await openPlayer(tmdbItem);
-              return;
-            }
-
-            // Preserve media_type when present (search results include it)
-            const payload = {
-              ...item,
-              media_type: item.media_type || (item.title ? "movie" : "tv")
-            };
-            await openPlayer(payload);
-          }, 220);
+          setTimeout(() => {
+            openPlayer(item);
+          }, 300);
         });
 
         return card;
@@ -1191,13 +1137,6 @@
         document.getElementById("home").style.display = "none";
         document.getElementById("results").style.display = "none";
         document.getElementById("player").style.display = "block";
-
-        // Determine media type reliably
-        let mediaType = item.media_type;
-        if (!mediaType) {
-          if (item.isHercaiCustom) mediaType = "tv";
-          else mediaType = item.title ? "movie" : "tv";
-        }
 
         const title = item.title || item.name;
         const releaseDate = item.release_date || item.first_air_date || "N/A";
@@ -1630,8 +1569,6 @@
                 "audioTrackButton",
                 "qualitySelector",
                 "fullscreenToggle",
-                "SettingsButton", // ← AGGIUNTO QUI
-  
               ],
             },
           });
@@ -1645,7 +1582,6 @@
 
           player.ready(function () {
             setupKeyboardShortcuts();
-            updateSettingsPanelTracks();
             showLoading(false);
             console.log("✅ Player ready");
 
@@ -1781,98 +1717,6 @@
           });
         }
       });
-
-
-const customEpisodeCounts = {
-  1: 12,   // Stagione 1 (come da TMDB)
-  2: 44,   // Stagione 2 (personalizzato)
-  3: 100,  // Stagione 3 (personalizzato)
-  4: 86    // Stagione 4 (personalizzato)
-};
-
-async function loadSeason(tvId, seasonNumber) {
-  const apiKey = "TUO_API_KEY_TMDB";
-  const cors = "https://corsproxy.io/?";
-  const seasonUrl = `${cors}https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${apiKey}&language=it-IT`;
-
-  const res = await fetch(seasonUrl);
-  const data = await res.json();
-
-  const totalEpisodes = customEpisodeCounts[seasonNumber] || data.episodes.length;
-  const container = document.getElementById("episode-list");
-  container.innerHTML = `<h3>Stagione ${seasonNumber} — ${totalEpisodes} episodi</h3>`;
-
-  for (let i = 1; i <= totalEpisodes; i++) {
-    const epBox = document.createElement("div");
-    epBox.className = "episode-item";
-    epBox.innerText = `Episodio ${i}`;
-    container.appendChild(epBox);
-  }
-}
-
-function updateSettingsPanelTracks() {
-  const subtitleSelect = document.getElementById("subtitles");
-  const audioSelect = document.getElementById("audio");
-
-  // Sottotitoli
-  const tracks = player.textTracks();
-  subtitleSelect.innerHTML = `<option value="none">Nessuno</option>`;
-  for (let i = 0; i < tracks.length; i++) {
-    const option = document.createElement("option");
-    option.value = tracks[i].label;
-    option.textContent = tracks[i].label;
-    subtitleSelect.appendChild(option);
-  }
-
-  // Audio
-  const audioTracks = player.audioTracks();
-  audioSelect.innerHTML = `<option value="default">Predefinito</option>`;
-  for (let i = 0; i < audioTracks.length; i++) {
-    const option = document.createElement("option");
-    option.value = audioTracks[i].label;
-    option.textContent = audioTracks[i].label;
-    audioSelect.appendChild(option);
-  }
-}
- 
-// Insert a dedicated Hercai card into popularTV (so it's visible on homepage)
-          const popularTVSection = document.getElementById("popularTV");
-          const popularCarousel = popularTVSection?.querySelector(".carousel");
-          if (popularCarousel) {
-            const hercaiObj = { id: HERCAI_TMDB_ID, name: "Hercai", poster_path: null, media_type: "tv", isHercaiCustom: true };
-            popularCarousel.insertBefore(createCard(hercaiObj), popularCarousel.firstChild);
-          }
-        } catch (err) {
-          console.warn("Errore caricamento sezioni TMDb:", err);
-        }
-
-        // Hook search input
-        const searchInput = document.getElementById("search");
-        if (searchInput) {
-          searchInput.addEventListener("input", (e) => {
-            clearTimeout(searchTimeout);
-            const query = e.target.value.trim();
-            if (query.length < 2) {
-              document.getElementById("results").style.display = "none";
-              document.getElementById("home").style.display = "block";
-              return;
-            }
-            searchTimeout = setTimeout(() => performSearch(query), 450);
-          });
-        }
-      });
-    setting-menu
-  
-</script>
-
+    </script>
   </body>
-
 </html>
-
-
-
-
-
-
-
-
