@@ -1092,19 +1092,43 @@
       }
 
       async function fetchTVSeasons(tvId) {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/tv/${tvId}?api_key=${API_KEY}&language=it-IT`
-        );
-        const j = await res.json();
-        return j.seasons || [];
-      }
+  if (tvId === 87917) {
+    // Hercai: override stagioni personalizzate
+    return [
+      { season_number: 1, name: "Stagione 1" },
+      { season_number: 2, name: "Stagione 2" },
+      { season_number: 3, name: "Stagione 3" },
+    ];
+  }
+
+  const res = await fetch(
+    `https://api.themoviedb.org/3/tv/${tvId}?api_key=${API_KEY}&language=it-IT`
+  );
+  const j = await res.json();
+  return j.seasons || [];
+}
 
       async function fetchEpisodes(tvId, seasonNum) {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNum}?api_key=${API_KEY}&language=it-IT`
-        );
-        const j = await res.json();
-        return j.episodes || [];
+  if (tvId === 87917) {
+    const episodeCounts = {
+      1: 44,
+      2: 100,
+      3: 86,
+    };
+
+    const count = episodeCounts[seasonNum] || 0;
+
+    return Array.from({ length: count }, (_, i) => ({
+      episode_number: i + 1,
+      name: `Episodio ${i + 1}`,
+    }));
+  }
+
+  const res = await fetch(
+    `https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNum}?api_key=${API_KEY}&language=it-IT`
+  );
+  const j = await res.json();
+  return j.episodes || [];
       }
 
       function createCard(item) {
@@ -1720,4 +1744,5 @@
       });
     </script>
   </body>
+
 </html>
