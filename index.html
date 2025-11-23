@@ -770,6 +770,40 @@
   z-index: 10;
 }
     
+    .carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-container {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.carousel {
+  display: inline-flex;
+  gap: 12px;
+}
+
+.arrow {
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  margin: 0 6px;
+}
+
+.arrow:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+    
     </style>
   </head>
   <body>
@@ -801,17 +835,27 @@
         
         <section id="continua-visione" style="display: none;">
   <h2>▶️ Continua visione</h2>
-  <div class="carousel-container">
-    <div class="carousel" id="continua-carousel"></div>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="continua-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="continua-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="continua-carousel">▶</button>
   </div>
 </section>
         
         <section id="preferiti" style="display: none;">
   <h2>⭐ Preferiti</h2>
-  <div class="carousel-container">
-    <div class="carousel" id="preferiti-carousel"></div>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="preferiti-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="preferiti-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="preferiti-carousel">▶</button>
   </div>
 </section>
+
+
 
         <section id="trending">
           <h2>🔥 Trending</h2>
@@ -1953,7 +1997,7 @@ function trackVideoProgress(tmdbId, mediaType, videoElement, season = null, epis
 }
     
 async function loadPreferiti() {
-  const ids = getPreferiti();
+  const ids = getPreferiti(); // Recupera gli ID salvati in localStorage
   const items = [];
 
   for (const id of ids) {
@@ -1964,7 +2008,7 @@ async function loadPreferiti() {
       data.media_type = mediaType;
       items.push(data);
     } catch (err) {
-      console.error("Errore nel recupero TMDB:", err);
+      console.error("❌ Errore nel recupero TMDB:", err);
     }
   }
 
@@ -1973,18 +2017,41 @@ async function loadPreferiti() {
 
   items.forEach((item) => {
     const card = createCard(item, [], false);
+
+    // ✅ Pulsante per rimuovere dai preferiti
     const removeBtn = document.createElement("button");
     removeBtn.textContent = "Rimuovi dai preferiti";
     removeBtn.className = "remove-btn";
+    removeBtn.style.position = "absolute";
+    removeBtn.style.bottom = "10px";
+    removeBtn.style.left = "10px";
+    removeBtn.style.background = "#e50914";
+    removeBtn.style.color = "white";
+    removeBtn.style.border = "none";
+    removeBtn.style.padding = "6px 12px";
+    removeBtn.style.borderRadius = "6px";
+    removeBtn.style.fontSize = "0.85rem";
+    removeBtn.style.fontWeight = "bold";
+    removeBtn.style.cursor = "pointer";
+    removeBtn.style.zIndex = "10";
+    removeBtn.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+
     removeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       removePreferito(item);
       card.remove();
+
+      // ✅ Nasconde la sezione se non ci sono più preferiti
+      if (carousel.children.length === 1) {
+        document.getElementById("preferiti").style.display = "none";
+      }
     });
+
     card.appendChild(removeBtn);
     carousel.appendChild(card);
   });
 
+  // ✅ Mostra la sezione se ci sono contenuti
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
 }
 
@@ -2058,6 +2125,19 @@ async function loadPreferiti() {
           await loadPreferiti();
         }
       });
+    
+    
+    document.querySelectorAll(".arrow").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const targetId = btn.getAttribute("data-target");
+    const container = document.getElementById(targetId).parentElement;
+    const scrollAmount = container.offsetWidth * 0.8;
+    container.scrollBy({
+      left: btn.classList.contains("left") ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  });
+});
     </script>
   </body>
 
