@@ -329,22 +329,27 @@
       }
 
       .back-btn {
-        background: rgba(229, 9, 20, 0.9);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-      }
+  position: absolute;         /* Posiziona rispetto al contenitore padre */
+  top: 80px;                  /* Sposta più in basso rispetto al bordo superiore */
+  left: 20px;                 /* Allinea a sinistra */
+  z-index: 1000;
 
-      .back-btn:hover {
-        background: #e50914;
-        transform: translateX(-5px);
-        box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
-      }
+  background: rgba(229, 9, 20, 0.9);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.back-btn:hover {
+  background: #e50914;
+  transform: translateX(-5px);
+  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+}
 
       .player-info {
         margin-bottom: 2rem;
@@ -1775,6 +1780,7 @@ async function loadAllowedContent() {
   </body>
 
 </html>
+
 
 
 
