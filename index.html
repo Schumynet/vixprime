@@ -15,6 +15,7 @@
       href="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@2.0.0/dist/videojs-hls-quality-selector.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@2.0.0/dist/videojs-hls-quality-selector.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
     <style>
       * {
         margin: 0;
@@ -804,6 +805,65 @@
   background: rgba(0, 0, 0, 0.8);
 }
     
+    
+  .hero {
+  padding: 100px 20px 60px;
+  background: linear-gradient(to right, #141e30, #243b55);
+  color: white;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.titolo-hero {
+  font-size: 2.5rem;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.sottotitolo-hero {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+  color: #dddddd;
+}
+
+.backup-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.backup-tools input[type="text"] {
+  padding: 10px 14px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 250px;
+  max-width: 100%;
+}
+
+.backup-tools button {
+  padding: 10px 16px;
+  font-size: 1rem;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+
+.backup-tools button:hover {
+  background-color: #c40812;
+}
     </style>
   </head>
   <body>
@@ -827,11 +887,17 @@
     <main>
       <div id="home">
         <section class="hero">
-          <div class="hero-content">
-            <h1>Benvenuto su VixPrime</h1>
-            <p>Scopri migliaia di film e serie TV in streaming</p>
-          </div>
-        </section>
+  <div class="hero-content">
+    <h1 class="titolo-hero">🎬 Benvenuto su VixPrime</h1>
+    <p class="sottotitolo-hero">Esporta o importa i tuoi preferiti e la visione in corso tra dispositivi</p>
+
+    <div class="backup-tools">
+      <button onclick="esportaSuPastebin()">📤 Esporta (codice + link)</button>
+      <input type="text" id="codice-import" placeholder="Incolla codice o link Pastebin">
+      <button onclick="importaDaCodiceOPastebin(document.getElementById('codice-import').value)">📥 Importa</button>
+    </div>
+  </div>
+</section>
         
         <section id="continua-visione" style="display: none;">
   <h2>▶️ Continua visione</h2>
@@ -2053,6 +2119,97 @@ async function loadPreferiti() {
 
   // ✅ Mostra la sezione se ci sono contenuti
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
+}
+    
+    async function esportaSuPastebin() {
+  const apiDevKey = "V4c4ghnxgQxaKvfHqkUn8WHpwd7_lFpr"; // La tua API key
+  const apiUserKey = "7dbecd6ec2d0c3057c43c7050fd65c6b"; // La tua user_key
+
+  const preferiti = getPreferiti();
+  const cookies = document.cookie
+    .split(";")
+    .map((c) => c.trim())
+    .filter((c) => c.startsWith("videoTime_"));
+
+  const payload = { preferiti, cookies };
+  const json = JSON.stringify(payload);
+  const compressed = LZString.compressToEncodedURIComponent(json);
+
+  // Mostra il codice compresso
+  try {
+    await navigator.clipboard.writeText(compressed);
+    alert("📋 Codice copiato negli appunti!");
+  } catch (err) {
+    prompt("📋 Copia manualmente il codice:", compressed);
+  }
+
+  // Upload su Pastebin
+  const formData = new URLSearchParams();
+  formData.append("api_dev_key", apiDevKey);
+  formData.append("api_user_key", apiUserKey);
+  formData.append("api_option", "paste");
+  formData.append("api_paste_code", compressed);
+  formData.append("api_paste_private", "1"); // 1 = unlisted
+  formData.append("api_paste_expire_date", "1W"); // 1 settimana
+  formData.append("api_paste_format", "text");
+
+  try {
+    const res = await fetch("https://pastebin.com/api/api_post.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: formData.toString()
+    });
+
+    const text = await res.text();
+
+    if (text.startsWith("http")) {
+      prompt("✅ Codice salvato su Pastebin! Copia il link:", text);
+    } else {
+      alert("❌ Errore da Pastebin: " + text);
+    }
+  } catch (err) {
+    alert("❌ Errore durante l'invio a Pastebin");
+    console.error(err);
+  }
+}
+
+async function importaDaCodiceOPastebin(input) {
+  const isLink = input.includes("pastebin.com");
+  let codice = input.trim();
+
+  if (isLink) {
+    const key = codice.replace(/^.*\/([^\/]+)$/, "$1");
+    try {
+      const res = await fetch(`https://pastebin.com/raw/${key}`);
+      codice = await res.text();
+    } catch (err) {
+      alert("❌ Errore nel recupero del codice da Pastebin");
+      console.error(err);
+      return;
+    }
+  }
+
+  try {
+    const json = LZString.decompressFromEncodedURIComponent(codice);
+    const data = JSON.parse(json);
+
+    if (Array.isArray(data.preferiti)) {
+      localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
+    }
+
+    if (Array.isArray(data.cookies)) {
+      data.cookies.forEach((cookie) => {
+        const [name, value] = cookie.split("=");
+        document.cookie = `${name}=${value};path=/;max-age=31536000`;
+      });
+    }
+
+    alert("✅ Dati importati con successo!");
+    location.reload();
+  } catch (err) {
+    alert("❌ Codice non valido o danneggiato");
+    console.error(err);
+  }
 }
 
       async function performSearch(query) {
