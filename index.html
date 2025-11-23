@@ -755,6 +755,21 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
     
+    .fav-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: gold;
+  color: black;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10;
+}
+    
     </style>
   </head>
   <body>
@@ -788,6 +803,13 @@
   <h2>▶️ Continua visione</h2>
   <div class="carousel-container">
     <div class="carousel" id="continua-carousel"></div>
+  </div>
+</section>
+        
+        <section id="preferiti" style="display: none;">
+  <h2>⭐ Preferiti</h2>
+  <div class="carousel-container">
+    <div class="carousel" id="preferiti-carousel"></div>
   </div>
 </section>
 
@@ -1204,6 +1226,27 @@ async function loadAllowedContent() {
   const j = await res.json();
   return j.episodes || [];
       }
+    
+    function getPreferiti() {
+  const raw = localStorage.getItem("preferiti");
+  return raw ? JSON.parse(raw) : [];
+}
+
+function addPreferito(item) {
+  const preferiti = getPreferiti();
+  const id = `${item.media_type || (item.title ? "movie" : "tv")}-${item.id}`;
+  if (!preferiti.includes(id)) {
+    preferiti.push(id);
+    localStorage.setItem("preferiti", JSON.stringify(preferiti));
+  }
+}
+
+function removePreferito(item) {
+  const preferiti = getPreferiti();
+  const id = `${item.media_type || (item.title ? "movie" : "tv")}-${item.id}`;
+  const updated = preferiti.filter((p) => p !== id);
+  localStorage.setItem("preferiti", JSON.stringify(updated));
+}
 
       function createCard(item, cookieNames = [], isRemovable = false) {
   const card = document.createElement("div");
@@ -1237,7 +1280,14 @@ async function loadAllowedContent() {
     ${badge}
     <div class="card-title">${title}</div>
     ${isRemovable ? `<button class="remove-btn">Rimuovi</button>` : ""}
+<button class="fav-btn">⭐ Preferito</button>
   `;
+        
+        card.querySelector(".fav-btn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  addPreferito(item);
+  alert(`⭐ "${title}" aggiunto ai preferiti`);
+});
 
   if (isRemovable) {
     const removeBtn = card.querySelector(".remove-btn");
@@ -1902,6 +1952,41 @@ function trackVideoProgress(tmdbId, mediaType, videoElement, season = null, epis
   checkContinuaVisione(items);
 }
     
+async function loadPreferiti() {
+  const ids = getPreferiti();
+  const items = [];
+
+  for (const id of ids) {
+    const [mediaType, tmdbId] = id.split("-");
+    try {
+      const res = await fetch(`https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${API_KEY}&language=it-IT`);
+      const data = await res.json();
+      data.media_type = mediaType;
+      items.push(data);
+    } catch (err) {
+      console.error("Errore nel recupero TMDB:", err);
+    }
+  }
+
+  const carousel = document.getElementById("preferiti-carousel");
+  carousel.innerHTML = "";
+
+  items.forEach((item) => {
+    const card = createCard(item, [], false);
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "Rimuovi dai preferiti";
+    removeBtn.className = "remove-btn";
+    removeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      removePreferito(item);
+      card.remove();
+    });
+    card.appendChild(removeBtn);
+    carousel.appendChild(card);
+  });
+
+  document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
+}
 
       async function performSearch(query) {
   const res = await fetch(
@@ -1970,6 +2055,7 @@ function trackVideoProgress(tmdbId, mediaType, videoElement, season = null, epis
           });
           checkContinuaVisione(items);
           await loadContinuaDaCookie();
+          await loadPreferiti();
         }
       });
     </script>
