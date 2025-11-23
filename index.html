@@ -864,6 +864,54 @@
 .backup-tools button:hover {
   background-color: #c40812;
 }
+    
+    
+    .vix-carousel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  padding: 20px 0;
+}
+
+.vix-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 12px;
+  flex: 1;
+}
+
+.vix-container::-webkit-scrollbar {
+  display: none;
+}
+.vix-container {
+  scrollbar-width: none;
+}
+
+.vix-arrow {
+  background-color: #e50914;
+  color: white;
+  border: none;
+  font-size: 2rem;
+  padding: 8px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.vix-arrow:hover {
+  background-color: #c40812;
+}
+
+.vix-arrow.sinistra {
+  margin-left: 10px;
+}
+
+.vix-arrow.destra {
+  margin-right: 10px;
+}
     </style>
   </head>
   <body>
@@ -2211,6 +2259,17 @@ async function importaDaCodiceOPastebin(input) {
     console.error(err);
   }
 }
+    
+    function scrollRisultati(direction) {
+  const container = document.getElementById("searchCarousel");
+  if (!container) return;
+
+  const scrollAmount = 300 * direction;
+  container.scrollBy({
+    left: scrollAmount,
+    behavior: "smooth"
+  });
+}
 
       async function performSearch(query) {
   const res = await fetch(
@@ -2219,8 +2278,14 @@ async function importaDaCodiceOPastebin(input) {
   const data = await res.json();
 
   const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML =
-    '<h2>Risultati della ricerca</h2><div class="carousel"></div>';
+  resultsDiv.innerHTML = `
+  <h2>Risultati della ricerca</h2>
+  <div class="vix-carousel">
+    <button class="vix-arrow sinistra" onclick="scrollRisultati(-1)">&#10094;</button>
+    <div class="carousel" id="searchCarousel"></div>
+    <button class="vix-arrow destra" onclick="scrollRisultati(1)">&#10095;</button>
+  </div>
+`;
 
   const carousel = resultsDiv.querySelector(".carousel");
 
