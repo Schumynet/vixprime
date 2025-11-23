@@ -722,6 +722,39 @@
       .episodes-list::-webkit-scrollbar-thumb:hover {
         background: #b20710;
       }
+    
+    .resume-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(229, 9, 20, 0.9);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  z-index: 5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  line-height: 1.3;
+  text-align: left;
+}
+
+.card .remove-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: #e50914;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+    
     </style>
   </head>
   <body>
@@ -750,6 +783,13 @@
             <p>Scopri migliaia di film e serie TV in streaming</p>
           </div>
         </section>
+        
+        <section id="continua-visione" style="display: none;">
+  <h2>▶️ Continua visione</h2>
+  <div class="carousel-container">
+    <div class="carousel" id="continua-carousel"></div>
+  </div>
+</section>
 
         <section id="trending">
           <h2>🔥 Trending</h2>
@@ -922,6 +962,7 @@
       ];
       let CORS = "corsproxy.io/";
 
+      const shownContinuaIds = new Set();
       const endpoints = {
         trending: `trending/all/week`,
         nowPlaying: `movie/now_playing`,
@@ -1164,30 +1205,70 @@ async function loadAllowedContent() {
   return j.episodes || [];
       }
 
-      function createCard(item) {
-        const card = document.createElement("div");
-        card.className = "card";
+      function createCard(item, cookieNames = [], isRemovable = false) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.style.position = "relative";
 
-        const poster = item.poster_path
-          ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-          : "https://via.placeholder.com/200x300?text=No+Image";
+  const poster = item.poster_path
+    ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+    : "https://via.placeholder.com/200x300?text=No+Image";
 
-        const title = item.title || item.name;
+  const title = item.title || item.name;
+  const mediaType = item.media_type || (item.title ? "movie" : "tv");
 
-        card.innerHTML = `
-        <img src="${poster}" alt="${title}">
-        <div class="card-title">${title}</div>
-      `;
+  let badge = "";
 
-        card.addEventListener("click", () => {
-          card.classList.add("clicked");
-          setTimeout(() => {
-            openPlayer(item);
-          }, 300);
-        });
-
-        return card;
+  cookieNames.forEach((name) => {
+    const value = getCookie(name);
+    const savedTime = parseFloat(value);
+    if (savedTime > 10) {
+      const match = name.match(/_S(\d+)_E(\d+)/);
+      if (match) {
+        badge = `<div class="resume-badge">📺 Stagione ${match[1]}, Episodio ${match[2]}<br>⏪ ${formatTime(savedTime)}</div>`;
+      } else {
+        badge = `<div class="resume-badge">⏪ Riprendi da ${formatTime(savedTime)}</div>`;
       }
+    }
+  });
+
+  card.innerHTML = `
+    <img src="${poster}" alt="${title}">
+    ${badge}
+    <div class="card-title">${title}</div>
+    ${isRemovable ? `<button class="remove-btn">Rimuovi</button>` : ""}
+  `;
+
+  if (isRemovable) {
+    const removeBtn = card.querySelector(".remove-btn");
+    removeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const confirmDelete = confirm(`Vuoi rimuovere "${title}" dalla visione?`);
+      if (confirmDelete) {
+        cookieNames.forEach((name) => {
+          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+        });
+        card.remove();
+        shownContinuaIds.delete(item.id); // ✅ aggiorna il Set globale
+        console.log(`🗑️ Rimosso ${title} e cancellati cookie:`, cookieNames);
+
+        const container = document.getElementById("continua-carousel");
+        if (container.children.length === 0) {
+          document.getElementById("continua-visione").style.display = "none";
+        }
+      }
+    });
+  }
+
+  card.addEventListener("click", () => {
+    card.classList.add("clicked");
+    setTimeout(() => {
+      openPlayer(item);
+    }, 300);
+  });
+
+  return card;
+}
 
       async function openPlayer(item) {
         currentItem = item;
@@ -1642,11 +1723,21 @@ async function loadAllowedContent() {
             setupKeyboardShortcuts();
             showLoading(false);
             console.log("✅ Player ready");
+            
+            trackVideoProgress(
+            currentItem.id,
+            currentItem.media_type || (currentItem.title ? "movie" : "tv"),
+            player.el().querySelector("video"),
+            season,
+            episode
+            );
 
             player.play().catch((e) => {
               console.log("Auto-play prevented:", e);
             });
           });
+          
+          
 
           player.on("error", function () {
             console.error("❌ Video.js error:", player.error());
@@ -1714,28 +1805,131 @@ async function loadAllowedContent() {
 
         searchTimeout = setTimeout(() => performSearch(query), 500);
       });
+    
+    function setCookie(name, value, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/`;
+}
+
+function getCookie(name) {
+  const target = name + "=";
+  return document.cookie
+    .split(";")
+    .map((c) => c.trim())
+    .filter((c) => c.startsWith(target))
+    .map((c) => decodeURIComponent(c.substring(target.length)))[0] || null;
+}
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+}
+
+function trackVideoProgress(tmdbId, mediaType, videoElement, season = null, episode = null) {
+  let cookieName = `videoTime_${mediaType}_${tmdbId}`;
+  if (mediaType === "tv" && season !== null && episode !== null) {
+    cookieName += `_S${season}_E${episode}`;
+  }
+
+  const savedTime = getCookie(cookieName);
+  if (savedTime && parseFloat(savedTime) > 10) {
+    videoElement.currentTime = parseFloat(savedTime);
+    console.log(`⏪ Ripreso ${cookieName} da ${formatTime(savedTime)}`);
+  }
+
+  setInterval(() => {
+    if (!videoElement.paused && !videoElement.ended) {
+      const currentTime = videoElement.currentTime;
+      setCookie(cookieName, currentTime, 365);
+      console.log(`💾 Salvato ${cookieName} a ${formatTime(currentTime)}`);
+    }
+  }, 5000);
+}
+    
+    function checkContinuaVisione(items) {
+  const carousel = document.getElementById("continua-carousel");
+  const allCookies = document.cookie.split(";").map((c) => c.trim());
+
+  items.forEach((item) => {
+    const mediaType = item.media_type || (item.title ? "movie" : "tv");
+    const baseKey = `videoTime_${mediaType}_${item.id}`;
+
+    const matchingCookies = allCookies.filter((c) => c.startsWith(baseKey));
+    const validCookies = matchingCookies.filter((cookie) => {
+      const [, value] = cookie.split("=");
+      return parseFloat(decodeURIComponent(value)) > 10;
+    });
+
+    if (validCookies.length > 0 && !shownContinuaIds.has(item.id)) {
+      carousel.appendChild(createCard(item, validCookies.map(c => c.split("=")[0]), true));
+      shownContinuaIds.add(item.id);
+    }
+  });
+
+  if (carousel.children.length > 0) {
+    document.getElementById("continua-visione").style.display = "block";
+  }
+}
+    
+    
+    async function loadContinuaDaCookie() {
+  const allCookies = document.cookie.split(";").map((c) => c.trim());
+  const ids = new Set();
+
+  allCookies.forEach((cookie) => {
+    const match = cookie.match(/^videoTime_(movie|tv)_(\d+)/);
+    if (match && parseFloat(cookie.split("=")[1]) > 10) {
+      ids.add(`${match[1]}-${match[2]}`);
+    }
+  });
+
+  const items = [];
+
+  for (const id of ids) {
+    const [mediaType, tmdbId] = id.split("-");
+    try {
+      const res = await fetch(`https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${API_KEY}&language=it-IT`);
+      const data = await res.json();
+      data.media_type = mediaType; // per coerenza
+      items.push(data);
+    } catch (err) {
+      console.error("Errore nel recupero TMDB:", err);
+    }
+  }
+
+  checkContinuaVisione(items);
+}
+    
 
       async function performSearch(query) {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=it-IT&query=${encodeURIComponent(query)}`
-        );
-        const data = await res.json();
+  const res = await fetch(
+    `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=it-IT&query=${encodeURIComponent(query)}`
+  );
+  const data = await res.json();
 
-        const resultsDiv = document.getElementById("results");
-        resultsDiv.innerHTML =
-          '<h2>Risultati della ricerca</h2><div class="carousel"></div>';
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML =
+    '<h2>Risultati della ricerca</h2><div class="carousel"></div>';
 
-        const carousel = resultsDiv.querySelector(".carousel");
-        data.results
-          .filter((item) => item.media_type !== "person" && item.poster_path)
-          .forEach((item) => {
-            carousel.appendChild(createCard(item));
-          });
+  const carousel = resultsDiv.querySelector(".carousel");
 
-        document.getElementById("home").style.display = "none";
-        document.getElementById("player").style.display = "none";
-        resultsDiv.style.display = "block";
-      }
+  const filteredResults = data.results.filter(
+    (item) => item.media_type !== "person" && item.poster_path
+  );
+
+  filteredResults.forEach((item) => {
+    carousel.appendChild(createCard(item));
+  });
+
+  // ✅ Aggiunta: aggiorna la sezione "Continua visione" con i titoli cercati
+  checkContinuaVisione(filteredResults);
+
+  document.getElementById("home").style.display = "none";
+  document.getElementById("player").style.display = "none";
+  resultsDiv.style.display = "block";
+}
 
       const style = document.createElement("style");
       style.textContent = `
@@ -1774,6 +1968,8 @@ async function loadAllowedContent() {
           items.forEach((item) => {
             carousel.appendChild(createCard(item));
           });
+          checkContinuaVisione(items);
+          await loadContinuaDaCookie();
         }
       });
     </script>
