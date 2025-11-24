@@ -940,9 +940,9 @@
     <p class="sottotitolo-hero">Esporta o importa i tuoi preferiti e la visione in corso tra dispositivi</p>
 
     <div class="backup-tools">
-      <button onclick="esportaSuPastesIO()">📤 Esporta (codice + link)</button>
-      <input type="text" id="codice-import" placeholder="Incolla codice o link Pastes.io">
-      <button onclick="importaDaPastesIO(document.getElementById('codice-import').value)">📥 Importa</button>
+      <button onclick="esportaSuGist()">📤 Esporta (codice + link)</button>
+      <input type="text" id="codice-import" placeholder="Incolla codice o link Gist">
+      <button onclick="importaDaGist(document.getElementById('codice-import').value)">📥 Importa</button>
     </div>
   </div>
 </section>
@@ -2172,9 +2172,9 @@ async function loadPreferiti() {
     
 
 
-const PASTES_IO_TOKEN = "9eb7dc73-753c-4d82-a43f-9a98c96e509c"; // Il tuo token Pastes.io
+const GITHUB_TOKEN = "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";
 
-async function esportaSuPastesIO() {
+async function esportaSuGist() {
   const preferiti = getPreferiti();
   const cookies = document.cookie
     .split(";")
@@ -2185,7 +2185,6 @@ async function esportaSuPastesIO() {
   const json = JSON.stringify(payload);
   const compressed = LZString.compressToEncodedURIComponent(json);
 
-  // Mostra il codice compresso
   try {
     await navigator.clipboard.writeText(compressed);
     showToast("📋 Codice copiato negli appunti!");
@@ -2194,49 +2193,48 @@ async function esportaSuPastesIO() {
   }
 
   try {
-    const res = await fetch("https://pastes.io/api/pastes", {
+    const res = await fetch("https://api.github.com/gists", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${PASTES_IO_TOKEN}`
+        "Authorization": `Bearer ${GITHUB_TOKEN}`,
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        title: "Backup VixPrime",
-        content: compressed,
-        visibility: "unlisted",
-        expires_in: "1w" // oppure "1d", "1h", "10m", o null per mai
+        description: "Backup VixPrime",
+        public: false,
+        files: {
+          "vixprime-backup.txt": {
+            content: compressed
+          }
+        }
       })
     });
 
     const result = await res.json();
-    if (result?.id) {
-      const link = `https://pastes.io/${result.id}`;
-      prompt("✅ Codice salvato su Pastes.io! Copia il link:", link);
+    if (result?.html_url) {
+      prompt("✅ Backup salvato su GitHub Gist! Copia il link:", result.html_url);
     } else {
-      alert("❌ Errore da Pastes.io: " + JSON.stringify(result));
+      alert("❌ Errore da GitHub: " + JSON.stringify(result));
     }
   } catch (err) {
-    alert("❌ Errore durante l'invio a Pastes.io");
+    alert("❌ Errore durante l'invio a GitHub Gist");
     console.error(err);
   }
 }
 
-async function importaDaCodiceOPastesIO(input) {
-  const isLink = input.includes("pastes.io");
+async function importaDaGist(input) {
+  const isLink = input.includes("gist.github.com");
   let codice = input.trim();
 
   if (isLink) {
-    const key = codice.replace(/^.*\/([^\/?#]+).*$/, "$1");
+    const key = codice.replace(/^.*\/([^\/]+)\/([^\/]+).*$/, "$2");
     try {
-      const res = await fetch(`https://pastes.io/api/pastes/${key}`, {
-        headers: {
-          Authorization: `Bearer ${PASTES_IO_TOKEN}`
-        }
-      });
+      const res = await fetch(`https://api.github.com/gists/${key}`);
       const result = await res.json();
-      codice = result?.content || "";
+      const file = Object.values(result.files)[0];
+      codice = file.content;
     } catch (err) {
-      alert("❌ Errore nel recupero del codice da Pastes.io");
+      alert("❌ Errore nel recupero del Gist");
       console.error(err);
       return;
     }
@@ -2369,6 +2367,7 @@ async function importaDaCodiceOPastesIO(input) {
   </body>
 
 </html>
+
 
 
 
