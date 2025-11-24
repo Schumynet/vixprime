@@ -2173,16 +2173,16 @@ async function loadPreferiti() {
 
 
 async function esportaSuRentry() {
+async function esportaSuRentry() {
   const preferiti = getPreferiti();
   const cookies = document.cookie
     .split(";")
-    .map(c => c.trim())
-    .filter(c => c.startsWith("videoTime_"));
+    .map((c) => c.trim())
+    .filter((c) => c.startsWith("videoTime_"));
 
   const payload = { preferiti, cookies };
   const json = JSON.stringify(payload);
-  let compressed = LZString.compressToEncodedURIComponent(json);
-  compressed = compressed.replace(/\s+/g, "").trim();
+  const compressed = LZString.compressToEncodedURIComponent(json).replace(/\s+/g, "").trim();
 
   try {
     await navigator.clipboard.writeText(compressed);
@@ -2192,7 +2192,8 @@ async function esportaSuRentry() {
   }
 
   const corsProxy = document.getElementById("cors-select")?.value || "";
-  const url = `https://${corsProxy}rentry.co/api/new`;
+  const pasteUrl = "rentry.co/api/new";
+  const fullUrl = `https://${corsProxy}${pasteUrl}`;
 
   const formData = new URLSearchParams();
   formData.append("text", compressed);
@@ -2200,7 +2201,7 @@ async function esportaSuRentry() {
   formData.append("private", "true");
 
   try {
-    const res = await fetch(url, {
+    const res = await fetch(fullUrl, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: formData.toString()
@@ -2244,7 +2245,7 @@ async function importaDaCodiceORentry(input) {
     }
 
     if (Array.isArray(data.cookies)) {
-      data.cookies.forEach(cookie => {
+      data.cookies.forEach((cookie) => {
         const [name, value] = cookie.split("=");
         document.cookie = `${name}=${value};path=/;max-age=31536000`;
       });
@@ -2362,6 +2363,7 @@ async function importaDaCodiceORentry(input) {
   </body>
 
 </html>
+
 
 
 
