@@ -940,9 +940,9 @@
     <p class="sottotitolo-hero">Esporta o importa i tuoi preferiti e la visione in corso tra dispositivi</p>
 
     <div class="backup-tools">
-      <button onclick="esportaSuGist()">📤 Esporta (codice + link)</button>
-      <input type="text" id="codice-import" placeholder="Incolla codice o link Gist">
-      <button onclick="importaDaGist(document.getElementById('codice-import').value)">📥 Importa</button>
+      <button onclick="esportaSuRentry()">📤 Esporta (codice + link)</button>
+      <input type="text" id="codice-import" placeholder="Incolla codice o link Rentry">
+      <button onclick="importaDaRentry(document.getElementById('codice-import').value)">📥 Importa</button>
     </div>
   </div>
 </section>
@@ -2172,9 +2172,7 @@ async function loadPreferiti() {
     
 
 
-const GITHUB_TOKEN = "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";
-
-async function esportaSuGist() {
+async function esportaSuRentry() {
   const preferiti = getPreferiti();
   const cookies = document.cookie
     .split(";")
@@ -2192,49 +2190,43 @@ async function esportaSuGist() {
     prompt("📋 Copia manualmente il codice:", compressed);
   }
 
+  const formData = new URLSearchParams();
+  formData.append("text", compressed);
+  formData.append("lang", "text");
+  formData.append("private", "true");
+
   try {
-    const res = await fetch("https://api.github.com/gists", {
+    const res = await fetch("https://rentry.co/api/new", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${GITHUB_TOKEN}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: JSON.stringify({
-        description: "Backup VixPrime",
-        public: false,
-        files: {
-          "vixprime-backup.txt": {
-            content: compressed
-          }
-        }
-      })
+      body: formData.toString()
     });
 
     const result = await res.json();
-    if (result?.html_url) {
-      prompt("✅ Backup salvato su GitHub Gist! Copia il link:", result.html_url);
+    if (result?.url) {
+      prompt("✅ Backup salvato su Rentry! Copia il link:", result.url);
     } else {
-      alert("❌ Errore da GitHub: " + JSON.stringify(result));
+      alert("❌ Errore da Rentry: " + JSON.stringify(result));
     }
   } catch (err) {
-    alert("❌ Errore durante l'invio a GitHub Gist");
+    alert("❌ Errore durante l'invio a Rentry");
     console.error(err);
   }
 }
 
-async function importaDaGist(input) {
-  const isLink = input.includes("gist.github.com");
+async function importaDaRentry(input) {
+  const isLink = input.includes("rentry.co");
   let codice = input.trim();
 
   if (isLink) {
-    const key = codice.replace(/^.*\/([^\/]+)\/([^\/]+).*$/, "$2");
+    const key = codice.replace(/^.*\/([^\/?#]+).*$/, "$1");
     try {
-      const res = await fetch(`https://api.github.com/gists/${key}`);
-      const result = await res.json();
-      const file = Object.values(result.files)[0];
-      codice = file.content;
+      const res = await fetch(`https://rentry.co/${key}/raw`);
+      codice = await res.text();
     } catch (err) {
-      alert("❌ Errore nel recupero del Gist");
+      alert("❌ Errore nel recupero del codice da Rentry");
       console.error(err);
       return;
     }
@@ -2367,6 +2359,7 @@ async function importaDaGist(input) {
   </body>
 
 </html>
+
 
 
 
