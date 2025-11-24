@@ -2220,20 +2220,18 @@ async function esportaSuRentry() {
 }
 
 async function importaDaRentry(input) {
-  const isLink = input.includes("rentry.co");
   let codice = input.trim();
 
-  if (isLink) {
-    const key = codice.replace(/^.*\/([^\/?#]+).*$/, "$1");
-    try {
-      const res = await fetch(`https://rentry.co/${key}/raw`);
-      codice = await res.text();
-      codice = codice.replace(/[\r\n]+/g, "").replace(/\s+/g, "").trim();
-    } catch (err) {
-      alert("❌ Errore nel recupero del codice da Rentry");
-      console.error(err);
+  // Se è un link Rentry, usa direttamente la parte finale come codice compresso
+  if (codice.includes("rentry.co")) {
+    const match = codice.match(/rentry\.co\/([a-zA-Z0-9_-]+)/);
+    if (!match || !match[1]) {
+      alert("❌ Link Rentry non valido");
       return;
     }
+
+    // ⚠️ Interpreta l'ID del paste come il codice compresso
+    codice = match[1].trim();
   }
 
   try {
@@ -2363,6 +2361,7 @@ async function importaDaRentry(input) {
   </body>
 
 </html>
+
 
 
 
