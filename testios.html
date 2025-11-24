@@ -1254,51 +1254,36 @@ async function loadAllowedContent() {
       }
 
       function applyCorsProxy(url) {
-        const CORS = document.getElementById("cors-select").value;
-        const requiresEncoding = CORS_PROXIES_REQUIRING_ENCODING.some(
-          (proxy) => CORS === proxy
-        );
-        let cleanUrl = url;
-        if (url.includes(CORS)) {
-          if (requiresEncoding) {
-            cleanUrl = decodeURIComponent(url.split(CORS)[1]);
-          } else {
-            cleanUrl = url.split(CORS)[1];
-          }
-        }
-        if (
-          !cleanUrl.startsWith("http://") &&
-          !cleanUrl.startsWith("https://")
-        ) {
-          cleanUrl = resolveUrl(cleanUrl);
-          console.log("🔗 Resolved relative URL:", url, "->", cleanUrl);
-        }
-        if (
-          cleanUrl.startsWith("data:") ||
-          cleanUrl.startsWith("blob:") ||
-          !cleanUrl.startsWith("https://vixsrc.to")
-        ) {
-          return url;
-        }
+  const CORS = document.getElementById("cors-select").value;
+  const requiresEncoding = CORS_PROXIES_REQUIRING_ENCODING.some(
+    (proxy) => CORS === proxy
+  );
 
-        console.log("🔒 Applying CORS proxy to:", cleanUrl);
-        if (requiresEncoding) {
-          return `https://${CORS}${encodeURIComponent(cleanUrl)}`;
-        } else {
-          return `https://${CORS}${cleanUrl}`;
-        }
-      }
+  let cleanUrl = url;
+  if (url.includes(CORS)) {
+    cleanUrl = requiresEncoding
+      ? decodeURIComponent(url.split(CORS)[1])
+      : url.split(CORS)[1];
+  }
 
-      const xhrRequestHook = (options) => {
-        const originalUri = options.uri;
-        options.uri = applyCorsProxy(originalUri);
+  if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
+    cleanUrl = resolveUrl(cleanUrl);
+    console.log("🔗 Resolved relative URL:", url, "->", cleanUrl);
+  }
 
-        console.log("📡 XHR Request intercepted:");
-        console.log("   Original:", originalUri);
-        console.log("   Proxied:", options.uri);
+  if (
+    cleanUrl.startsWith("data:") ||
+    cleanUrl.startsWith("blob:") ||
+    !cleanUrl.startsWith("https://vixsrc.to")
+  ) {
+    return url;
+  }
 
-        return options;
-      };
+  console.log("🔒 Applying CORS proxy to:", cleanUrl);
+  return CORS
+    ? `${CORS}${requiresEncoding ? encodeURIComponent(cleanUrl) : cleanUrl}`
+    : cleanUrl;
+}
 
       function setupVideoJsXhrHook() {
         if (typeof videojs === "undefined" || !videojs.Vhs) {
@@ -2369,6 +2354,7 @@ async function importaDaCodiceOPastebin(input) {
   </body>
 
 </html>
+
 
 
 
