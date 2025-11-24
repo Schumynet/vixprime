@@ -2186,23 +2186,27 @@ async function loadPreferiti() {
   // Mostra il codice compresso
   try {
     await navigator.clipboard.writeText(compressed);
-    alert("📋 Codice copiato negli appunti!");
+    showToast("📋 Codice copiato negli appunti!");
   } catch (err) {
     prompt("📋 Copia manualmente il codice:", compressed);
   }
 
-  // Upload su Pastebin
+  // Recupera il CORS proxy selezionato
+  const corsProxy = document.getElementById("cors-select")?.value || "";
+  const pastebinUrl = "https://pastebin.com/api/api_post.php";
+  const fullUrl = `https://${corsProxy}${pastebinUrl}`;
+
   const formData = new URLSearchParams();
   formData.append("api_dev_key", apiDevKey);
   formData.append("api_user_key", apiUserKey);
   formData.append("api_option", "paste");
   formData.append("api_paste_code", compressed);
-  formData.append("api_paste_private", "1"); // 1 = unlisted
-  formData.append("api_paste_expire_date", "1W"); // 1 settimana
+  formData.append("api_paste_private", "1");
+  formData.append("api_paste_expire_date", "1W");
   formData.append("api_paste_format", "text");
 
   try {
-    const res = await fetch("https://pastebin.com/api/api_post.php", {
+    const res = await fetch(fullUrl, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: formData.toString()
