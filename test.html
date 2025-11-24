@@ -2182,9 +2182,9 @@ async function esportaSuRentry() {
   const payload = { preferiti, cookies };
   const json = JSON.stringify(payload);
 
-  // Compressione sicura
+  // Compressione sicura + pulizia
   let compressed = LZString.compressToEncodedURIComponent(json);
-  compressed = compressed.trim().replace(/\s+/g, ""); // ← pulizia extra
+  compressed = compressed.replace(/\s+/g, "").trim();
 
   // Mostra codice negli appunti
   try {
@@ -2365,6 +2365,7 @@ async function importaDaRentry(input) {
   </body>
 
 </html>
+
 
 
 
