@@ -2225,6 +2225,7 @@ async function importaDaRentry(input) {
     try {
       const res = await fetch(`https://rentry.co/${key}/raw`);
       codice = await res.text();
+      codice = codice.trim().replace(/\s+/g, ""); // ← pulizia extra
     } catch (err) {
       alert("❌ Errore nel recupero del codice da Rentry");
       console.error(err);
@@ -2359,6 +2360,7 @@ async function importaDaRentry(input) {
   </body>
 
 </html>
+
 
 
 
