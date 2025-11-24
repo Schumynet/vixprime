@@ -2173,7 +2173,7 @@ async function loadPreferiti() {
 
 
 async function esportaSuRentry() {
-  const preferiti = getPreferiti();
+  const preferiti = getPreferiti?.() || [];
   const cookies = document.cookie
     .split(";")
     .map((c) => c.trim())
@@ -2182,19 +2182,16 @@ async function esportaSuRentry() {
   const payload = { preferiti, cookies };
   const json = JSON.stringify(payload);
 
-  // Compressione sicura + pulizia
   let compressed = LZString.compressToEncodedURIComponent(json);
   compressed = compressed.replace(/\s+/g, "").trim();
 
-  // Mostra codice negli appunti
   try {
     await navigator.clipboard.writeText(compressed);
-    showToast("📋 Codice copiato negli appunti!");
-  } catch (err) {
+    showToast?.("📋 Codice copiato negli appunti!");
+  } catch {
     prompt("📋 Copia manualmente il codice:", compressed);
   }
 
-  // Invio a Rentry
   const formData = new URLSearchParams();
   formData.append("text", compressed);
   formData.append("lang", "text");
@@ -2203,9 +2200,7 @@ async function esportaSuRentry() {
   try {
     const res = await fetch("https://rentry.co/api/new", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: formData.toString()
     });
 
@@ -2230,7 +2225,7 @@ async function importaDaRentry(input) {
     try {
       const res = await fetch(`https://rentry.co/${key}/raw`);
       codice = await res.text();
-      codice = codice.trim().replace(/\s+/g, ""); // ← pulizia extra
+      codice = codice.replace(/\s+/g, "").trim();
     } catch (err) {
       alert("❌ Errore nel recupero del codice da Rentry");
       console.error(err);
@@ -2259,7 +2254,7 @@ async function importaDaRentry(input) {
     alert("❌ Codice non valido o danneggiato");
     console.error(err);
   }
-}
+        }
     
     function scrollRisultati(direction) {
   const container = document.getElementById("searchCarousel");
@@ -2365,6 +2360,7 @@ async function importaDaRentry(input) {
   </body>
 
 </html>
+
 
 
 
