@@ -2181,8 +2181,12 @@ async function esportaSuRentry() {
 
   const payload = { preferiti, cookies };
   const json = JSON.stringify(payload);
-  const compressed = LZString.compressToEncodedURIComponent(json);
 
+  // Compressione sicura
+  let compressed = LZString.compressToEncodedURIComponent(json);
+  compressed = compressed.trim().replace(/\s+/g, ""); // ← pulizia extra
+
+  // Mostra codice negli appunti
   try {
     await navigator.clipboard.writeText(compressed);
     showToast("📋 Codice copiato negli appunti!");
@@ -2190,6 +2194,7 @@ async function esportaSuRentry() {
     prompt("📋 Copia manualmente il codice:", compressed);
   }
 
+  // Invio a Rentry
   const formData = new URLSearchParams();
   formData.append("text", compressed);
   formData.append("lang", "text");
@@ -2360,6 +2365,7 @@ async function importaDaRentry(input) {
   </body>
 
 </html>
+
 
 
 
