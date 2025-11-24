@@ -934,15 +934,15 @@
 
     <main>
       <div id="home">
-        <section class="hero">
+<section class="hero">
   <div class="hero-content">
     <h1 class="titolo-hero">🎬 Benvenuto su VixPrime</h1>
     <p class="sottotitolo-hero">Esporta o importa i tuoi preferiti e la visione in corso tra dispositivi</p>
 
     <div class="backup-tools">
-      <button onclick="esportaSuRentry()">📤 Esporta (codice + link)</button>
-      <input type="text" id="codice-import" placeholder="Incolla codice o link Rentry">
-      <button onclick="importaDaRentry(document.getElementById('codice-import').value)">📥 Importa</button>
+      <button onclick="esportaSuPrivateBin()">📤 Esporta (codice + link)</button>
+      <input type="text" id="codice-import" placeholder="Incolla link o codice PrivateBin">
+      <button onclick="importaDaPrivateBin()">📥 Importa</button>
     </div>
   </div>
 </section>
@@ -2172,8 +2172,10 @@ async function loadPreferiti() {
     
 
 
-async function esportaSuRentry() {
-  const preferiti = getPreferiti?.() || [];
+const PRIVATEBIN_URL = "https://privatebin.net/";
+
+async function esportaSuPrivateBin() {
+  const preferiti = getPreferiti();
   const cookies = document.cookie
     .split(";")
     .map((c) => c.trim())
@@ -2181,62 +2183,53 @@ async function esportaSuRentry() {
 
   const payload = { preferiti, cookies };
   const json = JSON.stringify(payload);
+  const compressed = LZString.compressToEncodedURIComponent(json);
 
-  // Compressione sicura
-  let compressed = LZString.compressToEncodedURIComponent(json)
-    .replace(/[\r\n]+/g, "") // rimuove ritorni a capo
-    .replace(/\s+/g, "")     // rimuove spazi
-    .trim();
-
-  try {
-    await navigator.clipboard.writeText(compressed);
-    showToast?.("📋 Codice copiato negli appunti!");
-  } catch {
-    prompt("📋 Copia manualmente il codice:", compressed);
-  }
-
-  const formData = new URLSearchParams();
-  formData.append("text", compressed);
-  formData.append("lang", "text");
-  formData.append("private", "true");
+  const data = {
+    v: 2,
+    a: false,
+    paste: compressed,
+    expire: "1week",
+    formatter: "plaintext"
+  };
 
   try {
-    const res = await fetch("https://rentry.co/api/new", {
+    const res = await fetch(`${PRIVATEBIN_URL}api/v1/paste`, {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: formData.toString()
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
     });
 
     const result = await res.json();
-    if (result?.url) {
-      prompt("✅ Backup salvato su Rentry! Copia il link:", result.url);
+    if (result.status === 0) {
+      const pasteUrl = `${PRIVATEBIN_URL}?${result.id}`;
+      await navigator.clipboard.writeText(pasteUrl);
+      alert("✅ Link copiato negli appunti:\n" + pasteUrl);
     } else {
-      alert("❌ Errore da Rentry: " + JSON.stringify(result));
+      alert("❌ Errore da PrivateBin: " + result.message);
     }
   } catch (err) {
-    alert("❌ Errore durante l'invio a Rentry");
+    alert("❌ Errore durante l'invio a PrivateBin");
     console.error(err);
   }
 }
 
-async function importaDaRentry(input) {
-  let codice = input.trim();
+async function importaDaPrivateBin() {
+  const input = document.getElementById("codice-import").value.trim();
+  if (!input) return alert("Inserisci un link o codice valido");
 
-  // Se è un link Rentry, usa direttamente la parte finale come codice compresso
-  if (codice.includes("rentry.co")) {
-    const match = codice.match(/rentry\.co\/([a-zA-Z0-9_-]+)/);
-    if (!match || !match[1]) {
-      alert("❌ Link Rentry non valido");
+  const key = input.includes("privatebin") ? input.split("?")[1] : input;
+  try {
+    const res = await fetch(`${PRIVATEBIN_URL}api/v1/paste/${key}`);
+    const result = await res.json();
+
+    if (result.status !== 0) {
+      alert("❌ Errore nel recupero del paste");
       return;
     }
 
-    // ⚠️ Interpreta l'ID del paste come il codice compresso
-    codice = match[1].trim();
-  }
-
-  try {
-    const json = LZString.decompressFromEncodedURIComponent(codice);
-    const data = JSON.parse(json);
+    const decompressed = LZString.decompressFromEncodedURIComponent(result.paste);
+    const data = JSON.parse(decompressed);
 
     if (Array.isArray(data.preferiti)) {
       localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
@@ -2252,7 +2245,7 @@ async function importaDaRentry(input) {
     alert("✅ Dati importati con successo!");
     location.reload();
   } catch (err) {
-    alert("❌ Codice non valido o danneggiato");
+    alert("❌ Errore durante l'importazione");
     console.error(err);
   }
 }
@@ -2361,6 +2354,7 @@ async function importaDaRentry(input) {
   </body>
 
 </html>
+
 
 
 
