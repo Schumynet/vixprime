@@ -1134,21 +1134,13 @@
       const API_KEY = "8265bd1679663a7ea12ac168da84d2e8";
       const VIXSRC_URL = "vixsrc.to";
       const CORS_PROXIES_REQUIRING_ENCODING = [""];
-      const CORS_LIST = [
+const CORS_LIST = [
   "https://corsproxy.io/",
   "https://cors-anywhere.com/",
   "https://api.allorigins.win/raw?url=",
   "http://proxyium.com/",
   "http://proxyorb.com/"
 ];
-
-const corsSelect = document.getElementById("cors-select");
-CORS_LIST.forEach((proxy) => {
-  const option = document.createElement("option");
-  option.value = proxy;
-  option.textContent = proxy.replace(/(^https?:\/\/|\/$)/g, "");
-  corsSelect.appendChild(option);
-});
       let CORS = "corsproxy.io/";
 
       const shownContinuaIds = new Set();
@@ -2377,6 +2369,7 @@ async function importaDaCodiceOPastebin(input) {
   </body>
 
 </html>
+
 
 
 
