@@ -2181,7 +2181,6 @@ async function esportaSuRentry() {
 
   const payload = { preferiti, cookies };
   const json = JSON.stringify(payload);
-
   let compressed = LZString.compressToEncodedURIComponent(json);
   compressed = compressed.replace(/\s+/g, "").trim();
 
@@ -2192,21 +2191,26 @@ async function esportaSuRentry() {
     prompt("📋 Copia manualmente il codice:", compressed);
   }
 
+  const corsProxy = document.getElementById("cors-select")?.value || "";
+  const rentryUrl = "rentry.co/api/new";
+  const fullUrl = `https://${corsProxy}${rentryUrl}`;
+
   const formData = new URLSearchParams();
   formData.append("text", compressed);
   formData.append("lang", "text");
   formData.append("private", "true");
 
   try {
-    const res = await fetch("https://rentry.co/api/new", {
+    const res = await fetch(fullUrl, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: formData.toString()
     });
 
     const result = await res.json();
+
     if (result?.url) {
-      prompt("✅ Backup salvato su Rentry! Copia il link:", result.url);
+      prompt("✅ Codice salvato su Rentry! Copia il link:", result.url);
     } else {
       alert("❌ Errore da Rentry: " + JSON.stringify(result));
     }
@@ -2216,7 +2220,7 @@ async function esportaSuRentry() {
   }
 }
 
-async function importaDaRentry(input) {
+async function importaDaCodiceORentry(input) {
   const isLink = input.includes("rentry.co");
   let codice = input.trim();
 
@@ -2254,7 +2258,7 @@ async function importaDaRentry(input) {
     alert("❌ Codice non valido o danneggiato");
     console.error(err);
   }
-        }
+}
     
     function scrollRisultati(direction) {
   const container = document.getElementById("searchCarousel");
@@ -2360,6 +2364,7 @@ async function importaDaRentry(input) {
   </body>
 
 </html>
+
 
 
 
