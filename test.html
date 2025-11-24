@@ -2225,22 +2225,25 @@ async function importaDaRentry(input) {
 
   if (isLink) {
     const key = codice.replace(/^.*\/([^\/?#]+).*$/, "$1");
+    const rentryUrl = `https://rentry.co/${key}`;
+
+    // Simula apertura del link
+    window.open(rentryUrl, "_blank");
+
+    // Copia il link negli appunti per facilitare l’operazione manuale
     try {
-      const res = await fetch(`https://rentry.co/${key}/raw`);
-      codice = await res.text();
-      codice = codice
-        .replace(/[\r\n]+/g, "") // rimuove ritorni a capo
-        .replace(/\s+/g, "")     // rimuove spazi
-        .trim();
-    } catch (err) {
-      alert("❌ Errore nel recupero del codice da Rentry");
-      console.error(err);
-      return;
+      await navigator.clipboard.writeText(rentryUrl);
+      showToast?.("🔗 Link Rentry copiato negli appunti!");
+    } catch {
+      prompt("🔗 Copia manualmente il link Rentry:", rentryUrl);
     }
+
+    alert("ℹ️ Apri il link, copia il codice manualmente e incollalo nel campo importazione.");
+    return;
   }
 
   try {
-    const json = LZString.decompressFromEncodedURIComponent(codice);
+    const json = LZString.decompressFromEncodedURIComponent(codice.trim());
     const data = JSON.parse(json);
 
     if (Array.isArray(data.preferiti)) {
@@ -2366,6 +2369,7 @@ async function importaDaRentry(input) {
   </body>
 
 </html>
+
 
 
 
