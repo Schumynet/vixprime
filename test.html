@@ -2173,7 +2173,7 @@ async function loadPreferiti() {
 
 
 async function esportaSuRentry() {
-  const preferiti = getPreferiti();
+  const preferiti = getPreferiti?.() || [];
   const cookies = document.cookie
     .split(";")
     .map((c) => c.trim())
@@ -2181,18 +2181,19 @@ async function esportaSuRentry() {
 
   const payload = { preferiti, cookies };
   const json = JSON.stringify(payload);
-  const compressed = LZString.compressToEncodedURIComponent(json).replace(/\s+/g, "").trim();
+
+  // Compressione sicura
+  let compressed = LZString.compressToEncodedURIComponent(json)
+    .replace(/[\r\n]+/g, "") // rimuove ritorni a capo
+    .replace(/\s+/g, "")     // rimuove spazi
+    .trim();
 
   try {
     await navigator.clipboard.writeText(compressed);
-    showToast("📋 Codice copiato negli appunti!");
-  } catch (err) {
+    showToast?.("📋 Codice copiato negli appunti!");
+  } catch {
     prompt("📋 Copia manualmente il codice:", compressed);
   }
-
-  const corsProxy = document.getElementById("cors-select")?.value || "";
-  const pasteUrl = "rentry.co/api/new";
-  const fullUrl = `https://${corsProxy}${pasteUrl}`;
 
   const formData = new URLSearchParams();
   formData.append("text", compressed);
@@ -2200,7 +2201,7 @@ async function esportaSuRentry() {
   formData.append("private", "true");
 
   try {
-    const res = await fetch(fullUrl, {
+    const res = await fetch("https://rentry.co/api/new", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: formData.toString()
@@ -2208,7 +2209,7 @@ async function esportaSuRentry() {
 
     const result = await res.json();
     if (result?.url) {
-      prompt("✅ Codice salvato su Rentry! Copia il link:", result.url);
+      prompt("✅ Backup salvato su Rentry! Copia il link:", result.url);
     } else {
       alert("❌ Errore da Rentry: " + JSON.stringify(result));
     }
@@ -2218,7 +2219,7 @@ async function esportaSuRentry() {
   }
 }
 
-async function importaDaCodiceORentry(input) {
+async function importaDaRentry(input) {
   const isLink = input.includes("rentry.co");
   let codice = input.trim();
 
@@ -2227,7 +2228,10 @@ async function importaDaCodiceORentry(input) {
     try {
       const res = await fetch(`https://rentry.co/${key}/raw`);
       codice = await res.text();
-      codice = codice.replace(/\s+/g, "").trim();
+      codice = codice
+        .replace(/[\r\n]+/g, "") // rimuove ritorni a capo
+        .replace(/\s+/g, "")     // rimuove spazi
+        .trim();
     } catch (err) {
       alert("❌ Errore nel recupero del codice da Rentry");
       console.error(err);
@@ -2362,6 +2366,7 @@ async function importaDaCodiceORentry(input) {
   </body>
 
 </html>
+
 
 
 
