@@ -1,4 +1,12 @@
-<!doctype html>
+        </div>
+
+        <div class="player-info" id="player-info">
+          <h1 id="player-title"></h1>
+          <div class="meta" id="player-meta"></div>
+          <div class="overview" id="player-overview"></div>
+        </div>
+
+        <div class="pl<!doctype html>
 <html lang="it">
   <head>
     <meta charset="UTF-8" />
@@ -934,15 +942,37 @@
 
     <main>
       <div id="home">
-        <section class="hero">
-  <div class="hero-content">
-    <h1 class="titolo-hero">🎬 Benvenuto su VixPrime</h1>
-    <p class="sottotitolo-hero">Esporta o importa i tuoi preferiti e la visione in corso tra dispositivi</p>
+        <section class="hero-section py-4 px-3">
+  <div class="container">
+    <h2 class="mb-4 text-center">🔄 Backup VixPrime</h2>
 
-    <div class="backup-tools">
-      <button onclick="esportaSuPastebin()">📤 Esporta (codice + link)</button>
-      <input type="text" id="codice-import" placeholder="Incolla codice o link Pastebin">
-      <button onclick="importaDaCodiceOPastebin(document.getElementById('codice-import').value)">📥 Importa</button>
+    <div class="row g-3">
+      <!-- Pulsante esporta -->
+      <div class="col-12 col-md-6">
+        <button onclick="esportaBackup()" class="btn btn-success w-100">
+          📤 Esporta backup
+        </button>
+      </div>
+
+      <!-- Campo input per importazione -->
+      <div class="col-12 col-md-6">
+        <input
+          type="text"
+          id="backupInput"
+          class="form-control"
+          placeholder="Incolla qui il backup JSON"
+        />
+      </div>
+
+      <!-- Pulsante importa -->
+      <div class="col-12">
+        <button
+          onclick="importaBackup(document.getElementById('backupInput').value)"
+          class="btn btn-primary w-100"
+        >
+          📥 Importa backup
+        </button>
+      </div>
     </div>
   </div>
 </section>
@@ -1072,15 +1102,7 @@
       <div id="player">
         <div class="player-header">
           <button class="back-btn" onclick="goBack()">← Torna indietro</button>
-        </div>
-
-        <div class="player-info" id="player-info">
-          <h1 id="player-title"></h1>
-          <div class="meta" id="player-meta"></div>
-          <div class="overview" id="player-overview"></div>
-        </div>
-
-        <div class="player-content">
+ayer-content">
           <div class="video-container">
             <!-- Episode Selection Warning -->
             <div
@@ -2169,98 +2191,52 @@ async function loadPreferiti() {
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
 }
     
-    async function esportaSuPastebin() {
-  const apiDevKey = "V4c4ghnxgQxaKvfHqkUn8WHpwd7_lFpr"; // La tua API key
-  const apiUserKey = "7dbecd6ec2d0c3057c43c7050fd65c6b"; // La tua user_key
-
+    function esportaBackup() {
   const preferiti = getPreferiti();
+
   const cookies = document.cookie
     .split(";")
     .map((c) => c.trim())
     .filter((c) => c.startsWith("videoTime_"));
 
-  const payload = { preferiti, cookies };
-  const json = JSON.stringify(payload);
-  const compressed = LZString.compressToEncodedURIComponent(json);
+  const payload = {
+    preferiti,
+    cookies,
+  };
 
-  // Mostra il codice compresso
+  const json = JSON.stringify(payload, null, 2);
+
   try {
-    await navigator.clipboard.writeText(compressed);
-    showToast("📋 Codice copiato negli appunti!");
+    navigator.clipboard.writeText(json);
+    alert("📋 Backup copiato negli appunti!");
   } catch (err) {
-    prompt("📋 Copia manualmente il codice:", compressed);
+    prompt("📋 Copia manualmente il backup:", json);
   }
-
-  // Recupera il CORS proxy selezionato
-  const corsProxy = document.getElementById("cors-select")?.value || "";
-  const pastebinUrl = "https://pastebin.com/api/api_post.php";
-  const fullUrl = `https://${corsProxy}${pastebinUrl}`;
-
-  const formData = new URLSearchParams();
-  formData.append("api_dev_key", apiDevKey);
-  formData.append("api_user_key", apiUserKey);
-  formData.append("api_option", "paste");
-  formData.append("api_paste_code", compressed);
-  formData.append("api_paste_private", "1");
-  formData.append("api_paste_expire_date", "1W");
-  formData.append("api_paste_format", "text");
-
-  try {
-    const res = await fetch(fullUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: formData.toString()
-    });
-
-    const text = await res.text();
-
-    if (text.startsWith("http")) {
-      prompt("✅ Codice salvato su Pastebin! Copia il link:", text);
-    } else {
-      alert("❌ Errore da Pastebin: " + text);
     }
-  } catch (err) {
-    alert("❌ Errore durante l'invio a Pastebin");
-    console.error(err);
-  }
-}
 
-async function importaDaCodiceOPastebin(input) {
-  const isLink = input.includes("pastebin.com");
-  let codice = input.trim();
-
-  if (isLink) {
-    const key = codice.replace(/^.*\/([^\/]+)$/, "$1");
-    try {
-      const res = await fetch(`https://pastebin.com/raw/${key}`);
-      codice = await res.text();
-    } catch (err) {
-      alert("❌ Errore nel recupero del codice da Pastebin");
-      console.error(err);
-      return;
-    }
-  }
-
+function importaBackup(jsonString) {
   try {
-    const json = LZString.decompressFromEncodedURIComponent(codice);
-    const data = JSON.parse(json);
+    const data = JSON.parse(jsonString);
 
+    // Ripristina preferiti
     if (Array.isArray(data.preferiti)) {
       localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
     }
 
+    // Ripristina cookies di visione
     if (Array.isArray(data.cookies)) {
-      data.cookies.forEach((cookie) => {
-        const [name, value] = cookie.split("=");
-        document.cookie = `${name}=${value};path=/;max-age=31536000`;
+      data.cookies.forEach((entry) => {
+        const [name, value] = entry.split("=");
+        if (name && value) {
+          setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
+        }
       });
     }
 
-    alert("✅ Dati importati con successo!");
-    location.reload();
+    alert("✅ Backup importato correttamente!");
   } catch (err) {
-    alert("❌ Codice non valido o danneggiato");
-    console.error(err);
+    alert("❌ Errore nel formato del backup");
+    console.error("Errore parsing JSON:", err);
   }
 }
     
@@ -2368,6 +2344,7 @@ async function importaDaCodiceOPastebin(input) {
   </body>
 
 </html>
+
 
 
 
