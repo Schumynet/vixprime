@@ -1039,7 +1039,73 @@
   }
 }
 
+/* Layout responsive per Smart TV */
+@media screen and (min-width: 1600px) {
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    font-size: 28px;
+    zoom: 100%;
+  }
 
+  main {
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  header,
+  .hero,
+  section,
+  .player-content,
+  .carousel-container,
+  .vix-container {
+    max-width: 1920px;
+    margin: 0 auto;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .carousel,
+  .vix-container {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 24px;
+  }
+
+  .card {
+    flex: 0 0 auto;
+    min-width: 260px;
+  }
+
+  .video-js {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .episode-selector,
+  .season-selector,
+  .overview {
+    max-width: 100%;
+  }
+
+  .error-message,
+  .loading-overlay {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Evita scroll orizzontale */
+  * {
+    box-sizing: border-box;
+  }
+
+  .carousel-container::-webkit-scrollbar,
+  .vix-container::-webkit-scrollbar {
+    display: none;
+  }
+}
     </style>
   </head>
   <body>
