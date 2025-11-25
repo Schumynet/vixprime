@@ -1494,12 +1494,16 @@ function removePreferito(item) {
   });
 
   card.innerHTML = `
-    <img src="${poster}" alt="${title}">
-    ${badge}
-    <div class="card-title">${title}</div>
-    ${isRemovable ? `<button class="remove-btn">Rimuovi</button>` : ""}
-<button class="fav-btn">⭐ Preferito</button>
-  `;
+  <img src="${poster}" alt="${title}">
+  ${badge}
+  <div class="card-title">${title}</div>
+  <div class="card-meta">
+    ${mediaType === "movie" ? "🎬 Film" : "📺 Serie TV"} • 
+    ${item.release_date?.slice(0, 4) || item.first_air_date?.slice(0, 4) || "Anno sconosciuto"}
+  </div>
+  ${isRemovable ? `<button class="remove-btn">Rimuovi</button>` : ""}
+  <button class="fav-btn">⭐ Preferito</button>
+`;
         
         card.querySelector(".fav-btn").addEventListener("click", (e) => {
   e.stopPropagation();
@@ -2383,6 +2387,7 @@ async function loadPreferiti() {
   </body>
 
 </html>
+
 
 
 
