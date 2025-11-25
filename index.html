@@ -920,6 +920,51 @@
 .vix-arrow.destra {
   margin-right: 10px;
 }
+
+            .hero-section {
+  background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
+  color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  margin-bottom: 2rem;
+}
+
+.hero-section h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #e50914;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.hero-section .form-control {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  color: #fff;
+}
+
+.hero-section .form-control::placeholder {
+  color: #aaa;
+}
+
+.hero-section .btn-success {
+  background-color: #28a745;
+  border: none;
+  font-weight: 600;
+}
+
+.hero-section .btn-success:hover {
+  background-color: #218838;
+}
+
+.hero-section .btn-primary {
+  background-color: #e50914;
+  border: none;
+  font-weight: 600;
+}
+
+.hero-section .btn-primary:hover {
+  background-color: #c40812;
+}
     </style>
   </head>
   <body>
@@ -2191,54 +2236,55 @@ async function loadPreferiti() {
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
 }
     
-    function esportaBackup() {
-  const preferiti = getPreferiti();
+      // 📤 Esporta preferiti + continua visione (cookie) in JSON compresso base64
+  function esportaBackup() {
+    const preferiti = getPreferiti();
 
-  const cookies = document.cookie
-    .split(";")
-    .map((c) => c.trim())
-    .filter((c) => c.startsWith("videoTime_"));
+    const cookies = document.cookie
+      .split(";")
+      .map((c) => c.trim())
+      .filter((c) => c.startsWith("videoTime_"));
 
-  const payload = {
-    preferiti,
-    cookies,
-  };
+    const payload = { preferiti, cookies };
+    const json = JSON.stringify(payload);
 
-  const json = JSON.stringify(payload, null, 2);
+    const compressed = LZString.compressToBase64(json);
 
-  try {
-    navigator.clipboard.writeText(json);
-    alert("📋 Backup copiato negli appunti!");
-  } catch (err) {
-    prompt("📋 Copia manualmente il backup:", json);
+    try {
+      navigator.clipboard.writeText(compressed);
+      alert("📋 Backup compresso copiato negli appunti!");
+    } catch (err) {
+      prompt("📋 Copia manualmente il backup compresso:", compressed);
+    }
   }
+
+  // 📥 Importa backup da stringa base64 compressa
+  function importaBackup(base64String) {
+    try {
+      const json = LZString.decompressFromBase64(base64String.trim());
+      const data = JSON.parse(json);
+
+      // Ripristina preferiti
+      if (Array.isArray(data.preferiti)) {
+        localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
+      }
+
+      // Ripristina cookies di visione
+      if (Array.isArray(data.cookies)) {
+        data.cookies.forEach((entry) => {
+          const [name, value] = entry.split("=");
+          if (name && value) {
+            setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
+          }
+        });
+      }
+
+      alert("✅ Backup importato correttamente!");
+    } catch (err) {
+      alert("❌ Errore nel backup: formato non valido o danneggiato");
+      console.error("Errore importazione:", err);
     }
-
-function importaBackup(jsonString) {
-  try {
-    const data = JSON.parse(jsonString);
-
-    // Ripristina preferiti
-    if (Array.isArray(data.preferiti)) {
-      localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
-    }
-
-    // Ripristina cookies di visione
-    if (Array.isArray(data.cookies)) {
-      data.cookies.forEach((entry) => {
-        const [name, value] = entry.split("=");
-        if (name && value) {
-          setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
-        }
-      });
-    }
-
-    alert("✅ Backup importato correttamente!");
-  } catch (err) {
-    alert("❌ Errore nel formato del backup");
-    console.error("Errore parsing JSON:", err);
-  }
-}
+            }
     
     function scrollRisultati(direction) {
   const container = document.getElementById("searchCarousel");
@@ -2344,6 +2390,7 @@ function importaBackup(jsonString) {
   </body>
 
 </html>
+
 
 
 
