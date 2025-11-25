@@ -979,131 +979,69 @@
     gap: 20px;
   }
 
-  .arrow,
-  .vix-arrow {
-    font-size: 2.2rem;
-    padding: 12px 16px;
-  }
-
-  .player-content {
-    grid-template-columns: 2fr 1fr;
-    gap: 3rem;
-  }
-
-  .player-info h1 {
-    font-size: 3.5rem;
-  }
-
-  .meta {
-    font-size: 1.3rem;
-  }
-
-  .overview {
-    font-size: 1.4rem;
-  }
-
-  .episode-item {
-    font-size: 1.2rem;
-    padding: 16px;
-  }
-
-  .episode-number,
-  .episode-title {
-    font-size: 1.1rem;
-  }
-
-  .error-message {
-    font-size: 1.3rem;
-    padding: 2rem;
-  }
-
-  .loading-text {
-    font-size: 1.3rem;
-  }
-
-  .video-js .vjs-big-play-button {
-    width: 100px;
-    height: 100px;
-    font-size: 3.5em;
-    line-height: 94px;
-  }
-
-  .video-js .vjs-control-bar {
-    height: 5em;
-    font-size: 1.3rem;
-  }
-
-  .video-js .vjs-menu li.vjs-menu-item {
-    font-size: 1.3rem;
-    padding: 1em 1.5em;
-  }
-}
-
-/* Layout responsive per Smart TV */
+/* Smart TV layout senza zoom eccessivo */
 @media screen and (min-width: 1600px) {
   html, body {
-    width: 100%;
-    height: 100%;
+    zoom: 100%; /* oppure rimuovilo del tutto */
+    font-size: 24px;
     overflow-x: hidden;
-    font-size: 28px;
-    zoom: 100%;
   }
 
-  main {
-    max-width: 1920px;
-    margin: 0 auto;
-    padding: 0 40px;
-  }
-
+  main,
   header,
   .hero,
-  section,
   .player-content,
   .carousel-container,
   .vix-container {
-    max-width: 1920px;
+    max-width: 1600px;
     margin: 0 auto;
     padding-left: 40px;
     padding-right: 40px;
   }
 
-  .carousel,
-  .vix-container {
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    gap: 24px;
-  }
-
   .card {
-    flex: 0 0 auto;
-    min-width: 260px;
+    min-width: 240px;
   }
 
-  .video-js {
-    max-width: 100%;
-    height: auto;
+  .hero-content h1,
+  .titolo-hero {
+    font-size: 3.5rem;
   }
 
-  .episode-selector,
-  .season-selector,
+  .sottotitolo-hero {
+    font-size: 1.6rem;
+  }
+
+  .player-info h1 {
+    font-size: 3rem;
+  }
+
   .overview {
-    max-width: 100%;
+    font-size: 1.2rem;
   }
 
-  .error-message,
-  .loading-overlay {
-    max-width: 100%;
-    box-sizing: border-box;
+  .arrow,
+  .vix-arrow {
+    font-size: 2rem;
+    padding: 10px 14px;
   }
 
-  /* Evita scroll orizzontale */
-  * {
-    box-sizing: border-box;
+  .resume-badge,
+  .remove-btn,
+  .fav-btn {
+    font-size: 1rem;
+    padding: 8px 14px;
   }
 
-  .carousel-container::-webkit-scrollbar,
-  .vix-container::-webkit-scrollbar {
-    display: none;
+  .video-js .vjs-big-play-button {
+    width: 80px;
+    height: 80px;
+    font-size: 2.5em;
+  }
+
+  .video-js .vjs-control-bar {
+    height: 4em;
+    font-size: 1.1rem;
   }
 }
     </style>
@@ -2536,6 +2474,7 @@ async function loadPreferiti() {
   </body>
 
 </html>
+
 
 
 
