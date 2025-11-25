@@ -912,51 +912,6 @@
 .vix-arrow.destra {
   margin-right: 10px;
 }
-
-            .hero-section {
-  background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
-  color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  margin-bottom: 2rem;
-}
-
-.hero-section h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #e50914;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
-}
-
-.hero-section .form-control {
-  background-color: #1e1e1e;
-  border: 1px solid #333;
-  color: #fff;
-}
-
-.hero-section .form-control::placeholder {
-  color: #aaa;
-}
-
-.hero-section .btn-success {
-  background-color: #28a745;
-  border: none;
-  font-weight: 600;
-}
-
-.hero-section .btn-success:hover {
-  background-color: #218838;
-}
-
-.hero-section .btn-primary {
-  background-color: #e50914;
-  border: none;
-  font-weight: 600;
-}
-
-.hero-section .btn-primary:hover {
-  background-color: #c40812;
-}
     </style>
   </head>
   <body>
@@ -979,7 +934,7 @@
 
     <main>
       <div id="home">
-        <section class="hero">
+                <section class="hero">
   <div class="hero-content">
     <h1>Benvenuto su VixFlix</h1>
     <p>Scopri migliaia di film e serie TV in streaming</p>
@@ -1133,6 +1088,15 @@
       <div id="player">
         <div class="player-header">
           <button class="back-btn" onclick="goBack()">← Torna indietro</button>
+        </div>
+
+        <div class="player-info" id="player-info">
+          <h1 id="player-title"></h1>
+          <div class="meta" id="player-meta"></div>
+          <div class="overview" id="player-overview"></div>
+        </div>
+
+        <div class="player-content">
           <div class="video-container">
             <!-- Episode Selection Warning -->
             <div
@@ -1419,7 +1383,7 @@ async function loadAllowedContent() {
     const episodeCounts = {
       1: 44,
       2: 100,
-      3: 92,
+      3: 89,
     };
 
     const count = episodeCounts[seasonNum] || 0;
@@ -1486,16 +1450,12 @@ function removePreferito(item) {
   });
 
   card.innerHTML = `
-  <img src="${poster}" alt="${title}">
-  ${badge}
-  <div class="card-title">${title}</div>
-  <div class="card-meta">
-    ${mediaType === "movie" ? "🎬 Film" : "📺 Serie TV"} • 
-    ${item.release_date?.slice(0, 4) || item.first_air_date?.slice(0, 4) || "Anno sconosciuto"}
-  </div>
-  ${isRemovable ? `<button class="remove-btn">Rimuovi</button>` : ""}
-  <button class="fav-btn">⭐ Preferito</button>
-`;
+    <img src="${poster}" alt="${title}">
+    ${badge}
+    <div class="card-title">${title}</div>
+    ${isRemovable ? `<button class="remove-btn">Rimuovi</button>` : ""}
+<button class="fav-btn">⭐ Preferito</button>
+  `;
         
         card.querySelector(".fav-btn").addEventListener("click", (e) => {
   e.stopPropagation();
@@ -2225,7 +2185,7 @@ async function loadPreferiti() {
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
 }
     
-      // 📤 Esporta preferiti + continua visione (cookie) in JSON compresso base64
+          // 📤 Esporta preferiti + continua visione (cookie) in JSON compresso base64
   function esportaBackup() {
     const preferiti = getPreferiti();
 
@@ -2274,6 +2234,9 @@ async function loadPreferiti() {
       console.error("Errore importazione:", err);
     }
             }
+    
+    
+    
     
     function scrollRisultati(direction) {
   const container = document.getElementById("searchCarousel");
@@ -2379,12 +2342,6 @@ async function loadPreferiti() {
   </body>
 
 </html>
-
-
-
-
-
-
 
 
 
