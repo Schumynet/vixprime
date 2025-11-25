@@ -987,36 +987,27 @@
 
     <main>
       <div id="home">
-        <section class="hero-section py-4 px-3">
-  <div class="container">
-    <h1 class="mb-3 text-center fw-bold text-white">👋 Benvenuto su VixPrime</h1>
-    <p class="text-center text-light mb-4">
-      Esporta o importa i tuoi preferiti e la visione in corso tra dispositivi.
-    </p>
+        <section class="hero">
+  <div class="hero-content">
+    <h1>Benvenuto su VixFlix</h1>
+    <p>Scopri migliaia di film e serie TV in streaming</p>
 
-    <div class="row g-3">
-      <!-- Pulsante esporta -->
-      <div class="col-12 col-md-6">
-        <button onclick="esportaBackup()" class="btn btn-success w-100">
+    <div class="backup-tools" style="margin-top: 2rem;">
+      <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
+        <button onclick="esportaBackup()" class="btn btn-success">
           📤 Esporta backup
         </button>
-      </div>
 
-      <!-- Campo input per importazione -->
-      <div class="col-12 col-md-6">
         <input
           type="text"
           id="backupInput"
           class="form-control"
           placeholder="Incolla qui il backup compresso"
         />
-      </div>
 
-      <!-- Pulsante importa -->
-      <div class="col-12">
         <button
           onclick="importaBackup(document.getElementById('backupInput').value)"
-          class="btn btn-primary w-100"
+          class="btn btn-primary"
         >
           📥 Importa backup
         </button>
