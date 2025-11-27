@@ -912,6 +912,307 @@
 .vix-arrow.destra {
   margin-right: 10px;
 }
+
+
+/* Ottimizzazioni per Smart TV */
+@media screen and (min-width: 1600px) {
+  body {
+    zoom: 100%;
+    font-size: 28px;
+  }
+
+  header {
+    padding: 2rem 6%;
+  }
+
+  .logo {
+    font-size: 3rem;
+  }
+
+  .header-controls {
+    gap: 2rem;
+  }
+
+  #search {
+    font-size: 1.5rem;
+    padding: 16px 24px;
+  }
+
+  #cors-select {
+    font-size: 1.2rem;
+    padding: 14px 40px 14px 20px;
+    min-width: 240px;
+  }
+
+  .hero-content h1,
+  .titolo-hero {
+    font-size: 4rem;
+  }
+
+  .sottotitolo-hero {
+    font-size: 1.8rem;
+  }
+
+  .backup-tools input[type="text"],
+  .backup-tools button {
+    font-size: 1.3rem;
+    padding: 14px 20px;
+  }
+
+  .card {
+    min-width: 280px;
+  }
+
+  .card img {
+    height: 400px;
+  }
+
+  .resume-badge,
+  .remove-btn,
+  .fav-btn {
+    font-size: 1.1rem;
+    padding: 10px 16px;
+  }
+
+  .carousel,
+  .vix-container {
+    gap: 20px;
+  }
+
+/* Smart TV layout senza zoom eccessivo */
+@media screen and (min-width: 1600px) {
+  html, body {
+    zoom: 80%; /* oppure rimuovilo del tutto */
+    font-size: 24px;
+    overflow-x: hidden;
+  }
+
+  main,
+  header,
+  .hero,
+  .player-content,
+  .carousel-container,
+  .vix-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .card {
+    min-width: 240px;
+  }
+
+  .hero-content h1,
+  .titolo-hero {
+    font-size: 3.5rem;
+  }
+
+  .sottotitolo-hero {
+    font-size: 1.6rem;
+  }
+
+  .player-info h1 {
+    font-size: 3rem;
+  }
+
+  .overview {
+    font-size: 1.2rem;
+  }
+
+  .arrow,
+  .vix-arrow {
+    font-size: 2rem;
+    padding: 10px 14px;
+  }
+
+  .resume-badge,
+  .remove-btn,
+  .fav-btn {
+    font-size: 1rem;
+    padding: 8px 14px;
+  }
+
+  .video-js .vjs-big-play-button {
+    width: 80px;
+    height: 80px;
+    font-size: 2.5em;
+  }
+
+  .video-js .vjs-control-bar {
+    height: 4em;
+    font-size: 1.1rem;
+  }
+}
+
+
+.card {
+  position: relative;
+  width: 180px;
+  background: #111;
+  color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 270px;
+  overflow: hidden;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-content {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.card-meta {
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.card-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.card-buttons button {
+  flex: 1;
+  padding: 6px;
+  font-size: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fav-btn {
+  background-color: #444;
+  color: #fff;
+}
+
+.remove-btn {
+  background-color: #e50914;
+  color: white;
+}
+  
+  .card {
+  position: relative;
+  width: 180px;
+  background: #111;
+  color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  font-family: sans-serif;
+}
+
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 270px;
+  overflow: hidden;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-title-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  text-shadow: 0 1px 2px black;
+}
+
+.resume-badge {
+  position: absolute;
+  bottom: 40px;
+  left: 10px;
+  background: rgba(229, 9, 20, 0.9);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  z-index: 5;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  line-height: 1.2;
+  text-align: left;
+  max-width: 90%;
+}
+
+.card-content {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card-meta {
+  font-size: 0.8rem;
+  color: #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  word-break: break-word;
+}
+
+.card-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.card-buttons button {
+  padding: 4px 6px;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+}
+
+.remove-btn {
+  color: #e50914;
+}
+
+.fav-btn {
+  color: #ffcc00;
+}
     </style>
   </head>
   <body>
@@ -934,15 +1235,31 @@
 
     <main>
       <div id="home">
-<section class="hero">
+                <section class="hero">
   <div class="hero-content">
-    <h1 class="titolo-hero">🎬 Benvenuto su VixPrime</h1>
-    <p class="sottotitolo-hero">Esporta o importa i tuoi preferiti e la visione in corso tra dispositivi</p>
+    <h1>Benvenuto su VixFlix</h1>
+    <p>Scopri migliaia di film e serie TV in streaming</p>
 
-    <div class="backup-tools">
-      <button onclick="esportaSuPrivateBin()">📤 Esporta (codice + link)</button>
-      <input type="text" id="codice-import" placeholder="Incolla link o codice PrivateBin">
-      <button onclick="importaDaPrivateBin()">📥 Importa</button>
+    <div class="backup-tools" style="margin-top: 2rem;">
+      <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
+        <button onclick="esportaBackup()" class="btn btn-success">
+          📤 Esporta backup
+        </button>
+
+        <input
+          type="text"
+          id="backupInput"
+          class="form-control"
+          placeholder="Incolla qui il backup compresso"
+        />
+
+        <button
+          onclick="importaBackup(document.getElementById('backupInput').value)"
+          class="btn btn-primary"
+        >
+          📥 Importa backup
+        </button>
+      </div>
     </div>
   </div>
 </section>
@@ -1065,6 +1382,186 @@
             </button>
           </div>
         </section>
+
+<section id="azione">
+  <h2>💥 Azione</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('azione', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('azione', 1)">›</button>
+  </div>
+</section>
+
+<section id="documentario">
+  <h2>📚 Documentario</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('documentario', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('documentario', 1)">›</button>
+  </div>
+</section>
+
+<section id="dramma">
+  <h2>🎭 Dramma</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('dramma', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('dramma', 1)">›</button>
+  </div>
+</section>
+
+<section id="fantascienza">
+  <h2>🚀 Fantascienza</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('fantascienza', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('fantascienza', 1)">›</button>
+  </div>
+</section>
+
+<section id="mistero">
+  <h2>🕵️‍♂️ Mistero</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('mistero', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('mistero', 1)">›</button>
+  </div>
+</section>
+
+<section id="reality">
+  <h2>📺 Reality</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('reality', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('reality', 1)">›</button>
+  </div>
+</section>
+
+<section id="storia">
+  <h2>🏛️ Storia</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('storia', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('storia', 1)">›</button>
+  </div>
+</section>
+
+<section id="fantasy">
+  <h2>🧙‍♂️ Fantasy</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('fantasy', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('fantasy', 1)">›</button>
+  </div>
+</section>
+
+<section id="korean-dramma">
+  <h2>🇰🇷 Korean Dramma</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('korean-dramma', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('korean-dramma', 1)">›</button>
+  </div>
+</section>
+
+<section id="war-politics">
+  <h2>⚔️ War & Politics</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('war-politics', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('war-politics', 1)">›</button>
+  </div>
+</section>
+
+<section id="crime">
+  <h2>🔪 Crime</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('crime', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('crime', 1)">›</button>
+  </div>
+</section>
+
+<section id="soap">
+  <h2>🧼 Soap</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('soap', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('soap', 1)">›</button>
+  </div>
+</section>
+
+<section id="romance">
+  <h2>❤️ Romance</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('romance', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('romance', 1)">›</button>
+  </div>
+</section>
+
+<section id="kids">
+  <h2>🧒 Kids</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('kids', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('kids', 1)">›</button>
+  </div>
+</section>
+
+<section id="musica">
+  <h2>🎵 Musica</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('musica', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('musica', 1)">›</button>
+  </div>
+</section>
+
+<section id="action-adventure">
+  <h2>🗡️ Action & Adventure</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('action-adventure', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('action-adventure', 1)">›</button>
+  </div>
+</section>
+
+<section id="guerra">
+  <h2>🪖 Guerra</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('guerra', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('guerra', 1)">›</button>
+  </div>
+</section>
+
+<section id="avventura">
+  <h2>🌍 Avventura</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('avventura', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('avventura', 1)">›</button>
+  </div>
+</section>
+
+<section id="famiglia">
+  <h2>👨‍👩‍👧‍👦 Famiglia</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('famiglia', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('famiglia', 1)">›</button>
+  </div>
+</section>
+
+<section id="horror">
+  <h2>👻 Horror</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('horror', -1)">‹</button>
+    <div class="carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('horror', 1)">›</button>
+  </div>
+</section>
       </div>
 
       <div id="results"></div>
@@ -1143,13 +1640,35 @@
       let CORS = "corsproxy.io/";
 
       const shownContinuaIds = new Set();
-      const endpoints = {
-        trending: `trending/all/week`,
-        nowPlaying: `movie/now_playing`,
-        popularMovies: `movie/popular`,
-        onTheAir: `tv/on_the_air`,
-        popularTV: `tv/popular`,
-      };
+
+const endpoints = {
+  trending: `trending/all/week`,
+  nowPlaying: `movie/now_playing`,
+  popularMovies: `movie/popular`,
+  onTheAir: `tv/on_the_air`,
+  popularTV: `tv/popular`,
+
+  azione: `discover/movie?with_genres=28`,
+  documentario: `discover/movie?with_genres=99`,
+  dramma: `discover/movie?with_genres=18`,
+  fantascienza: `discover/movie?with_genres=878`,
+  mistero: `discover/movie?with_genres=9648`,
+  reality: `discover/tv?with_genres=10764`,
+  storia: `discover/movie?with_genres=36`,
+  fantasy: `discover/movie?with_genres=14`,
+  koreanDramma: `discover/tv?with_original_language=ko`,
+  warPolitics: `discover/tv?with_genres=10768`,
+  crime: `discover/movie?with_genres=80`,
+  soap: `discover/tv?with_genres=10766`,
+  romance: `discover/movie?with_genres=10749`,
+  kids: `discover/movie?with_genres=10751`,
+  musica: `discover/movie?with_genres=10402`,
+  actionAdventure: `discover/movie?with_genres=10759`,
+  guerra: `discover/movie?with_genres=10752`,
+  avventura: `discover/movie?with_genres=12`,
+  famiglia: `discover/movie?with_genres=10751`,
+  horror: `discover/movie?with_genres=27`,
+};
 
       let currentItem = null;
       let currentSeasons = [];
@@ -1367,7 +1886,7 @@ async function loadAllowedContent() {
     const episodeCounts = {
       1: 44,
       2: 100,
-      3: 89,
+      3: 92,
     };
 
     const count = episodeCounts[seasonNum] || 0;
@@ -1409,7 +1928,6 @@ function removePreferito(item) {
       function createCard(item, cookieNames = [], isRemovable = false) {
   const card = document.createElement("div");
   card.className = "card";
-  card.style.position = "relative";
 
   const poster = item.poster_path
     ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
@@ -1417,35 +1935,48 @@ function removePreferito(item) {
 
   const title = item.title || item.name;
   const mediaType = item.media_type || (item.title ? "movie" : "tv");
+  const anno = item.release_date?.slice(0, 4) || item.first_air_date?.slice(0, 4) || "—";
+  const tipo = mediaType === "movie" ? "Film" : mediaType === "tv" ? "Serie TV" : "—";
+  const voto = item.vote_average?.toFixed(1) || "—";
 
   let badge = "";
-
   cookieNames.forEach((name) => {
     const value = getCookie(name);
     const savedTime = parseFloat(value);
     if (savedTime > 10) {
       const match = name.match(/_S(\d+)_E(\d+)/);
       if (match) {
-        badge = `<div class="resume-badge">📺 Stagione ${match[1]}, Episodio ${match[2]}<br>⏪ ${formatTime(savedTime)}</div>`;
+        badge = `<div class="resume-badge">📺 S${match[1]} • E${match[2]}<br>⏪ ${formatTime(savedTime)}</div>`;
       } else {
-        badge = `<div class="resume-badge">⏪ Riprendi da ${formatTime(savedTime)}</div>`;
+        badge = `<div class="resume-badge">⏪ ${formatTime(savedTime)}</div>`;
       }
     }
   });
 
   card.innerHTML = `
-    <img src="${poster}" alt="${title}">
-    ${badge}
-    <div class="card-title">${title}</div>
-    ${isRemovable ? `<button class="remove-btn">Rimuovi</button>` : ""}
-<button class="fav-btn">⭐ Preferito</button>
+    <div class="card-image-wrapper">
+      <img src="${poster}" alt="${title}">
+      <div class="card-title-overlay">${title}</div>
+      ${badge}
+    </div>
+    <div class="card-content">
+      <div class="card-meta">
+        <div>${anno}</div>
+        <div>${voto}</div>
+        <div>${tipo}</div>
+      </div>
+      <div class="card-buttons">
+        ${isRemovable ? `<button class="remove-btn" title="Rimuovi">❌</button>` : ""}
+        <button class="fav-btn" title="Preferito">♥</button>
+      </div>
+    </div>
   `;
-        
-        card.querySelector(".fav-btn").addEventListener("click", (e) => {
-  e.stopPropagation();
-  addPreferito(item);
-  alert(`⭐ "${title}" aggiunto ai preferiti`);
-});
+
+  card.querySelector(".fav-btn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    addPreferito(item);
+    alert(`⭐ "${title}" aggiunto ai preferiti`);
+  });
 
   if (isRemovable) {
     const removeBtn = card.querySelector(".remove-btn");
@@ -1457,7 +1988,7 @@ function removePreferito(item) {
           document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
         });
         card.remove();
-        shownContinuaIds.delete(item.id); // ✅ aggiorna il Set globale
+        shownContinuaIds.delete(item.id);
         console.log(`🗑️ Rimosso ${title} e cancellati cookie:`, cookieNames);
 
         const container = document.getElementById("continua-carousel");
@@ -2169,86 +2700,58 @@ async function loadPreferiti() {
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
 }
     
+          // 📤 Esporta preferiti + continua visione (cookie) in JSON compresso base64
+  function esportaBackup() {
+    const preferiti = getPreferiti();
+
+    const cookies = document.cookie
+      .split(";")
+      .map((c) => c.trim())
+      .filter((c) => c.startsWith("videoTime_"));
+
+    const payload = { preferiti, cookies };
+    const json = JSON.stringify(payload);
+
+    const compressed = LZString.compressToBase64(json);
+
+    try {
+      navigator.clipboard.writeText(compressed);
+      alert("📋 Backup compresso copiato negli appunti!");
+    } catch (err) {
+      prompt("📋 Copia manualmente il backup compresso:", compressed);
+    }
+  }
+
+  // 📥 Importa backup da stringa base64 compressa
+  function importaBackup(base64String) {
+    try {
+      const json = LZString.decompressFromBase64(base64String.trim());
+      const data = JSON.parse(json);
+
+      // Ripristina preferiti
+      if (Array.isArray(data.preferiti)) {
+        localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
+      }
+
+      // Ripristina cookies di visione
+      if (Array.isArray(data.cookies)) {
+        data.cookies.forEach((entry) => {
+          const [name, value] = entry.split("=");
+          if (name && value) {
+            setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
+          }
+        });
+      }
+
+      alert("✅ Backup importato correttamente!");
+    } catch (err) {
+      alert("❌ Errore nel backup: formato non valido o danneggiato");
+      console.error("Errore importazione:", err);
+    }
+            }
     
-
-
-const PRIVATEBIN_URL = "https://privatebin.net/";
-
-async function esportaSuPrivateBin() {
-  const preferiti = getPreferiti();
-  const cookies = document.cookie
-    .split(";")
-    .map((c) => c.trim())
-    .filter((c) => c.startsWith("videoTime_"));
-
-  const payload = { preferiti, cookies };
-  const json = JSON.stringify(payload);
-  const compressed = LZString.compressToEncodedURIComponent(json);
-
-  const data = {
-    v: 2,
-    a: false,
-    paste: compressed,
-    expire: "1week",
-    formatter: "plaintext"
-  };
-
-  try {
-    const res = await fetch(`${PRIVATEBIN_URL}api/v1/paste`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-
-    const result = await res.json();
-    if (result.status === 0) {
-      const pasteUrl = `${PRIVATEBIN_URL}?${result.id}`;
-      await navigator.clipboard.writeText(pasteUrl);
-      alert("✅ Link copiato negli appunti:\n" + pasteUrl);
-    } else {
-      alert("❌ Errore da PrivateBin: " + result.message);
-    }
-  } catch (err) {
-    alert("❌ Errore durante l'invio a PrivateBin");
-    console.error(err);
-  }
-}
-
-async function importaDaPrivateBin() {
-  const input = document.getElementById("codice-import").value.trim();
-  if (!input) return alert("Inserisci un link o codice valido");
-
-  const key = input.includes("privatebin") ? input.split("?")[1] : input;
-  try {
-    const res = await fetch(`${PRIVATEBIN_URL}api/v1/paste/${key}`);
-    const result = await res.json();
-
-    if (result.status !== 0) {
-      alert("❌ Errore nel recupero del paste");
-      return;
-    }
-
-    const decompressed = LZString.decompressFromEncodedURIComponent(result.paste);
-    const data = JSON.parse(decompressed);
-
-    if (Array.isArray(data.preferiti)) {
-      localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
-    }
-
-    if (Array.isArray(data.cookies)) {
-      data.cookies.forEach((cookie) => {
-        const [name, value] = cookie.split("=");
-        document.cookie = `${name}=${value};path=/;max-age=31536000`;
-      });
-    }
-
-    alert("✅ Dati importati con successo!");
-    location.reload();
-  } catch (err) {
-    alert("❌ Errore durante l'importazione");
-    console.error(err);
-  }
-}
+    
+    
     
     function scrollRisultati(direction) {
   const container = document.getElementById("searchCarousel");
@@ -2354,17 +2857,6 @@ async function importaDaPrivateBin() {
   </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
 
 
 
