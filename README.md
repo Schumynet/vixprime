@@ -1,7 +1,7 @@
 
-# 🎬 VixFlix
+# 🎬 VixPrime
 
-VixFlix è una piattaforma web che consente la **visione gratuita di film e serie TV in italiano**, grazie all'integrazione con l'API di **TMDb** per i dati e **VixSrc** per lo streaming.
+VixPrime è una piattaforma web che consente la **visione gratuita di film e serie TV in italiano**, grazie all'integrazione con l'API di **TMDb** per i dati e **VixSrc** per lo streaming.
 
 ---
 
@@ -32,7 +32,7 @@ VixFlix è una piattaforma web che consente la **visione gratuita di film e seri
 
 ## ⚠️ Disclaimer
 
-> Questo progetto è solo a scopo dimostrativo ed educativo. **VixFlix non ospita alcun contenuto**, ma rimanda ai link di VixSrc. L’utilizzo di servizi di terze parti per la visione di contenuti protetti da copyright può violare le leggi sul diritto d’autore.
+> Questo progetto è solo a scopo dimostrativo ed educativo. **VixPrime non ospita alcun contenuto**, ma rimanda ai link di VixSrc. L’utilizzo di servizi di terze parti per la visione di contenuti protetti da copyright può violare le leggi sul diritto d’autore.
 
 ---
 
