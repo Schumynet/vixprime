@@ -1747,7 +1747,7 @@ function removePreferito(item) {
       if (match) {
         badge = `<div class="resume-badge">📺 S${match[1]} • E${match[2]}<br>⏪ ${formatTime(savedTime)}</div>`;
       } else {
-        badge = `<div class="resume-badge">⏩ ${formatTime(savedTime)}</div>`;
+        badge = `<div class="resume-badge">⏪ Riprendi da ${formatTime(savedTime)}</div>`;
       }
     }
   });
@@ -1755,11 +1755,11 @@ function removePreferito(item) {
   card.innerHTML = `
     <div class="card-image-wrapper">
       <img src="${poster}" alt="${title}">
+      <div class="card-title-overlay">${title}</div>
       ${badge}
     </div>
     <div class="card-content">
       <div class="card-meta">
-        <div class="card-title">${title}</div>
         <div>${anno}</div>
         <div>${voto}</div>
         <div>${tipo}</div>
