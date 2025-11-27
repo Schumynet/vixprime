@@ -1656,18 +1656,18 @@ const endpoints = {
   reality: "tv/on_the_air",               // Reality show in onda
   storia: "movie/top_rated",              // Film storici apprezzati
   fantasy: "movie/upcoming",              // Fantasy in arrivo
-  koreanDramma: "tv/popular",             // Serie coreane popolari
-  warPolitics: "tv/top_rated",            // Serie politiche e di guerra
-  crime: "movie/top_rated",               // Crime movie di qualità
-  soap: "tv/airing_today",                // Soap opera attuali
-  romance: "movie/now_playing",           // Film romantici al cinema
-  kids: "movie/upcoming",                 // Film per bambini in arrivo
-  musica: "movie/top_rated",              // Film musicali apprezzati
-  actionAdventure: "movie/now_playing",   // Azione e avventura al cinema
-  guerra: "movie/top_rated",              // Film di guerra
-  avventura: "movie/upcoming",            // Avventure in uscita
-  famiglia: "movie/popular",              // Film per famiglie
-  horror: "movie/now_playing",            // Horror attuali
+  koreanDramma: "discover/tv?with_original_language=ko&sort_by=popularity.desc",
+  warPolitics: "discover/tv?with_genres=10768&sort_by=popularity.desc",
+  crime: "discover/movie?with_genres=80&certification_country=IT&certification.lte=T&sort_by=popularity.desc",
+  soap: "discover/tv?with_genres=10766&sort_by=popularity.desc",
+  romance: "discover/movie?with_genres=10749&certification_country=IT&certification.lte=T&sort_by=popularity.desc",
+  kids: "discover/movie?with_genres=10751&certification_country=IT&certification.lte=G&sort_by=popularity.desc",
+  musica: "discover/movie?with_genres=10402&certification_country=IT&certification.lte=T&sort_by=popularity.desc",
+  actionAdventure: "discover/movie?with_genres=28,12&certification_country=IT&certification.lte=T&sort_by=popularity.desc",
+  guerra: "discover/movie?with_genres=10752&certification_country=IT&certification.lte=T&sort_by=popularity.desc",
+  avventura: "discover/movie?with_genres=12&certification_country=IT&certification.lte=T&sort_by=popularity.desc",
+  famiglia: "discover/movie?with_genres=10751&certification_country=IT&certification.lte=G&sort_by=popularity.desc",
+  horror: "discover/movie?with_genres=27&certification_country=IT&certification.lte=T&sort_by=popularity.desc"
 };
 
       let currentItem = null;
