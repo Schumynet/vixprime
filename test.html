@@ -1642,32 +1642,32 @@
       const shownContinuaIds = new Set();
 
 const endpoints = {
-  trending: `trending/all/week`,
-  nowPlaying: `movie/now_playing`,
-  popularMovies: `movie/popular`,
-  onTheAir: `tv/on_the_air`,
-  popularTV: `tv/popular`,
+  trending: "trending/all/week",
+  nowPlaying: "movie/now_playing",
+  popularMovies: "movie/popular",
+  onTheAir: "tv/on_the_air",
+  popularTV: "tv/popular",
 
-  azione: `discover/movie?with_genres=28`,
-  documentario: `discover/movie?with_genres=99`,
-  dramma: `discover/movie?with_genres=18`,
-  fantascienza: `discover/movie?with_genres=878`,
-  mistero: `discover/movie?with_genres=9648`,
-  reality: `discover/tv?with_genres=10764`,
-  storia: `discover/movie?with_genres=36`,
-  fantasy: `discover/movie?with_genres=14`,
-  koreanDramma: `discover/tv?with_original_language=ko`,
-  warPolitics: `discover/tv?with_genres=10768`,
-  crime: `discover/movie?with_genres=80`,
-  soap: `discover/tv?with_genres=10766`,
-  romance: `discover/movie?with_genres=10749`,
-  kids: `discover/movie?with_genres=10751`,
-  musica: `discover/movie?with_genres=10402`,
-  actionAdventure: `discover/movie?with_genres=10759`,
-  guerra: `discover/movie?with_genres=10752`,
-  avventura: `discover/movie?with_genres=12`,
-  famiglia: `discover/movie?with_genres=10751`,
-  horror: `discover/movie?with_genres=27`,
+  azione: "movie/top_rated",              // Film d'azione di qualità
+  documentario: "tv/top_rated",           // Documentari in formato serie
+  dramma: "movie/now_playing",            // Drammi attualmente al cinema
+  fantascienza: "movie/upcoming",         // Fantascienza in uscita
+  mistero: "tv/airing_today",             // Serie misteriose in onda oggi
+  reality: "tv/on_the_air",               // Reality show in onda
+  storia: "movie/top_rated",              // Film storici apprezzati
+  fantasy: "movie/upcoming",              // Fantasy in arrivo
+  koreanDramma: "tv/popular",             // Serie coreane popolari
+  warPolitics: "tv/top_rated",            // Serie politiche e di guerra
+  crime: "movie/top_rated",               // Crime movie di qualità
+  soap: "tv/airing_today",                // Soap opera attuali
+  romance: "movie/now_playing",           // Film romantici al cinema
+  kids: "movie/upcoming",                 // Film per bambini in arrivo
+  musica: "movie/top_rated",              // Film musicali apprezzati
+  actionAdventure: "movie/now_playing",   // Azione e avventura al cinema
+  guerra: "movie/top_rated",              // Film di guerra
+  avventura: "movie/upcoming",            // Avventure in uscita
+  famiglia: "movie/popular",              // Film per famiglie
+  horror: "movie/now_playing",            // Horror attuali
 };
 
       let currentItem = null;
