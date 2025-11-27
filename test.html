@@ -1566,17 +1566,7 @@ const endpoints = {
   popularMovies: "movie/popular",
   onTheAir: "tv/on_the_air",
   popularTV: "tv/popular",
-  azione: "discover/movie?with_genres=28",
-  avventura: "discover/movie?with_genres=12",
-  animazione: "discover/movie?with_genres=16",
-  commedia: "discover/movie?with_genres=35",
-  crime: "discover/movie?with_genres=80",
-  documentario: "discover/movie?with_genres=99",
-  dramma: "discover/movie?with_genres=18",
-  famiglia: "discover/movie?with_genres=10751",
-  fantasy: "discover/movie?with_genres=14",
-  storia: "discover/movie?with_genres=36",
-  horror: "discover/movie?with_genres=27"
+  
 };
 
       let currentItem = null;
@@ -1589,6 +1579,42 @@ const endpoints = {
 let allowedMovies = [];
 let allowedTV = [];
 let allowedEpisodes = [];
+
+
+function loadGenreSections(apiKey) {
+  const genreMap = {
+    azione: 28,
+    avventura: 12,
+    animazione: 16,
+    commedia: 35,
+    crime: 80,
+    documentario: 99,
+    dramma: 18,
+    famiglia: 10751,
+    fantasy: 14,
+    storia: 36,
+    horror: 27
+  };
+
+  Object.entries(genreMap).forEach(([sectionId, genreId]) => {
+    const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${genreId}&sort_by=popularity.desc&certification_country=IT&certification.lte=T`;
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const container = document.querySelector(`#${sectionId} .carousel`);
+        if (!container || !data.results) return;
+
+        data.results.forEach(item => {
+          const card = createCard(item); // Assicurati che questa funzione esista
+          container.appendChild(card);
+        });
+      })
+      .catch(err => console.error(`Errore nella sezione ${sectionId}:`, err));
+  });
+}
+
+
 
 async function loadAllowedContent() {
   try {
