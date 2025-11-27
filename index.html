@@ -1746,7 +1746,7 @@ function removePreferito(item) {
       if (match) {
         badge = `<div class="resume-badge">📺 S${match[1]} • E${match[2]}<br>⏪ ${formatTime(savedTime)}</div>`;
       } else {
-        badge = `<div class="resume-badge">⏪ Riprendi da ${formatTime(savedTime)}</div>`;
+        badge = `<div class="resume-badge">⏪ ${formatTime(savedTime)}</div>`;
       }
     }
   });
@@ -2655,6 +2655,7 @@ async function loadPreferiti() {
   </body>
 
 </html>
+
 
 
 
