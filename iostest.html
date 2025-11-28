@@ -2661,8 +2661,10 @@ async function caricaTuttiICataloghi() {
       document.head.appendChild(style);
 
       window.addEventListener("DOMContentLoaded", async () => {
+  // Carica contenuti consentiti da file JSON
   await loadAllowedContent();
 
+  // Inizializza il selettore CORS
   const corsSelect = document.getElementById("cors-select");
   CORS_LIST.forEach((proxy) => {
     const option = document.createElement("option");
@@ -2672,27 +2674,28 @@ async function caricaTuttiICataloghi() {
   });
   corsSelect.value = CORS;
 
+  // Installa hook Video.js
   if (typeof videojs !== "undefined") {
     setupVideoJsXhrHook();
   } else {
     window.addEventListener("load", setupVideoJsXhrHook);
   }
 
-  // 🔁 Carica tutti i cataloghi da VixSrc e TMDb
+  // 🔁 Carica cataloghi da VixSrc e dettagli da TMDb
   const cataloghi = await caricaTuttiICataloghi();
 
   const film = cataloghi.movie;
   const serie = cataloghi.tv;
   const episodi = cataloghi.episode;
 
-  // 🎞️ Popola le sezioni con i contenuti caricati
+  // 🎞️ Popola le sezioni
   popolaSezioneCatalogo("trending", film);
   popolaSezioneCatalogo("nowPlaying", film);
   popolaSezioneCatalogo("popularMovies", film);
   popolaSezioneCatalogo("onTheAir", serie);
   popolaSezioneCatalogo("popularTV", serie);
 
-  // ▶️ Carica continua visione e preferiti
+  // ▶️ Continua visione e preferiti
   checkContinuaVisione([...film, ...serie]);
   await loadContinuaDaCookie();
   await loadPreferiti();
