@@ -1047,6 +1047,7 @@
 
 
 .card {
+  max-width: 100px;
   position: relative;
   width: 180px;
   background: #111;
@@ -1212,6 +1213,15 @@
 
 .fav-btn {
   color: #ffcc00;
+}
+
+
+.card-title-overlay {
+  white-space: pre-line;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 2.6em;
+  line-height: 1.3;
 }
     </style>
   </head>
@@ -1382,105 +1392,6 @@
             </button>
           </div>
         </section>
-
-<section id="azione">
-  <h2>💥 Azione</h2>
-  <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="scrollCarousel('azione', -1)">‹</button>
-    <div class="carousel"></div>
-    <button class="carousel-btn next" onclick="scrollCarousel('azione', 1)">›</button>
-  </div>
-</section>
-
-<section id="avventura">
-  <h2>🌍 Avventura</h2>
-  <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="scrollCarousel('avventura', -1)">‹</button>
-    <div class="carousel"></div>
-    <button class="carousel-btn next" onclick="scrollCarousel('avventura', 1)">›</button>
-  </div>
-</section>
-
-<section id="animazione">
-  <h2>🎨 Animazione</h2>
-  <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="scrollCarousel('animazione', -1)">‹</button>
-    <div class="carousel"></div>
-    <button class="carousel-btn next" onclick="scrollCarousel('animazione', 1)">›</button>
-  </div>
-</section>
-
-<section id="commedia">
-  <h2>😂 Commedia</h2>
-  <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="scrollCarousel('commedia', -1)">‹</button>
-    <div class="carousel"></div>
-    <button class="carousel-btn next" onclick="scrollCarousel('commedia', 1)">›</button>
-  </div>
-</section>
-
-<section id="crime">
-  <h2>🔪 Crime</h2>
-  <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="scrollCarousel('crime', -1)">‹</button>
-    <div class="carousel"></div>
-    <button class="carousel-btn next" onclick="scrollCarousel('crime', 1)">›</button>
-  </div>
-</section>
-
-<section id="documentario">
-  <h2>📚 Documentario</h2>
-  <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="scrollCarousel('documentario', -1)">‹</button>
-    <div class="carousel"></div>
-    <button class="carousel-btn next" onclick="scrollCarousel('documentario', 1)">›</button>
-  </div>
-</section>
-
-<section id="dramma">
-  <h2>🎭 Dramma</h2>
-  <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="scrollCarousel('dramma', -1)">‹</button>
-    <div class="carousel"></div>
-    <button class="carousel-btn next" onclick="scrollCarousel('dramma', 1)">›</button>
-  </div>
-</section>
-
-<section id="famiglia">
-  <h2>👨‍👩‍👧‍👦 Famiglia</h2>
-  <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="scrollCarousel('famiglia', -1)">‹</button>
-    <div class="carousel"></div>
-    <button class="carousel-btn next" onclick="scrollCarousel('famiglia', 1)">›</button>
-  </div>
-</section>
-
-<section id="fantasy">
-  <h2>🧙‍♂️ Fantasy</h2>
-  <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="scrollCarousel('fantasy', -1)">‹</button>
-    <div class="carousel"></div>
-    <button class="carousel-btn next" onclick="scrollCarousel('fantasy', 1)">›</button>
-  </div>
-</section>
-
-<section id="storia">
-  <h2>🏛️ Storia</h2>
-  <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="scrollCarousel('storia', -1)">‹</button>
-    <div class="carousel"></div>
-    <button class="carousel-btn next" onclick="scrollCarousel('storia', 1)">›</button>
-  </div>
-</section>
-
-<section id="horror">
-  <h2>👻 Horror</h2>
-  <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="scrollCarousel('horror', -1)">‹</button>
-    <div class="carousel"></div>
-    <button class="carousel-btn next" onclick="scrollCarousel('horror', 1)">›</button>
-  </div>
-</section>
       </div>
 
       <div id="results"></div>
@@ -1559,15 +1470,13 @@
       let CORS = "corsproxy.io/";
 
       const shownContinuaIds = new Set();
-
-const endpoints = {
-  trending: "trending/all/week",
-  nowPlaying: "movie/now_playing",
-  popularMovies: "movie/popular",
-  onTheAir: "tv/on_the_air",
-  popularTV: "tv/popular",
-  
-};
+      const endpoints = {
+        trending: `trending/all/week`,
+        nowPlaying: `movie/now_playing`,
+        popularMovies: `movie/popular`,
+        onTheAir: `tv/on_the_air`,
+        popularTV: `tv/popular`,
+      };
 
       let currentItem = null;
       let currentSeasons = [];
@@ -1579,42 +1488,6 @@ const endpoints = {
 let allowedMovies = [];
 let allowedTV = [];
 let allowedEpisodes = [];
-
-
-function loadGenreSections(8265bd1679663a7ea12ac168da84d2e8) {
-  const genreMap = {
-    azione: 28,
-    avventura: 12,
-    animazione: 16,
-    commedia: 35,
-    crime: 80,
-    documentario: 99,
-    dramma: 18,
-    famiglia: 10751,
-    fantasy: 14,
-    storia: 36,
-    horror: 27
-  };
-
-  Object.entries(genreMap).forEach(([sectionId, genreId]) => {
-    const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${genreId}&sort_by=popularity.desc&certification_country=IT&certification.lte=T`;
-
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        const container = document.querySelector(`#${sectionId} .carousel`);
-        if (!container || !data.results) return;
-
-        data.results.forEach(item => {
-          const card = createCard(item); // Assicurati che questa funzione esista
-          container.appendChild(card);
-        });
-      })
-      .catch(err => console.error(`Errore nella sezione ${sectionId}:`, err));
-  });
-}
-
-
 
 async function loadAllowedContent() {
   try {
@@ -1868,11 +1741,18 @@ function removePreferito(item) {
     ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
     : "https://via.placeholder.com/200x300?text=No+Image";
 
-  const title = item.title || item.name;
+  const rawTitle = item.title || item.name || "";
   const mediaType = item.media_type || (item.title ? "movie" : "tv");
   const anno = item.release_date?.slice(0, 4) || item.first_air_date?.slice(0, 4) || "—";
   const tipo = mediaType === "movie" ? "Film" : mediaType === "tv" ? "Serie TV" : "—";
   const voto = item.vote_average?.toFixed(1) || "—";
+
+  // Titolo su massimo 2 righe, con troncamento a 42 caratteri
+  let title = rawTitle.length > 42
+    ? rawTitle.slice(0, 42).replace(/(.{21})/, "$1\n") + "..."
+    : rawTitle.length > 21
+      ? rawTitle.replace(/(.{21})/, "$1\n")
+      : rawTitle;
 
   let badge = "";
   cookieNames.forEach((name) => {
@@ -1890,7 +1770,7 @@ function removePreferito(item) {
 
   card.innerHTML = `
     <div class="card-image-wrapper">
-      <img src="${poster}" alt="${title}">
+      <img src="${poster}" alt="${rawTitle}">
       <div class="card-title-overlay">${title}</div>
       ${badge}
     </div>
@@ -1910,21 +1790,21 @@ function removePreferito(item) {
   card.querySelector(".fav-btn").addEventListener("click", (e) => {
     e.stopPropagation();
     addPreferito(item);
-    alert(`⭐ "${title}" aggiunto ai preferiti`);
+    alert(`⭐ "${rawTitle}" aggiunto ai preferiti`);
   });
 
   if (isRemovable) {
     const removeBtn = card.querySelector(".remove-btn");
     removeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const confirmDelete = confirm(`Vuoi rimuovere "${title}" dalla visione?`);
+      const confirmDelete = confirm(`Vuoi rimuovere "${rawTitle}" dalla visione?`);
       if (confirmDelete) {
         cookieNames.forEach((name) => {
           document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
         });
         card.remove();
         shownContinuaIds.delete(item.id);
-        console.log(`🗑️ Rimosso ${title} e cancellati cookie:`, cookieNames);
+        console.log(`🗑️ Rimosso ${rawTitle} e cancellati cookie:`, cookieNames);
 
         const container = document.getElementById("continua-carousel");
         if (container.children.length === 0) {
@@ -2792,7 +2672,6 @@ async function loadPreferiti() {
   </body>
 
 </html>
-
 
 
 
