@@ -1217,23 +1217,11 @@
 
 
 .card-title-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-  color: white;
-  font-size: 0.85rem;
-  font-weight: bold;
-  padding: 6px 8px;
-  box-sizing: border-box;
-  text-shadow: 0 1px 2px black;
-  line-height: 1.2;
-  max-height: 2.4em; /* 2 lines of text at 1.2 line-height */
+  white-space: pre-line;
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  max-height: 2.6em;
+  line-height: 1.3;
 }
     </style>
   </head>
@@ -1753,11 +1741,18 @@ function removePreferito(item) {
     ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
     : "https://via.placeholder.com/200x300?text=No+Image";
 
-  const title = item.title || item.name;
+  const rawTitle = item.title || item.name || "";
   const mediaType = item.media_type || (item.title ? "movie" : "tv");
   const anno = item.release_date?.slice(0, 4) || item.first_air_date?.slice(0, 4) || "—";
   const tipo = mediaType === "movie" ? "Film" : mediaType === "tv" ? "Serie TV" : "—";
   const voto = item.vote_average?.toFixed(1) || "—";
+
+  // Titolo su massimo 2 righe, con troncamento a 42 caratteri
+  let title = rawTitle.length > 42
+    ? rawTitle.slice(0, 42).replace(/(.{21})/, "$1\n") + "..."
+    : rawTitle.length > 21
+      ? rawTitle.replace(/(.{21})/, "$1\n")
+      : rawTitle;
 
   let badge = "";
   cookieNames.forEach((name) => {
@@ -1775,7 +1770,7 @@ function removePreferito(item) {
 
   card.innerHTML = `
     <div class="card-image-wrapper">
-      <img src="${poster}" alt="${title}">
+      <img src="${poster}" alt="${rawTitle}">
       <div class="card-title-overlay">${title}</div>
       ${badge}
     </div>
@@ -1795,21 +1790,21 @@ function removePreferito(item) {
   card.querySelector(".fav-btn").addEventListener("click", (e) => {
     e.stopPropagation();
     addPreferito(item);
-    alert(`⭐ "${title}" aggiunto ai preferiti`);
+    alert(`⭐ "${rawTitle}" aggiunto ai preferiti`);
   });
 
   if (isRemovable) {
     const removeBtn = card.querySelector(".remove-btn");
     removeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const confirmDelete = confirm(`Vuoi rimuovere "${title}" dalla visione?`);
+      const confirmDelete = confirm(`Vuoi rimuovere "${rawTitle}" dalla visione?`);
       if (confirmDelete) {
         cookieNames.forEach((name) => {
           document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
         });
         card.remove();
         shownContinuaIds.delete(item.id);
-        console.log(`🗑️ Rimosso ${title} e cancellati cookie:`, cookieNames);
+        console.log(`🗑️ Rimosso ${rawTitle} e cancellati cookie:`, cookieNames);
 
         const container = document.getElementById("continua-carousel");
         if (container.children.length === 0) {
