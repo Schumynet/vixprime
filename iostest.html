@@ -2661,46 +2661,42 @@ async function caricaTuttiICataloghi() {
       document.head.appendChild(style);
 
       window.addEventListener("DOMContentLoaded", async () => {
-        await loadAllowedContent();
-const cataloghi = await caricaTuttiICataloghi();
+  await loadAllowedContent();
+
+  const corsSelect = document.getElementById("cors-select");
+  CORS_LIST.forEach((proxy) => {
+    const option = document.createElement("option");
+    option.value = proxy;
+    option.textContent = proxy.replace(/\/|\?|=/g, "");
+    corsSelect.appendChild(option);
+  });
+  corsSelect.value = CORS;
+
+  if (typeof videojs !== "undefined") {
+    setupVideoJsXhrHook();
+  } else {
+    window.addEventListener("load", setupVideoJsXhrHook);
+  }
+
+  // 🔁 Carica tutti i cataloghi da VixSrc e TMDb
+  const cataloghi = await caricaTuttiICataloghi();
 
   const film = cataloghi.movie;
   const serie = cataloghi.tv;
   const episodi = cataloghi.episode;
 
+  // 🎞️ Popola le sezioni con i contenuti caricati
   popolaSezioneCatalogo("trending", film);
   popolaSezioneCatalogo("nowPlaying", film);
   popolaSezioneCatalogo("popularMovies", film);
   popolaSezioneCatalogo("onTheAir", serie);
   popolaSezioneCatalogo("popularTV", serie);
-        const corsSelect = document.getElementById("cors-select");
-        CORS_LIST.forEach((proxy) => {
-          const option = document.createElement("option");
-          option.value = proxy;
-          option.textContent = proxy.replace(/\/|\?|=/g, "");
-          corsSelect.appendChild(option);
-        });
-        corsSelect.value = CORS;
-        if (typeof videojs !== "undefined") {
-          setupVideoJsXhrHook();
-        } else {
-          window.addEventListener("load", setupVideoJsXhrHook);
-        }
 
-        for (const [key, endpoint] of Object.entries(endpoints)) {
-          const items = await fetchList(key);
-          const section = document.getElementById(key);
-          const carousel = section.querySelector(".carousel");
-
-          items.forEach((item) => {
-            carousel.appendChild(createCard(item));
-          });
-          checkContinuaVisione(items);
-          await loadContinuaDaCookie();
-          await loadPreferiti();
-         
-        }
-      });
+  // ▶️ Carica continua visione e preferiti
+  checkContinuaVisione([...film, ...serie]);
+  await loadContinuaDaCookie();
+  await loadPreferiti();
+});
     
     
     document.querySelectorAll(".arrow").forEach((btn) => {
