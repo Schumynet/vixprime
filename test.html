@@ -1087,23 +1087,19 @@
         
         <section id="continua-visione" style="display: none;">
   <h2>▶️ Continua visione</h2>
-  <div class="carousel-wrapper">
-    <button class="arrow left" data-target="continua-carousel">◀</button>
-    <div class="carousel-container">
-      <div class="carousel" id="continua-carousel"></div>
-    </div>
-    <button class="arrow right" data-target="continua-carousel">▶</button>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('continua-carousel', -1)">‹</button>
+    <div class="carousel" id="continua-carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('continua-carousel', 1)">›</button>
   </div>
 </section>
-        
-        <section id="preferiti" style="display: none;">
+
+<section id="preferiti" style="display: none;">
   <h2>⭐ Preferiti</h2>
-  <div class="carousel-wrapper">
-    <button class="arrow left" data-target="preferiti-carousel">◀</button>
-    <div class="carousel-container">
-      <div class="carousel" id="preferiti-carousel"></div>
-    </div>
-    <button class="arrow right" data-target="preferiti-carousel">▶</button>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('preferiti-carousel', -1)">‹</button>
+    <div class="carousel" id="preferiti-carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('preferiti-carousel', 1)">›</button>
   </div>
 </section>
 
