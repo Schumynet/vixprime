@@ -668,6 +668,88 @@ section h2::before {
 .vix-arrow.sinistra { margin-left: 10px; }
 .vix-arrow.destra { margin-right: 10px; }
 
+/* ========== CAROUSEL ARROWS (PREFERITI / CONTINUA) ========== */
+.carousel-arrow,
+.vix-arrow,
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.06);
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  z-index: 20;
+  flex-shrink: 0;
+}
+
+.carousel-arrow.left,
+.vix-arrow.sinistra,
+.arrow.prev { margin-left: 8px; }
+.carousel-arrow.right,
+.vix-arrow.destra,
+.arrow.next { margin-right: 8px; }
+
+.carousel-arrow > i,
+.carousel-arrow > span,
+.vix-arrow > i,
+.vix-arrow > span {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.carousel-arrow:hover,
+.vix-arrow:hover,
+.arrow:hover,
+.carousel-arrow:focus,
+.vix-arrow:focus,
+.arrow:focus {
+  background: #e50914;
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(229,9,20,0.35);
+  outline: none;
+}
+
+.carousel-arrow[disabled],
+.vix-arrow[disabled],
+.arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+  background: rgba(0,0,0,0.35);
+  box-shadow: none;
+}
+
+.carousel-arrow.fav,
+.vix-arrow.fav {
+  background: rgba(255,204,0,0.12);
+  color: #ffcc00;
+  border-color: rgba(255,204,0,0.12);
+}
+.carousel-arrow.fav:hover,
+.vix-arrow.fav:hover {
+  background: #ffcc00;
+  color: #111;
+  box-shadow: 0 6px 18px rgba(255,204,0,0.25);
+}
+
+.carousel-arrow.resume,
+.vix-arrow.resume {
+  background: rgba(229,9,20,0.12);
+  color: #e50914;
+  border-color: rgba(229,9,20,0.12);
+}
+.carousel-arrow.resume:hover,
+.vix-arrow.resume:hover {
+  background: #e50914;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(229,9,20,0.35);
+}
+
 /* ========== UTILITIES ========== */
 .titolo-hero { font-size: 2.5rem; margin-top: 60px; margin-bottom: 20px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
 .sottotitolo-hero { font-size: 1.2rem; margin-bottom: 40px; color: #dddddd; }
@@ -713,109 +795,6 @@ section h2::before {
   .arrow, .vix-arrow { font-size: 2rem; padding: 10px 14px; }
   .video-js .vjs-big-play-button { width: 80px; height: 80px; font-size: 2.5em; }
   .video-js .vjs-control-bar { height: 4em; font-size: 1.1rem; }
-}
-
-/* Frecce generiche carosello */
-.carousel-arrow,
-.vix-arrow,
-.arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.6);
-  color: #fff;
-  border: 2px solid rgba(255,255,255,0.06);
-  cursor: pointer;
-  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
-  z-index: 20;
-  flex-shrink: 0;
-}
-
-/* Posizionamento specifico (override se necessario) */
-.carousel-arrow.left,
-.vix-arrow.sinistra,
-.arrow.prev { margin-left: 8px; }
-.carousel-arrow.right,
-.vix-arrow.destra,
-.arrow.next { margin-right: 8px; }
-
-/* Icona interna (se usi <span> o <i>) */
-.carousel-arrow > i,
-.carousel-arrow > span,
-.vix-arrow > i,
-.vix-arrow > span {
-  font-size: 1.4rem;
-  line-height: 1;
-}
-
-/* Hover / Active / Focus */
-.carousel-arrow:hover,
-.vix-arrow:hover,
-.arrow:hover,
-.carousel-arrow:focus,
-.vix-arrow:focus,
-.arrow:focus {
-  background: #e50914;
-  transform: scale(1.08);
-  box-shadow: 0 6px 18px rgba(229,9,20,0.35);
-  outline: none;
-}
-
-/* Disabled */
-.carousel-arrow[disabled],
-.vix-arrow[disabled],
-.arrow:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-  transform: none;
-  background: rgba(0,0,0,0.35);
-  box-shadow: none;
-}
-
-/* Variante per "Preferiti" (colore oro) */
-.carousel-arrow.fav,
-.vix-arrow.fav {
-  background: rgba(255,204,0,0.12);
-  color: #ffcc00;
-  border-color: rgba(255,204,0,0.12);
-}
-.carousel-arrow.fav:hover,
-.vix-arrow.fav:hover {
-  background: #ffcc00;
-  color: #111;
-  box-shadow: 0 6px 18px rgba(255,204,0,0.25);
-}
-
-/* Variante per "Continua la visione" (evidenza rossa) */
-.carousel-arrow.resume,
-.vix-arrow.resume {
-  background: rgba(229,9,20,0.12);
-  color: #e50914;
-  border-color: rgba(229,9,20,0.12);
-}
-.carousel-arrow.resume:hover,
-.vix-arrow.resume:hover {
-  background: #e50914;
-  color: #fff;
-  box-shadow: 0 6px 18px rgba(229,9,20,0.35);
-}
-
-/* Smart TV: frecce più grandi e più spazio */
-@media screen and (min-width: 1600px) {
-  .carousel-arrow,
-  .vix-arrow,
-  .arrow {
-    width: 72px;
-    height: 72px;
-  }
-  .carousel-arrow > i,
-  .vix-arrow > i,
-  .arrow > i {
-    font-size: 2.2rem;
-  }
 }
     </style>
   </head>
