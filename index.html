@@ -2336,15 +2336,16 @@ function removePreferito(item) {
         document.getElementById("home").style.display = "block";
       }
 
-      function scrollCarousel(sectionId, direction) {
-        const section = document.getElementById(sectionId);
-        const carousel = section.querySelector(".carousel");
-        const scrollAmount = carousel.clientWidth * 0.8;
-        carousel.scrollBy({
-          left: direction * scrollAmount,
-          behavior: "smooth",
-        });
-      }
+      function scrollCarousel(carouselId, direction) {
+  const carousel = document.getElementById(carouselId);
+  if (!carousel) return;
+
+  const scrollAmount = carousel.clientWidth * 0.8;
+  carousel.scrollBy({
+    left: direction * scrollAmount,
+    behavior: "smooth",
+  });
+}
 
       let searchTimeout;
       document.getElementById("search").addEventListener("input", (e) => {
@@ -2687,6 +2688,7 @@ function scrollCarousel(id, direction) {
   </body>
 
 </html>
+
 
 
 
