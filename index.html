@@ -2354,17 +2354,7 @@ function removePreferito(item) {
         document.getElementById("home").style.display = "block";
       }
 
-      function scrollCarousel(carouselId, direction) {
-  const carousel = document.getElementById(carouselId);
-  if (!carousel) return;
-
-  const scrollAmount = carousel.clientWidth * 0.8;
-  carousel.scrollBy({
-    left: direction * scrollAmount,
-    behavior: "smooth",
-  });
-}
-
+      
       let searchTimeout;
       document.getElementById("search").addEventListener("input", (e) => {
         clearTimeout(searchTimeout);
@@ -2584,15 +2574,32 @@ async function loadPreferiti() {
     }
             }
     
-    function scrollCarousel(id, direction) {
-  const carousel = document.getElementById(id);
-  if (carousel) {
+    function scrollCarousel(carouselId, direction) {
+  const carousel = document.getElementById(carouselId);
+  if (!carousel) return;
+
+  const scrollAmount = carousel.clientWidth * 0.8;
+  carousel.scrollBy({
+    left: direction * scrollAmount,
+    behavior: "smooth",
+  });
+}
+
+// Supporta anche le frecce con data-target (preferiti e continua-visione)
+document.querySelectorAll('.arrow').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const targetId = btn.getAttribute('data-target');
+    const carousel = document.getElementById(targetId);
+    if (!carousel) return;
+
+    const direction = btn.classList.contains('left') ? -1 : 1;
+    const scrollAmount = carousel.clientWidth * 0.8;
     carousel.scrollBy({
-      left: direction * 300,
+      left: direction * scrollAmount,
       behavior: 'smooth'
     });
-  }
-}
+  });
+});
     
     
     function scrollRisultati(direction) {
@@ -2706,6 +2713,7 @@ function scrollCarousel(id, direction) {
   </body>
 
 </html>
+
 
 
 
