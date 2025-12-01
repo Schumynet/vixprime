@@ -2668,6 +2668,13 @@ async function loadPreferiti() {
     });
   });
 });
+
+function scrollCarousel(id, direction) {
+  const carousel = document.getElementById(id);
+  if (carousel) {
+    carousel.scrollBy({ left: direction * 300, behavior: 'smooth' });
+  }
+}
     </script>
   </body>
 
