@@ -1348,50 +1348,68 @@
             <div class="carousel"></div>
             <button
               class="carousel-btn next"
-              onclick="scrollCarousel('popularMovies', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
+<section id="continua-visione" style="display: none;">
+  <h2>▶️ Continua visione</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('continua-carousel', -1)">‹</button>
+    <div class="carousel" id="continua-carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('continua-carousel', 1)">›</button>
+  </div>
+</section>
 
-        <section id="onTheAir">
-          <h2>📺 Ultime Serie</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('onTheAir', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('onTheAir', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
+<section id="preferiti" style="display: none;">
+  <h2>⭐ Preferiti</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('preferiti-carousel', -1)">‹</button>
+    <div class="carousel" id="preferiti-carousel"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('preferiti-carousel', 1)">›</button>
+  </div>
+</section>
 
-        <section id="popularTV">
-          <h2>🏆 Serie Popolari</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('popularTV', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('popularTV', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
+<section id="trending">
+  <h2>🔥 Trending</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('trending', -1)">‹</button>
+    <div class="carousel" id="trending"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('trending', 1)">›</button>
+  </div>
+</section>
+
+<section id="nowPlaying">
+  <h2>🎬 Ultimi Film</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('nowPlaying', -1)">‹</button>
+    <div class="carousel" id="nowPlaying"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('nowPlaying', 1)">›</button>
+  </div>
+</section>
+
+<section id="popularMovies">
+  <h2>⭐ Film Popolari</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('popularMovies', -1)">‹</button>
+    <div class="carousel" id="popularMovies"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('popularMovies', 1)">›</button>
+  </div>
+</section>
+
+<section id="onTheAir">
+  <h2>📺 Ultime Serie</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('onTheAir', -1)">‹</button>
+    <div class="carousel" id="onTheAir"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('onTheAir', 1)">›</button>
+  </div>
+</section>
+
+<section id="popularTV">
+  <h2>🏆 Serie Popolari</h2>
+  <div class="carousel-container">
+    <button class="carousel-btn prev" onclick="scrollCarousel('popularTV', -1)">‹</button>
+    <div class="carousel" id="popularTV"></div>
+    <button class="carousel-btn next" onclick="scrollCarousel('popularTV', 1)">›</button>
+  </div>
+</section>
       </div>
 
       <div id="results"></div>
@@ -2688,6 +2706,7 @@ function scrollCarousel(id, direction) {
   </body>
 
 </html>
+
 
 
 
