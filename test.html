@@ -2487,8 +2487,7 @@ function esportaBackup() {
   const payload = { preferiti, cookies };
   const json = JSON.stringify(payload);
   const compressed = LZString.compressToBase64(json);
-
-  const fullUrl = `${location.origin}${location.pathname}#backup=${encodeURIComponent(compressed)}`;
+  const fullUrl = `${location.origin}${location.pathname}?backup=${encodeURIComponent(compressed)}`;
 
   fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(fullUrl)}`)
     .then((res) => res.text())
@@ -2502,18 +2501,16 @@ function esportaBackup() {
     });
 }
 
-// 📥 Importa backup da stringa base64 compressa (manuale o da URL)
+// 📥 Importa backup da stringa base64 compressa
 function importaBackup(base64String) {
   try {
     const json = LZString.decompressFromBase64(base64String.trim());
     const data = JSON.parse(json);
 
-    // Ripristina preferiti
     if (Array.isArray(data.preferiti)) {
       localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
     }
 
-    // Ripristina cookies di visione
     if (Array.isArray(data.cookies)) {
       data.cookies.forEach((entry) => {
         const [name, value] = entry.split("=");
@@ -2529,15 +2526,6 @@ function importaBackup(base64String) {
     console.error("Errore importazione:", err);
   }
 }
-
-// 📦 Importa automaticamente se presente nell’URL
-window.addEventListener("load", () => {
-  const hash = location.hash.slice(1);
-  if (hash.startsWith("backup=")) {
-    const base64 = decodeURIComponent(hash.split("=")[1]);
-    importaBackup(base64);
-  }
-});
     
     function scrollCarousel(carouselId, direction) {
   const carousel = document.getElementById(carouselId);
