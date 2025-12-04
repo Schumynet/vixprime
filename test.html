@@ -2473,10 +2473,7 @@ async function loadPreferiti() {
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
 }
     
- function generaCodiceBreve(lunghezza = 8) {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  return Array.from({ length: lunghezza }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-}
+
 
 // 📤 Esporta preferiti + continua visione (cookie) in JSON compresso base64 + link breve
 function esportaBackup() {
