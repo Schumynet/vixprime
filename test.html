@@ -1248,7 +1248,7 @@
                 <section class="hero">
   <div class="hero-content">
     <h1>Benvenuto su VixPrime</h1>
-    <p>Scopri migliaia di film e serie TV in streaming</p>
+    <p>Esporta e importa i tuoi preferiti su qualsiasi dispositivo</p>
 
     <div class="backup-tools" style="margin-top: 2rem;">
       <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
@@ -1260,7 +1260,7 @@
           type="text"
           id="backupInput"
           class="form-control"
-          placeholder="Incolla qui il backup compresso"
+          placeholder="Incolla qui il link TinyURL"
         />
 
         <button
@@ -2493,7 +2493,7 @@ function esportaBackup() {
     .then((res) => res.text())
     .then((shortUrl) => {
       navigator.clipboard.writeText(shortUrl);
-      alert(`📋 Link breve copiato negli appunti:\n${shortUrl}`);
+      document.getElementById("codiceGenerato").innerHTML = `✅ Link breve copiato: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
     })
     .catch((err) => {
       console.error("Errore shortener:", err);
@@ -2501,30 +2501,40 @@ function esportaBackup() {
     });
 }
 
-// 📥 Importa backup da stringa base64 compressa
-function importaBackup(base64String) {
-  try {
-    const json = LZString.decompressFromBase64(base64String.trim());
-    const data = JSON.parse(json);
+function importaBackup(tinyUrl) {
+  fetch(tinyUrl, { method: "HEAD", redirect: "follow" })
+    .then((response) => {
+      const realUrl = response.url;
+      const params = new URL(realUrl).searchParams;
+      const base64 = params.get("backup");
 
-    if (Array.isArray(data.preferiti)) {
-      localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
-    }
+      if (!base64) {
+        alert("❌ Nessun backup trovato nel link.");
+        return;
+      }
 
-    if (Array.isArray(data.cookies)) {
-      data.cookies.forEach((entry) => {
-        const [name, value] = entry.split("=");
-        if (name && value) {
-          setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
-        }
-      });
-    }
+      const json = LZString.decompressFromBase64(base64.trim());
+      const data = JSON.parse(json);
 
-    alert("✅ Backup importato correttamente!");
-  } catch (err) {
-    alert("❌ Errore nel backup: formato non valido o danneggiato");
-    console.error("Errore importazione:", err);
-  }
+      if (Array.isArray(data.preferiti)) {
+        localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
+      }
+
+      if (Array.isArray(data.cookies)) {
+        data.cookies.forEach((entry) => {
+          const [name, value] = entry.split("=");
+          if (name && value) {
+            setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
+          }
+        });
+      }
+
+      alert("✅ Backup importato correttamente!");
+    })
+    .catch((err) => {
+      alert("❌ Errore nel backup: link non valido o danneggiato");
+      console.error("Errore importazione:", err);
+    });
 }
     
     function scrollCarousel(carouselId, direction) {
