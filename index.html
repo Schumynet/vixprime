@@ -1248,7 +1248,7 @@
                 <section class="hero">
   <div class="hero-content">
     <h1>Benvenuto su VixPrime</h1>
-    <p>Scopri migliaia di film e serie TV in streaming</p>
+    <p>Esporta e importa i tuoi preferiti su qualsiasi dispositivo</p>
 
     <div class="backup-tools" style="margin-top: 2rem;">
       <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
@@ -1260,7 +1260,7 @@
           type="text"
           id="backupInput"
           class="form-control"
-          placeholder="Incolla qui il backup compresso"
+          placeholder="Incolla qui il link TinyURL"
         />
 
         <button
@@ -1269,6 +1269,8 @@
         >
           📥 Importa backup
         </button>
+
+        <p id="codiceGenerato" style="text-align: center;"></p>
       </div>
     </div>
   </div>
@@ -2471,55 +2473,84 @@ async function loadPreferiti() {
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
 }
     
-          // 📤 Esporta preferiti + continua visione (cookie) in JSON compresso base64
-  function esportaBackup() {
-    const preferiti = getPreferiti();
 
-    const cookies = document.cookie
-      .split(";")
-      .map((c) => c.trim())
-      .filter((c) => c.startsWith("videoTime_"));
 
-    const payload = { preferiti, cookies };
-    const json = JSON.stringify(payload);
+// 📤 Esporta preferiti + continua visione (cookie) in JSON compresso base64 + link breve
+function esportaBackup() {
+  const preferiti = getPreferiti();
 
-    const compressed = LZString.compressToBase64(json);
+  const cookies = document.cookie
+    .split(";")
+    .map((c) => c.trim())
+    .filter((c) => c.startsWith("videoTime_"));
 
-    try {
-      navigator.clipboard.writeText(compressed);
-      alert("📋 Backup compresso copiato negli appunti!");
-    } catch (err) {
-      prompt("📋 Copia manualmente il backup compresso:", compressed);
-    }
+  const payload = { preferiti, cookies };
+  const json = JSON.stringify(payload);
+  const compressed = LZString.compressToBase64(json);
+  const fullUrl = `${location.origin}${location.pathname}?backup=${encodeURIComponent(compressed)}`;
+
+  fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(fullUrl)}`)
+    .then((res) => res.text())
+    .then((shortUrl) => {
+      navigator.clipboard.writeText(shortUrl);
+      document.getElementById("codiceGenerato").innerHTML = `✅ Link breve copiato: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+    })
+    .catch((err) => {
+      console.error("Errore shortener:", err);
+      prompt("🔗 Copia manualmente il link:", fullUrl);
+    });
+}
+
+function importaBackup(input) {
+  const isUrl = input.startsWith("http");
+
+  if (isUrl) {
+    // Caso: link TinyURL → HEAD per ottenere redirect
+    fetch(input, { method: "HEAD", redirect: "follow" })
+      .then((response) => {
+        const realUrl = response.url;
+        const params = new URL(realUrl).searchParams;
+        const base64 = params.get("backup");
+
+        if (!base64) {
+          alert("❌ Nessun backup trovato nel link.");
+          return;
+        }
+
+        importaBackup(base64); // richiamo ricorsivo con base64
+      })
+      .catch((err) => {
+        alert("❌ Errore nel backup: link non valido o danneggiato");
+        console.error("Errore importazione:", err);
+      });
+
+    return;
   }
 
-  // 📥 Importa backup da stringa base64 compressa
-  function importaBackup(base64String) {
-    try {
-      const json = LZString.decompressFromBase64(base64String.trim());
-      const data = JSON.parse(json);
+  // Caso: stringa base64 diretta
+  try {
+    const json = LZString.decompressFromBase64(input.trim());
+    const data = JSON.parse(json);
 
-      // Ripristina preferiti
-      if (Array.isArray(data.preferiti)) {
-        localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
-      }
-
-      // Ripristina cookies di visione
-      if (Array.isArray(data.cookies)) {
-        data.cookies.forEach((entry) => {
-          const [name, value] = entry.split("=");
-          if (name && value) {
-            setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
-          }
-        });
-      }
-
-      alert("✅ Backup importato correttamente!");
-    } catch (err) {
-      alert("❌ Errore nel backup: formato non valido o danneggiato");
-      console.error("Errore importazione:", err);
+    if (Array.isArray(data.preferiti)) {
+      localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
     }
-            }
+
+    if (Array.isArray(data.cookies)) {
+      data.cookies.forEach((entry) => {
+        const [name, value] = entry.split("=");
+        if (name && value) {
+          setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
+        }
+      });
+    }
+
+    alert("✅ Backup importato correttamente!");
+  } catch (err) {
+    alert("❌ Errore nel backup: formato non valido o danneggiato");
+    console.error("Errore importazione:", err);
+  }
+}
     
     function scrollCarousel(carouselId, direction) {
   const carousel = document.getElementById(carouselId);
@@ -2668,13 +2699,4 @@ function scrollCarousel(id, direction) {
 
 
 
-
-
-
-
-
-
-
-
-
-
+
