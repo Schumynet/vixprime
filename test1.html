@@ -1548,51 +1548,62 @@ async function loadAllowedContent() {
       }
 
       function applyCorsProxy(url) {
-        const CORS = document.getElementById("cors-select").value;
-        const requiresEncoding = CORS_PROXIES_REQUIRING_ENCODING.some(
-          (proxy) => CORS === proxy
-        );
-        let cleanUrl = url;
-        if (url.includes(CORS)) {
-          if (requiresEncoding) {
-            cleanUrl = decodeURIComponent(url.split(CORS)[1]);
-          } else {
-            cleanUrl = url.split(CORS)[1];
-          }
-        }
-        if (
-          !cleanUrl.startsWith("http://") &&
-          !cleanUrl.startsWith("https://")
-        ) {
-          cleanUrl = resolveUrl(cleanUrl);
-          console.log("🔗 Resolved relative URL:", url, "->", cleanUrl);
-        }
-        if (
-          cleanUrl.startsWith("data:") ||
-          cleanUrl.startsWith("blob:") ||
-          !cleanUrl.startsWith("https://vixsrc.to")
-        ) {
-          return url;
-        }
+  const CORS = document.getElementById("cors-select").value;
+  const requiresEncoding = CORS_PROXIES_REQUIRING_ENCODING.some(
+    (proxy) => CORS === proxy
+  );
 
-        console.log("🔒 Applying CORS proxy to:", cleanUrl);
-        if (requiresEncoding) {
-          return `https://${CORS}${encodeURIComponent(cleanUrl)}`;
-        } else {
-          return `https://${CORS}${cleanUrl}`;
-        }
-      }
+  // Se non è selezionato alcun proxy, restituisci l'URL risolto
+  if (!CORS || CORS === "none") {
+    let resolved = url;
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      resolved = resolveUrl(url);
+      console.log("🚫 No proxy: resolved", url, "→", resolved);
+    }
+    return resolved;
+  }
 
-      const xhrRequestHook = (options) => {
-        const originalUri = options.uri;
-        options.uri = applyCorsProxy(originalUri);
+  let cleanUrl = url;
 
-        console.log("📡 XHR Request intercepted:");
-        console.log("   Original:", originalUri);
-        console.log("   Proxied:", options.uri);
+  // Rimuove il prefisso del proxy se già presente
+  if (url.includes(CORS)) {
+    cleanUrl = requiresEncoding
+      ? decodeURIComponent(url.split(CORS)[1])
+      : url.split(CORS)[1];
+  }
 
-        return options;
-      };
+  // Risolve URL relativi
+  if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
+    cleanUrl = resolveUrl(cleanUrl);
+    console.log("🔗 Resolved relative URL:", url, "→", cleanUrl);
+  }
+
+  // Esclude URL non proxyabili
+  if (
+    cleanUrl.startsWith("data:") ||
+    cleanUrl.startsWith("blob:") ||
+    !cleanUrl.startsWith("https://vixsrc.to")
+  ) {
+    return cleanUrl;
+  }
+
+  console.log("🔒 Applying CORS proxy to:", cleanUrl);
+  return requiresEncoding
+    ? `https://${CORS}${encodeURIComponent(cleanUrl)}`
+    : `https://${CORS}${cleanUrl}`;
+}
+
+const xhrRequestHook = (options) => {
+  const originalUri = options.uri;
+  const proxiedUri = applyCorsProxy(originalUri);
+  options.uri = proxiedUri;
+
+  console.log("📡 XHR Request intercepted:");
+  console.log("   Original:", originalUri);
+  console.log("   Final:", proxiedUri);
+
+  return options;
+};
 
       function setupVideoJsXhrHook() {
         if (typeof videojs === "undefined" || !videojs.Vhs) {
@@ -2700,4 +2711,4 @@ function scrollCarousel(id, direction) {
 
 
 
-
+
