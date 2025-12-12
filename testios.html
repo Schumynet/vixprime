@@ -912,6 +912,317 @@
 .vix-arrow.destra {
   margin-right: 10px;
 }
+
+
+/* Ottimizzazioni per Smart TV */
+@media screen and (min-width: 1600px) {
+  body {
+    zoom: 100%;
+    font-size: 28px;
+  }
+
+  header {
+    padding: 2rem 6%;
+  }
+
+  .logo {
+    font-size: 3rem;
+  }
+
+  .header-controls {
+    gap: 2rem;
+  }
+
+  #search {
+    font-size: 1.5rem;
+    padding: 16px 24px;
+  }
+
+  #cors-select {
+    font-size: 1.2rem;
+    padding: 14px 40px 14px 20px;
+    min-width: 240px;
+  }
+
+  .hero-content h1,
+  .titolo-hero {
+    font-size: 4rem;
+  }
+
+  .sottotitolo-hero {
+    font-size: 1.8rem;
+  }
+
+  .backup-tools input[type="text"],
+  .backup-tools button {
+    font-size: 1.3rem;
+    padding: 14px 20px;
+  }
+
+  .card {
+    min-width: 280px;
+  }
+
+  .card img {
+    height: 400px;
+  }
+
+  .resume-badge,
+  .remove-btn,
+  .fav-btn {
+    font-size: 1.1rem;
+    padding: 10px 16px;
+  }
+
+  .carousel,
+  .vix-container {
+    gap: 20px;
+  }
+
+/* Smart TV layout senza zoom eccessivo */
+@media screen and (min-width: 1600px) {
+  html, body {
+    zoom: 80%; /* oppure rimuovilo del tutto */
+    font-size: 24px;
+    overflow-x: hidden;
+  }
+
+  main,
+  header,
+  .hero,
+  .player-content,
+  .carousel-container,
+  .vix-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .card {
+    min-width: 240px;
+  }
+
+  .hero-content h1,
+  .titolo-hero {
+    font-size: 3.5rem;
+  }
+
+  .sottotitolo-hero {
+    font-size: 1.6rem;
+  }
+
+  .player-info h1 {
+    font-size: 3rem;
+  }
+
+  .overview {
+    font-size: 1.2rem;
+  }
+
+  .arrow,
+  .vix-arrow {
+    font-size: 2rem;
+    padding: 10px 14px;
+  }
+
+  .resume-badge,
+  .remove-btn,
+  .fav-btn {
+    font-size: 1rem;
+    padding: 8px 14px;
+  }
+
+  .video-js .vjs-big-play-button {
+    width: 80px;
+    height: 80px;
+    font-size: 2.5em;
+  }
+
+  .video-js .vjs-control-bar {
+    height: 4em;
+    font-size: 1.1rem;
+  }
+}
+
+
+.card {
+  max-width: 100px;
+  position: relative;
+  width: 180px;
+  background: #111;
+  color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 270px;
+  overflow: hidden;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-content {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.card-meta {
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.card-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.card-buttons button {
+  flex: 1;
+  padding: 6px;
+  font-size: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fav-btn {
+  background-color: #444;
+  color: #fff;
+}
+
+.remove-btn {
+  background-color: #e50914;
+  color: white;
+}
+  
+  .card {
+  position: relative;
+  width: 180px;
+  background: #111;
+  color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  font-family: sans-serif;
+}
+
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 270px;
+  overflow: hidden;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-title-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  text-shadow: 0 1px 2px black;
+}
+
+.resume-badge {
+  position: absolute;
+  bottom: 40px;
+  left: 10px;
+  background: rgba(229, 9, 20, 0.9);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  z-index: 5;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  line-height: 1.2;
+  text-align: left;
+  max-width: 90%;
+}
+
+.card-content {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card-meta {
+  font-size: 0.8rem;
+  color: #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  word-break: break-word;
+}
+
+.card-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.card-buttons button {
+  padding: 4px 6px;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+}
+
+.remove-btn {
+  color: #e50914;
+}
+
+.fav-btn {
+  color: #ffcc00;
+}
+
+
+.card-title-overlay {
+  white-space: pre-line;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 2.6em;
+  line-height: 1.3;
+}
     </style>
   </head>
   <body>
@@ -934,20 +1245,39 @@
 
     <main>
       <div id="home">
-        <section class="hero">
+                <section class="hero">
   <div class="hero-content">
-    <h1 class="titolo-hero">🎬 Benvenuto su VixPrime</h1>
-    <p class="sottotitolo-hero">Esporta o importa i tuoi preferiti e la visione in corso tra dispositivi</p>
+    <h1>Benvenuto su VixPrime</h1>
+    <p>Esporta e importa i tuoi preferiti su qualsiasi dispositivo</p>
 
-    <div class="backup-tools">
-      <button onclick="esportaSuPastebin()">📤 Esporta (codice + link)</button>
-      <input type="text" id="codice-import" placeholder="Incolla codice o link Pastebin">
-      <button onclick="importaDaCodiceOPastebin(document.getElementById('codice-import').value)">📥 Importa</button>
+    <div class="backup-tools" style="margin-top: 2rem;">
+      <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
+        <button onclick="esportaBackup()" class="btn btn-success">
+          📤 Esporta backup
+        </button>
+
+        <input
+          type="text"
+          id="backupInput"
+          class="form-control"
+          placeholder="Incolla qui il link TinyURL"
+        />
+
+        <button
+          onclick="importaBackup(document.getElementById('backupInput').value)"
+          class="btn btn-primary"
+        >
+          📥 Importa backup
+        </button>
+
+        <p id="codiceGenerato" style="text-align: center;"></p>
+      </div>
     </div>
   </div>
 </section>
         
-        <section id="continua-visione" style="display: none;">
+       <!-- CONTINUA VISIONE -->
+<section id="continua-visione" style="display: none;">
   <h2>▶️ Continua visione</h2>
   <div class="carousel-wrapper">
     <button class="arrow left" data-target="continua-carousel">◀</button>
@@ -957,8 +1287,9 @@
     <button class="arrow right" data-target="continua-carousel">▶</button>
   </div>
 </section>
-        
-        <section id="preferiti" style="display: none;">
+
+<!-- PREFERITI -->
+<section id="preferiti" style="display: none;">
   <h2>⭐ Preferiti</h2>
   <div class="carousel-wrapper">
     <button class="arrow left" data-target="preferiti-carousel">◀</button>
@@ -969,102 +1300,65 @@
   </div>
 </section>
 
+<!-- TRENDING -->
+<section id="trending">
+  <h2>🔥 Trending</h2>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="trending-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="trending-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="trending-carousel">▶</button>
+  </div>
+</section>
 
+<!-- ULTIMI FILM -->
+<section id="nowPlaying">
+  <h2>🎬 Ultimi Film</h2>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="nowPlaying-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="nowPlaying-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="nowPlaying-carousel">▶</button>
+  </div>
+</section>
 
-        <section id="trending">
-          <h2>🔥 Trending</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('trending', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('trending', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
+<!-- FILM POPOLARI -->
+<section id="popularMovies">
+  <h2>⭐ Film Popolari</h2>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="popularMovies-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="popularMovies-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="popularMovies-carousel">▶</button>
+  </div>
+</section>
 
-        <section id="nowPlaying">
-          <h2>🎬 Ultimi Film</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('nowPlaying', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('nowPlaying', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
+<!-- ULTIME SERIE -->
+<section id="onTheAir">
+  <h2>📺 Ultime Serie</h2>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="onTheAir-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="onTheAir-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="onTheAir-carousel">▶</button>
+  </div>
+</section>
 
-        <section id="popularMovies">
-          <h2>⭐ Film Popolari</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('popularMovies', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('popularMovies', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
-
-        <section id="onTheAir">
-          <h2>📺 Ultime Serie</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('onTheAir', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('onTheAir', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
-
-        <section id="popularTV">
-          <h2>🏆 Serie Popolari</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('popularTV', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('popularTV', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
+<!-- SERIE POPOLARI -->
+<section id="popularTV">
+  <h2>🏆 Serie Popolari</h2>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="popularTV-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="popularTV-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="popularTV-carousel">▶</button>
+  </div>
+</section>
       </div>
 
       <div id="results"></div>
@@ -1104,6 +1398,19 @@
               playsinline
               crossorigin="anonymous"
             ></video>
+           
+            <div id="download-options" style="margin-top: 1rem;">
+  <label>🎞️ Qualità:
+    <select id="quality-select"></select>
+  </label>
+  <label>🎧 Audio:
+    <select id="audio-select"></select>
+  </label>
+  <label>📝 Sottotitoli:
+    <select id="subtitle-select"></select>
+  </label>
+  <button onclick="scaricaSelezionato()" class="btn btn-primary">⬇️ Scarica selezionato</button>
+</div>
 
             <div
               id="loading-overlay"
@@ -1134,13 +1441,12 @@
       const API_KEY = "8265bd1679663a7ea12ac168da84d2e8";
       const VIXSRC_URL = "vixsrc.to";
       const CORS_PROXIES_REQUIRING_ENCODING = [""];
-const CORS_LIST = [
-  "https://corsproxy.io/",
-  "https://cors-anywhere.com/",
-  "https://api.allorigins.win/raw?url=",
-  "http://proxyium.com/",
-  "http://proxyorb.com/"
-];
+      const CORS_LIST = [
+        "cors-anywhere.com/",
+        "corsproxy.io/",
+        "api.allorigins.win/raw?url=",
+        ...CORS_PROXIES_REQUIRING_ENCODING,
+      ];
       let CORS = "corsproxy.io/";
 
       const shownContinuaIds = new Set();
@@ -1254,36 +1560,51 @@ async function loadAllowedContent() {
       }
 
       function applyCorsProxy(url) {
-  const CORS = document.getElementById("cors-select").value;
-  const requiresEncoding = CORS_PROXIES_REQUIRING_ENCODING.some(
-    (proxy) => CORS === proxy
-  );
+        const CORS = document.getElementById("cors-select").value;
+        const requiresEncoding = CORS_PROXIES_REQUIRING_ENCODING.some(
+          (proxy) => CORS === proxy
+        );
+        let cleanUrl = url;
+        if (url.includes(CORS)) {
+          if (requiresEncoding) {
+            cleanUrl = decodeURIComponent(url.split(CORS)[1]);
+          } else {
+            cleanUrl = url.split(CORS)[1];
+          }
+        }
+        if (
+          !cleanUrl.startsWith("http://") &&
+          !cleanUrl.startsWith("https://")
+        ) {
+          cleanUrl = resolveUrl(cleanUrl);
+          console.log("🔗 Resolved relative URL:", url, "->", cleanUrl);
+        }
+        if (
+          cleanUrl.startsWith("data:") ||
+          cleanUrl.startsWith("blob:") ||
+          !cleanUrl.startsWith("https://vixsrc.to")
+        ) {
+          return url;
+        }
 
-  let cleanUrl = url;
-  if (url.includes(CORS)) {
-    cleanUrl = requiresEncoding
-      ? decodeURIComponent(url.split(CORS)[1])
-      : url.split(CORS)[1];
-  }
+        console.log("🔒 Applying CORS proxy to:", cleanUrl);
+        if (requiresEncoding) {
+          return `https://${CORS}${encodeURIComponent(cleanUrl)}`;
+        } else {
+          return `https://${CORS}${cleanUrl}`;
+        }
+      }
 
-  if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
-    cleanUrl = resolveUrl(cleanUrl);
-    console.log("🔗 Resolved relative URL:", url, "->", cleanUrl);
-  }
+      const xhrRequestHook = (options) => {
+        const originalUri = options.uri;
+        options.uri = applyCorsProxy(originalUri);
 
-  if (
-    cleanUrl.startsWith("data:") ||
-    cleanUrl.startsWith("blob:") ||
-    !cleanUrl.startsWith("https://vixsrc.to")
-  ) {
-    return url;
-  }
+        console.log("📡 XHR Request intercepted:");
+        console.log("   Original:", originalUri);
+        console.log("   Proxied:", options.uri);
 
-  console.log("🔒 Applying CORS proxy to:", cleanUrl);
-  return CORS
-    ? `${CORS}${requiresEncoding ? encodeURIComponent(cleanUrl) : cleanUrl}`
-    : cleanUrl;
-}
+        return options;
+      };
 
       function setupVideoJsXhrHook() {
         if (typeof videojs === "undefined" || !videojs.Vhs) {
@@ -1353,7 +1674,7 @@ async function loadAllowedContent() {
     const episodeCounts = {
       1: 44,
       2: 100,
-      3: 89,
+      3: 95,
     };
 
     const count = episodeCounts[seasonNum] || 0;
@@ -1370,6 +1691,72 @@ async function loadAllowedContent() {
   const j = await res.json();
   return j.episodes || [];
       }
+
+
+async function caricaOpzioniDownload(m3u8Url) {
+  try {
+    const res = await fetch(applyCorsProxy(m3u8Url));
+    const text = await res.text();
+
+    const qualitySelect = document.getElementById("quality-select");
+    const audioSelect = document.getElementById("audio-select");
+    const subtitleSelect = document.getElementById("subtitle-select");
+
+    qualitySelect.innerHTML = "";
+    audioSelect.innerHTML = "";
+    subtitleSelect.innerHTML = "";
+
+    const lines = text.split("\n");
+    const qualities = [];
+    const audios = new Set();
+    const subtitles = new Set();
+
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].startsWith("#EXT-X-STREAM-INF")) {
+        const resolution = lines[i].match(/RESOLUTION=(\d+x\d+)/)?.[1] || "auto";
+        const uri = lines[i + 1];
+        qualities.push({ label: resolution, uri });
+      }
+      if (lines[i].includes("TYPE=AUDIO")) {
+        const name = lines[i].match(/NAME="([^"]+)"/)?.[1];
+        const uri = lines[i + 1];
+        if (name && uri) audios.add({ name, uri });
+      }
+      if (lines[i].includes("TYPE=SUBTITLES")) {
+        const name = lines[i].match(/NAME="([^"]+)"/)?.[1];
+        const uri = lines[i + 1];
+        if (name && uri) subtitles.add({ name, uri });
+      }
+    }
+
+    qualities.forEach((q) => {
+      const opt = document.createElement("option");
+      opt.value = q.uri;
+      opt.textContent = q.label;
+      qualitySelect.appendChild(opt);
+    });
+
+    audios.forEach((a) => {
+      const opt = document.createElement("option");
+      opt.value = a.uri;
+      opt.textContent = a.name;
+      audioSelect.appendChild(opt);
+    });
+
+    subtitles.forEach((s) => {
+      const opt = document.createElement("option");
+      opt.value = s.uri;
+      opt.textContent = s.name;
+      subtitleSelect.appendChild(opt);
+    });
+
+    console.log("🎚️ Opzioni caricate:", { qualities, audios, subtitles });
+  } catch (err) {
+    console.error("❌ Errore nel parsing della playlist:", err);
+  }
+}
+
+
     
     function getPreferiti() {
   const raw = localStorage.getItem("preferiti");
@@ -1395,56 +1782,75 @@ function removePreferito(item) {
       function createCard(item, cookieNames = [], isRemovable = false) {
   const card = document.createElement("div");
   card.className = "card";
-  card.style.position = "relative";
 
   const poster = item.poster_path
     ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
     : "https://via.placeholder.com/200x300?text=No+Image";
 
-  const title = item.title || item.name;
+  const rawTitle = item.title || item.name || "";
   const mediaType = item.media_type || (item.title ? "movie" : "tv");
+  const anno = item.release_date?.slice(0, 4) || item.first_air_date?.slice(0, 4) || "—";
+  const tipo = mediaType === "movie" ? "Film" : mediaType === "tv" ? "Serie TV" : "—";
+  const voto = item.vote_average?.toFixed(1) || "—";
+
+  // Titolo su massimo 2 righe, con troncamento a 42 caratteri
+  let title = rawTitle.length > 42
+    ? rawTitle.slice(0, 42).replace(/(.{21})/, "$1\n") + "..."
+    : rawTitle.length > 21
+      ? rawTitle.replace(/(.{21})/, "$1\n")
+      : rawTitle;
 
   let badge = "";
-
   cookieNames.forEach((name) => {
     const value = getCookie(name);
     const savedTime = parseFloat(value);
     if (savedTime > 10) {
       const match = name.match(/_S(\d+)_E(\d+)/);
       if (match) {
-        badge = `<div class="resume-badge">📺 Stagione ${match[1]}, Episodio ${match[2]}<br>⏪ ${formatTime(savedTime)}</div>`;
+        badge = `<div class="resume-badge">📺 S${match[1]} • E${match[2]}<br>⏪ ${formatTime(savedTime)}</div>`;
       } else {
-        badge = `<div class="resume-badge">⏪ Riprendi da ${formatTime(savedTime)}</div>`;
+        badge = `<div class="resume-badge">⏪ ${formatTime(savedTime)}</div>`;
       }
     }
   });
 
   card.innerHTML = `
-    <img src="${poster}" alt="${title}">
-    ${badge}
-    <div class="card-title">${title}</div>
-    ${isRemovable ? `<button class="remove-btn">Rimuovi</button>` : ""}
-<button class="fav-btn">⭐ Preferito</button>
+    <div class="card-image-wrapper">
+      <img src="${poster}" alt="${rawTitle}">
+      <div class="card-title-overlay">${title}</div>
+      ${badge}
+    </div>
+    <div class="card-content">
+      <div class="card-meta">
+        <div>${anno}</div>
+        <div>${voto}</div>
+        <div>${tipo}</div>
+      </div>
+      <div class="card-buttons">
+        ${isRemovable ? `<button class="remove-btn" title="Rimuovi">❌</button>` : ""}
+        <button class="fav-btn" title="Preferito">♥</button>
+      </div>
+    </div>
   `;
-        
-        card.querySelector(".fav-btn").addEventListener("click", (e) => {
-  e.stopPropagation();
-  addPreferito(item);
-  alert(`⭐ "${title}" aggiunto ai preferiti`);
-});
+
+  card.querySelector(".fav-btn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    addPreferito(item);
+    alert(`⭐ "${rawTitle}" aggiunto ai preferiti`);
+  });
 
   if (isRemovable) {
     const removeBtn = card.querySelector(".remove-btn");
     removeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const confirmDelete = confirm(`Vuoi rimuovere "${title}" dalla visione?`);
+      const confirmDelete = confirm(`Vuoi rimuovere "${rawTitle}" dalla visione?`);
       if (confirmDelete) {
         cookieNames.forEach((name) => {
           document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
         });
         card.remove();
-        shownContinuaIds.delete(item.id); // ✅ aggiorna il Set globale
-        console.log(`🗑️ Rimosso ${title} e cancellati cookie:`, cookieNames);
+        shownContinuaIds.delete(item.id);
+        console.log(`🗑️ Rimosso ${rawTitle} e cancellati cookie:`, cookieNames);
 
         const container = document.getElementById("continua-carousel");
         if (container.children.length === 0) {
@@ -1916,6 +2322,7 @@ function removePreferito(item) {
           player.ready(function () {
             setupKeyboardShortcuts();
             showLoading(false);
+       caricaOpzioniDownload(proxiedM3u8Url);
             console.log("✅ Player ready");
             
             trackVideoProgress(
@@ -1947,6 +2354,41 @@ function removePreferito(item) {
         }
       }
 
+
+function scaricaSelezionato() {
+  const qualityUri = document.getElementById("quality-select").value;
+  const audioUri = document.getElementById("audio-select").value;
+  const subtitleUri = document.getElementById("subtitle-select").value;
+
+  const base = baseStreamUrl; // già calcolato da getDirectStream
+  const title = (currentItem?.title || currentItem?.name || "video").replace(/[^\w\s-]/g, "").replace(/\s+/g, "_");
+
+  const links = [];
+
+  if (qualityUri) links.push({ label: "🎞️ Video", url: applyCorsProxy(resolveUrl(qualityUri, base)) });
+  if (audioUri) links.push({ label: "🎧 Audio", url: applyCorsProxy(resolveUrl(audioUri, base)) });
+  if (subtitleUri) links.push({ label: "📝 Sub", url: applyCorsProxy(resolveUrl(subtitleUri, base)) });
+
+  if (links.length === 0) {
+    alert("⚠️ Nessuna selezione valida per il download.");
+    return;
+  }
+
+  links.forEach((link) => {
+    const a = document.createElement("a");
+    a.href = link.url;
+    a.download = `${title}_${link.label}.ts`;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  console.log("⬇️ Download avviato per:", links);
+}
+
+
       function showLoading(show, message = "Caricamento stream...") {
         const overlay = document.getElementById("loading-overlay");
         overlay.style.display = show ? "flex" : "none";
@@ -1976,16 +2418,7 @@ function removePreferito(item) {
         document.getElementById("home").style.display = "block";
       }
 
-      function scrollCarousel(sectionId, direction) {
-        const section = document.getElementById(sectionId);
-        const carousel = section.querySelector(".carousel");
-        const scrollAmount = carousel.clientWidth * 0.8;
-        carousel.scrollBy({
-          left: direction * scrollAmount,
-          behavior: "smooth",
-        });
-      }
-
+      
       let searchTimeout;
       document.getElementById("search").addEventListener("input", (e) => {
         clearTimeout(searchTimeout);
@@ -2155,11 +2588,12 @@ async function loadPreferiti() {
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
 }
     
-    async function esportaSuPastebin() {
-  const apiDevKey = "V4c4ghnxgQxaKvfHqkUn8WHpwd7_lFpr"; // La tua API key
-  const apiUserKey = "7dbecd6ec2d0c3057c43c7050fd65c6b"; // La tua user_key
 
+
+// 📤 Esporta preferiti + continua visione (cookie) in JSON compresso base64 + link breve
+function esportaBackup() {
   const preferiti = getPreferiti();
+
   const cookies = document.cookie
     .split(";")
     .map((c) => c.trim())
@@ -2167,68 +2601,50 @@ async function loadPreferiti() {
 
   const payload = { preferiti, cookies };
   const json = JSON.stringify(payload);
-  const compressed = LZString.compressToEncodedURIComponent(json);
+  const compressed = LZString.compressToBase64(json);
+  const fullUrl = `${location.origin}${location.pathname}?backup=${encodeURIComponent(compressed)}`;
 
-  // Mostra il codice compresso
-  try {
-    await navigator.clipboard.writeText(compressed);
-    showToast("📋 Codice copiato negli appunti!");
-  } catch (err) {
-    prompt("📋 Copia manualmente il codice:", compressed);
-  }
-
-  // Recupera il CORS proxy selezionato
-  const corsProxy = document.getElementById("cors-select")?.value || "";
-  const pastebinUrl = "https://pastebin.com/api/api_post.php";
-  const fullUrl = `https://${corsProxy}${pastebinUrl}`;
-
-  const formData = new URLSearchParams();
-  formData.append("api_dev_key", apiDevKey);
-  formData.append("api_user_key", apiUserKey);
-  formData.append("api_option", "paste");
-  formData.append("api_paste_code", compressed);
-  formData.append("api_paste_private", "1");
-  formData.append("api_paste_expire_date", "1W");
-  formData.append("api_paste_format", "text");
-
-  try {
-    const res = await fetch(fullUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: formData.toString()
+  fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(fullUrl)}`)
+    .then((res) => res.text())
+    .then((shortUrl) => {
+      navigator.clipboard.writeText(shortUrl);
+      document.getElementById("codiceGenerato").innerHTML = `✅ Link breve copiato: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+    })
+    .catch((err) => {
+      console.error("Errore shortener:", err);
+      prompt("🔗 Copia manualmente il link:", fullUrl);
     });
-
-    const text = await res.text();
-
-    if (text.startsWith("http")) {
-      prompt("✅ Codice salvato su Pastebin! Copia il link:", text);
-    } else {
-      alert("❌ Errore da Pastebin: " + text);
-    }
-  } catch (err) {
-    alert("❌ Errore durante l'invio a Pastebin");
-    console.error(err);
-  }
 }
 
-async function importaDaCodiceOPastebin(input) {
-  const isLink = input.includes("pastebin.com");
-  let codice = input.trim();
+function importaBackup(input) {
+  const isUrl = input.startsWith("http");
 
-  if (isLink) {
-    const key = codice.replace(/^.*\/([^\/]+)$/, "$1");
-    try {
-      const res = await fetch(`https://pastebin.com/raw/${key}`);
-      codice = await res.text();
-    } catch (err) {
-      alert("❌ Errore nel recupero del codice da Pastebin");
-      console.error(err);
-      return;
-    }
+  if (isUrl) {
+    // Caso: link TinyURL → HEAD per ottenere redirect
+    fetch(input, { method: "HEAD", redirect: "follow" })
+      .then((response) => {
+        const realUrl = response.url;
+        const params = new URL(realUrl).searchParams;
+        const base64 = params.get("backup");
+
+        if (!base64) {
+          alert("❌ Nessun backup trovato nel link.");
+          return;
+        }
+
+        importaBackup(base64); // richiamo ricorsivo con base64
+      })
+      .catch((err) => {
+        alert("❌ Errore nel backup: link non valido o danneggiato");
+        console.error("Errore importazione:", err);
+      });
+
+    return;
   }
 
+  // Caso: stringa base64 diretta
   try {
-    const json = LZString.decompressFromEncodedURIComponent(codice);
+    const json = LZString.decompressFromBase64(input.trim());
     const data = JSON.parse(json);
 
     if (Array.isArray(data.preferiti)) {
@@ -2236,19 +2652,48 @@ async function importaDaCodiceOPastebin(input) {
     }
 
     if (Array.isArray(data.cookies)) {
-      data.cookies.forEach((cookie) => {
-        const [name, value] = cookie.split("=");
-        document.cookie = `${name}=${value};path=/;max-age=31536000`;
+      data.cookies.forEach((entry) => {
+        const [name, value] = entry.split("=");
+        if (name && value) {
+          setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
+        }
       });
     }
 
-    alert("✅ Dati importati con successo!");
-    location.reload();
+    alert("✅ Backup importato correttamente!");
   } catch (err) {
-    alert("❌ Codice non valido o danneggiato");
-    console.error(err);
+    alert("❌ Errore nel backup: formato non valido o danneggiato");
+    console.error("Errore importazione:", err);
   }
 }
+    
+    function scrollCarousel(carouselId, direction) {
+  const carousel = document.getElementById(carouselId);
+  if (!carousel) return;
+
+  const scrollAmount = carousel.clientWidth * 0.8;
+  carousel.scrollBy({
+    left: direction * scrollAmount,
+    behavior: "smooth",
+  });
+}
+
+// Supporta anche le frecce con data-target (preferiti e continua-visione)
+document.querySelectorAll('.arrow').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const targetId = btn.getAttribute('data-target');
+    const carousel = document.getElementById(targetId);
+    if (!carousel) return;
+
+    const direction = btn.classList.contains('left') ? -1 : 1;
+    const scrollAmount = carousel.clientWidth * 0.8;
+    carousel.scrollBy({
+      left: direction * scrollAmount,
+      behavior: 'smooth'
+    });
+  });
+});
+    
     
     function scrollRisultati(direction) {
   const container = document.getElementById("searchCarousel");
@@ -2350,6 +2795,13 @@ async function importaDaCodiceOPastebin(input) {
     });
   });
 });
+
+function scrollCarousel(id, direction) {
+  const carousel = document.getElementById(id);
+  if (carousel) {
+    carousel.scrollBy({ left: direction * 300, behavior: 'smooth' });
+  }
+}
     </script>
   </body>
 
@@ -2362,5 +2814,4 @@ async function importaDaCodiceOPastebin(input) {
 
 
 
-
-
+
