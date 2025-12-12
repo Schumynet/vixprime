@@ -8,6 +8,9 @@ VixPrime è una piattaforma web che consente la **visione gratuita di film e ser
 ## 🚀 Funzionalità
 🤣
 - 🎥 **Film e Serie TV in italiano**
+- ⏩ Sezioni backup:
+  - continua la visione
+  - preferiti
 - 🔥 Sezioni dinamiche:
   - Trending
   - Ultimi Film
