@@ -1224,7 +1224,15 @@
   line-height: 1.3;
 }
 
-.episodio-arrow {
+.episodio-selector-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.episodio-selector-vertical button {
   font-size: 1.4rem;
   padding: 0.3rem 0.8rem;
   background-color: #444;
@@ -1235,16 +1243,19 @@
   transition: background-color 0.2s ease;
 }
 
-.episodio-arrow:hover {
+.episodio-selector-vertical button:hover {
   background-color: #666;
 }
 
-.episodio-select {
+.episodio-selector-vertical select {
+  width: 100%;
+  max-height: 180px;
   font-size: 1rem;
   background-color: #111;
   color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
+  overflow-y: auto;
 }
     </style>
   </head>
@@ -1431,7 +1442,7 @@
               <div class="loading-text">Caricamento stream...</div>
             </div>
           </div>
-          <div
+         <div
   class="episode-selector"
   id="episode-selector"
   style="display: none"
@@ -1444,19 +1455,23 @@
   </div>
 
   <div class="episodes-list" id="episodes-list">
-    <div class="episodio-selector-vertical" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-top: 1rem;">
-      <button onclick="spostaEpisodio(-1)" class="episodio-arrow">⬆</button>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-top: 1rem;">
+      <button onclick="scrollEpisodio(-1)">⬆</button>
 
-      <select id="episodioSelect" class="episodio-select" onchange="onEpisodioChange(this.value)" size="6" style="width: 100%;">
-        <option value="1">Episodio 1</option>
-        <option value="2">Episodio 2</option>
-        <option value="3">Episodio 3</option>
-        <option value="4">Episodio 4</option>
-        <option value="5">Episodio 5</option>
-        <!-- Puoi popolarlo dinamicamente -->
-      </select>
+      <div style="max-height: 180px; overflow-y: auto;">
+        <select id="episodioSelect" size="6" onchange="onEpisodioChange(this.value)" style="width: 100%;">
+          <option value="1">Episodio 1</option>
+          <option value="2">Episodio 2</option>
+          <option value="3">Episodio 3</option>
+          <option value="4">Episodio 4</option>
+          <option value="5">Episodio 5</option>
+          <option value="6">Episodio 6</option>
+          <option value="7">Episodio 7</option>
+          <option value="8">Episodio 8</option>
+        </select>
+      </div>
 
-      <button onclick="spostaEpisodio(1)" class="episodio-arrow">⬇</button>
+      <button onclick="scrollEpisodio(1)">⬇</button>
     </div>
   </div>
 </div>
@@ -2591,23 +2606,22 @@ function importaBackup(input) {
 }
 
 
-function spostaEpisodio(direzione) {
+function scrollEpisodio(direzione) {
   const select = document.getElementById("episodioSelect");
   if (!select) return;
 
-  const max = select.options.length;
   const current = select.selectedIndex;
   const next = current + direzione;
 
-  if (next >= 0 && next < max) {
+  if (next >= 0 && next < select.options.length) {
     select.selectedIndex = next;
+    select.options[next].scrollIntoView({ block: "nearest", behavior: "smooth" });
     select.dispatchEvent(new Event("change"));
   }
 }
 
 function onEpisodioChange(value) {
-  console.log("Episodio selezionato:", value);
-  caricaEpisodio(value); // se già esiste questa funzione
+  caricaEpisodio(value); // o la tua funzione di caricamento
 }
     
     function scrollCarousel(carouselId, direction) {
