@@ -1453,19 +1453,19 @@
   </div>
 
   <div class="episodes-list" id="episodes-list">
-    <div class="episodio-selector" style="display: flex; align-items: center; gap: 0.5rem;">
-      <button onclick="spostaEpisodio(-1)" class="btn btn-secondary">⬆</button>
+    <div class="episodio-selector-vertical" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-top: 1rem;">
+      <button onclick="spostaEpisodio(-1)" class="episodio-arrow">⬆</button>
 
-      <select id="episodioSelect" class="form-select" onchange="onEpisodioChange(this.value)">
+      <select id="episodioSelect" class="episodio-select" onchange="onEpisodioChange(this.value)" size="6" style="width: 100%;">
         <option value="1">Episodio 1</option>
         <option value="2">Episodio 2</option>
         <option value="3">Episodio 3</option>
         <option value="4">Episodio 4</option>
         <option value="5">Episodio 5</option>
-        <!-- Puoi generare dinamicamente questi option via JS -->
+        <!-- Puoi popolarlo dinamicamente -->
       </select>
 
-      <button onclick="spostaEpisodio(1)" class="btn btn-secondary">⬇</button>
+      <button onclick="spostaEpisodio(1)" class="episodio-arrow">⬇</button>
     </div>
   </div>
 </div>
