@@ -2566,6 +2566,27 @@ function importaBackup(input) {
     console.error("Errore importazione:", err);
   }
 }
+
+
+function spostaEpisodio(direzione) {
+  const select = document.getElementById("episodioSelect");
+  if (!select) return;
+
+  const max = select.options.length;
+  const current = select.selectedIndex;
+  const next = current + direzione;
+
+  if (next >= 0 && next < max) {
+    select.selectedIndex = next;
+    select.dispatchEvent(new Event("change"));
+  }
+}
+
+function onEpisodioChange(value) {
+  // Inserisci qui la tua logica per caricare l’episodio selezionato
+  console.log("Episodio selezionato:", value);
+  caricaEpisodio(value); // se già esiste questa funzione
+}
     
     function scrollCarousel(carouselId, direction) {
   const carousel = document.getElementById(carouselId);
