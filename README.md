@@ -29,7 +29,7 @@ VixPrime è una piattaforma web che consente la **visione gratuita di film e ser
 - [VixSrc.to](https://vixsrc.to) per la visione dei contenuti
 
 # 🎬 Come usare il progetto
--- **Guarda ora** (https://schumynet.github.io/vixprime/)
+-- **Guarda ora** (https://vixprime.vercel.app/)
 
 
 
