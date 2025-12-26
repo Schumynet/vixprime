@@ -1245,36 +1245,42 @@
 
     <main>
       <div id="home">
-                <section class="hero">
-  <div class="hero-content">
-    <h1>Benvenuto/a su VixPrime</h1>
-    <p>Esporta e importa i tuoi preferiti su qualsiasi dispositivo</p>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Benvenuto/a su VixPrime</h1>
+      <p>Esporta e importa i tuoi preferiti su qualsiasi dispositivo</p>
 
-    <div class="backup-tools" style="margin-top: 2rem;">
-      <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
-        <button onclick="esportaBackup()" class="btn btn-success">
-          📤 Esporta backup
-        </button>
+      <div class="backup-tools" style="margin-top: 2rem;">
+        <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
+          
+          <!-- Pulsante esportazione -->
+          <button onclick="esportaBackup()" class="btn btn-success">
+            📤 Esporta backup
+          </button>
 
-        <input
-          type="text"
-          id="backupInput"
-          class="form-control"
-          placeholder="Incolla qui il link TinyURL"
-        />
+          <!-- Campo input per incollare link o codice -->
+          <input
+            type="text"
+            id="backupInput"
+            class="form-control"
+            placeholder="Incolla qui il link o codice backup"
+          />
 
-        <button
-          onclick="importaBackup(document.getElementById('backupInput').value)"
-          class="btn btn-primary"
-        >
-          📥 Importa backup
-        </button>
+          <!-- Pulsante importazione -->
+          <button
+            onclick="importaBackup(document.getElementById('backupInput').value)"
+            class="btn btn-primary"
+          >
+            📥 Importa backup
+          </button>
 
-        <p id="codiceGenerato" style="text-align: center;"></p>
+          <!-- Output link generato -->
+          <p id="codiceGenerato" style="text-align: center; word-break: break-all;"></p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+</div>
         
        <!-- CONTINUA VISIONE -->
 <section id="continua-visione" style="display: none;">
