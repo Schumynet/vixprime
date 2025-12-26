@@ -1244,37 +1244,41 @@
     </header>
 
     <main>
-      <div id="home">
-                <section class="hero">
-  <div class="hero-content">
-    <h1>Benvenuto su VixFlix</h1>
-    <p>Scopri migliaia di film e serie TV in streaming</p>
+   <div id="home">
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Benvenuto/a su VixPrime</h1>
+      <p>Esporta e importa i tuoi preferiti su qualsiasi dispositivo</p>
 
-    <div class="backup-tools" style="margin-top: 2rem;">
-      <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
-        <button onclick="esportaBackup()" class="btn btn-success">
-          📤 Esporta backup
-        </button>
+      <div class="backup-tools" style="margin-top: 2rem;">
+        <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
+          <button onclick="esportaBackup()" class="btn btn-success">
+            📤 Esporta backup
+          </button>
 
-        <input
-          type="text"
-          id="backupInput"
-          class="form-control"
-          placeholder="Incolla qui il backup compresso"
-        />
+          <input
+            type="text"
+            id="backupInput"
+            class="form-control"
+            placeholder="Incolla qui il link TinyURL o ctxt.io"
+          />
 
-        <button
-          onclick="importaBackup(document.getElementById('backupInput').value)"
-          class="btn btn-primary"
-        >
-          📥 Importa backup
-        </button>
+          <button
+            onclick="importaBackup(document.getElementById('backupInput').value)"
+            class="btn btn-primary"
+          >
+            📥 Importa backup
+          </button>
+
+          <p id="codiceGenerato" style="text-align: center;"></p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+</div>
         
-        <section id="continua-visione" style="display: none;">
+       <!-- CONTINUA VISIONE -->
+<section id="continua-visione" style="display: none;">
   <h2>▶️ Continua visione</h2>
   <div class="carousel-wrapper">
     <button class="arrow left" data-target="continua-carousel">◀</button>
@@ -1284,8 +1288,9 @@
     <button class="arrow right" data-target="continua-carousel">▶</button>
   </div>
 </section>
-        
-        <section id="preferiti" style="display: none;">
+
+<!-- PREFERITI -->
+<section id="preferiti" style="display: none;">
   <h2>⭐ Preferiti</h2>
   <div class="carousel-wrapper">
     <button class="arrow left" data-target="preferiti-carousel">◀</button>
@@ -1296,102 +1301,65 @@
   </div>
 </section>
 
+<!-- TRENDING -->
+<section id="trending">
+  <h2>🔥 Trending</h2>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="trending-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="trending-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="trending-carousel">▶</button>
+  </div>
+</section>
 
+<!-- ULTIMI FILM -->
+<section id="nowPlaying">
+  <h2>🎬 Ultimi Film</h2>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="nowPlaying-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="nowPlaying-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="nowPlaying-carousel">▶</button>
+  </div>
+</section>
 
-        <section id="trending">
-          <h2>🔥 Trending</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('trending', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('trending', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
+<!-- FILM POPOLARI -->
+<section id="popularMovies">
+  <h2>⭐ Film Popolari</h2>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="popularMovies-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="popularMovies-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="popularMovies-carousel">▶</button>
+  </div>
+</section>
 
-        <section id="nowPlaying">
-          <h2>🎬 Ultimi Film</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('nowPlaying', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('nowPlaying', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
+<!-- ULTIME SERIE -->
+<section id="onTheAir">
+  <h2>📺 Ultime Serie</h2>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="onTheAir-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="onTheAir-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="onTheAir-carousel">▶</button>
+  </div>
+</section>
 
-        <section id="popularMovies">
-          <h2>⭐ Film Popolari</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('popularMovies', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('popularMovies', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
-
-        <section id="onTheAir">
-          <h2>📺 Ultime Serie</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('onTheAir', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('onTheAir', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
-
-        <section id="popularTV">
-          <h2>🏆 Serie Popolari</h2>
-          <div class="carousel-container">
-            <button
-              class="carousel-btn prev"
-              onclick="scrollCarousel('popularTV', -1)"
-            >
-              ‹
-            </button>
-            <div class="carousel"></div>
-            <button
-              class="carousel-btn next"
-              onclick="scrollCarousel('popularTV', 1)"
-            >
-              ›
-            </button>
-          </div>
-        </section>
+<!-- SERIE POPOLARI -->
+<section id="popularTV">
+  <h2>🏆 Serie Popolari</h2>
+  <div class="carousel-wrapper">
+    <button class="arrow left" data-target="popularTV-carousel">◀</button>
+    <div class="carousel-container">
+      <div class="carousel" id="popularTV-carousel"></div>
+    </div>
+    <button class="arrow right" data-target="popularTV-carousel">▶</button>
+  </div>
+</section>
       </div>
 
       <div id="results"></div>
@@ -1673,7 +1641,7 @@ async function loadAllowedContent() {
       }
 
       async function fetchTVSeasons(tvId) {
-  if (tvId === 8762) {
+  if (tvId === 87623) {
     // Hercai: override stagioni personalizzate
     return [
       { season_number: 1, name: "Stagione 1" },
@@ -1694,7 +1662,7 @@ async function loadAllowedContent() {
     const episodeCounts = {
       1: 44,
       2: 100,
-      3: 92,
+      3: 98,
     };
 
     const count = episodeCounts[seasonNum] || 0;
@@ -2336,16 +2304,7 @@ function removePreferito(item) {
         document.getElementById("home").style.display = "block";
       }
 
-      function scrollCarousel(sectionId, direction) {
-        const section = document.getElementById(sectionId);
-        const carousel = section.querySelector(".carousel");
-        const scrollAmount = carousel.clientWidth * 0.8;
-        carousel.scrollBy({
-          left: direction * scrollAmount,
-          behavior: "smooth",
-        });
-      }
-
+      
       let searchTimeout;
       document.getElementById("search").addEventListener("input", (e) => {
         clearTimeout(searchTimeout);
@@ -2515,91 +2474,150 @@ async function loadPreferiti() {
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
 }
     
-          // 📤 Esporta preferiti + continua visione (cookie) in JSON compresso base64
-  function esportaBackup() {
-    const preferiti = getPreferiti();
 
-    const cookies = document.cookie
-      .split(";")
-      .map((c) => c.trim())
-      .filter((c) => c.startsWith("videoTime_"));
+function esportaBackup() {
+  const preferiti = getPreferiti();
 
-    const payload = { preferiti, cookies };
-    const json = JSON.stringify(payload);
+  const cookies = document.cookie
+    .split(";")
+    .map((c) => c.trim())
+    .filter((c) => c.startsWith("videoTime_"));
 
-    const compressed = LZString.compressToBase64(json);
+  const payload = { preferiti, cookies };
+  const json = JSON.stringify(payload);
+  const compressed = LZString.compressToBase64(json);
 
-    try {
-      navigator.clipboard.writeText(compressed);
-      alert("📋 Backup compresso copiato negli appunti!");
-    } catch (err) {
-      prompt("📋 Copia manualmente il backup compresso:", compressed);
-    }
-  }
+  fetch("https://ctxt.io/api/v1/pastes", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: "Backup",
+      description: "Backup preferiti + cookie",
+      contents: compressed,
+      expire: "1month",
+      lexer: "text",
+      visibility: "public"
+    })
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      const ctxtUrl = data.url;
+      const encodedCtxtUrl = encodeURIComponent(ctxtUrl);
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://tinyurl.com/api-create.php?url=${encodedCtxtUrl}`)}`;
 
-  // 📥 Importa backup da stringa base64 compressa
-  function importaBackup(base64String) {
-    try {
-      const json = LZString.decompressFromBase64(base64String.trim());
-      const data = JSON.parse(json);
-
-      // Ripristina preferiti
-      if (Array.isArray(data.preferiti)) {
-        localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
-      }
-
-      // Ripristina cookies di visione
-      if (Array.isArray(data.cookies)) {
-        data.cookies.forEach((entry) => {
-          const [name, value] = entry.split("=");
-          if (name && value) {
-            setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
-          }
+      fetch(proxyUrl)
+        .then((res) => res.json())
+        .then((shortData) => {
+          const shortUrl = shortData.contents.trim();
+          navigator.clipboard.writeText(shortUrl);
+          document.getElementById("codiceGenerato").innerHTML = `
+            ✅ Link breve copiato: <a href="${shortUrl}" target="_blank">${shortUrl}</a><br>
+            📄 Backup completo: <a href="${ctxtUrl}" target="_blank">${ctxtUrl}</a>
+          `;
         });
-      }
+    })
+    .catch((err) => {
+      console.error("Errore esportazione:", err);
+      prompt("🔗 Copia manualmente il backup:", compressed);
+    });
+}
 
-      alert("✅ Backup importato correttamente!");
-    } catch (err) {
-      alert("❌ Errore nel backup: formato non valido o danneggiato");
-      console.error("Errore importazione:", err);
-    }
-            }
-    
-    
-async function caricaTuttiICataloghi() {
-  const tipi = ["movie", "tv", "episode"];
-  const risultati = {};
+function importaBackup(input) {
+  const isUrl = input.startsWith("http");
 
-  for (const tipo of tipi) {
-    const url = applyCorsProxy(`https://${VIXSRC_URL}/api/list/${tipo}?lang=it`);
-    try {
-      const res = await fetch(url);
-      const ids = await res.json(); // [{ tmdb_id: ... }]
-      const endpoint = tipo === "tv" ? "tv" : "movie";
+  if (isUrl) {
+    const url = input.trim();
 
-      const dettagli = await Promise.all(
-        ids.map(async ({ tmdb_id }) => {
-          try {
-            const res = await fetch(`https://api.themoviedb.org/3/${endpoint}/${tmdb_id}?api_key=${API_KEY}&language=it-IT`);
-            const data = await res.json();
-            data.media_type = tipo;
-            return data;
-          } catch (err) {
-            console.warn(`Errore TMDb per ${tmdb_id}:`, err);
-            return null;
-          }
+    if (url.includes("ctxt.io")) {
+      const id = url.split("/").pop().replace(".txt", "");
+      const rawUrl = `https://ctxt.io/${id}.txt`;
+
+      fetch(rawUrl)
+        .then((res) => {
+          if (!res.ok) throw new Error("Risposta non valida");
+          return res.text();
         })
-      );
+        .then((base64) => importaBackup(base64))
+        .catch((err) => {
+          alert("❌ Errore nel recupero da ctxt.io");
+          console.error("Errore ctxt.io:", err);
+        });
 
-      risultati[tipo] = dettagli.filter(Boolean);
-    } catch (err) {
-      console.error(`Errore nel caricamento catalogo ${tipo}:`, err);
-      risultati[tipo] = [];
+      return;
     }
+
+    fetch(url, { method: "HEAD", redirect: "follow" })
+      .then((response) => {
+        const realUrl = response.url;
+        const params = new URL(realUrl).searchParams;
+        const base64 = params.get("backup");
+
+        if (!base64) {
+          alert("❌ Nessun backup trovato nel link.");
+          return;
+        }
+
+        importaBackup(base64);
+      })
+      .catch((err) => {
+        alert("❌ Errore nel backup: link non valido o danneggiato");
+        console.error("Errore importazione:", err);
+      });
+
+    return;
   }
 
-  return risultati;
+  try {
+    const json = LZString.decompressFromBase64(input.trim());
+    const data = JSON.parse(json);
+
+    if (Array.isArray(data.preferiti)) {
+      localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
+    }
+
+    if (Array.isArray(data.cookies)) {
+      data.cookies.forEach((entry) => {
+        const [name, value] = entry.split("=");
+        if (name && value) {
+          setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
+        }
+      });
+    }
+
+    alert("✅ Backup importato correttamente!");
+  } catch (err) {
+    alert("❌ Errore nel backup: formato non valido o danneggiato");
+    console.error("Errore importazione:", err);
+  }
 }
+
+    
+    function scrollCarousel(carouselId, direction) {
+  const carousel = document.getElementById(carouselId);
+  if (!carousel) return;
+
+  const scrollAmount = carousel.clientWidth * 0.8;
+  carousel.scrollBy({
+    left: direction * scrollAmount,
+    behavior: "smooth",
+  });
+}
+
+// Supporta anche le frecce con data-target (preferiti e continua-visione)
+document.querySelectorAll('.arrow').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const targetId = btn.getAttribute('data-target');
+    const carousel = document.getElementById(targetId);
+    if (!carousel) return;
+
+    const direction = btn.classList.contains('left') ? -1 : 1;
+    const scrollAmount = carousel.clientWidth * 0.8;
+    carousel.scrollBy({
+      left: direction * scrollAmount,
+      behavior: 'smooth'
+    });
+  });
+});
     
     
     function scrollRisultati(direction) {
@@ -2661,45 +2679,34 @@ async function caricaTuttiICataloghi() {
       document.head.appendChild(style);
 
       window.addEventListener("DOMContentLoaded", async () => {
-  // Carica contenuti consentiti da file JSON
-  await loadAllowedContent();
+        await loadAllowedContent();
+        const corsSelect = document.getElementById("cors-select");
+        CORS_LIST.forEach((proxy) => {
+          const option = document.createElement("option");
+          option.value = proxy;
+          option.textContent = proxy.replace(/\/|\?|=/g, "");
+          corsSelect.appendChild(option);
+        });
+        corsSelect.value = CORS;
+        if (typeof videojs !== "undefined") {
+          setupVideoJsXhrHook();
+        } else {
+          window.addEventListener("load", setupVideoJsXhrHook);
+        }
 
-  // Inizializza il selettore CORS
-  const corsSelect = document.getElementById("cors-select");
-  CORS_LIST.forEach((proxy) => {
-    const option = document.createElement("option");
-    option.value = proxy;
-    option.textContent = proxy.replace(/\/|\?|=/g, "");
-    corsSelect.appendChild(option);
-  });
-  corsSelect.value = CORS;
+        for (const [key, endpoint] of Object.entries(endpoints)) {
+          const items = await fetchList(key);
+          const section = document.getElementById(key);
+          const carousel = section.querySelector(".carousel");
 
-  // Installa hook Video.js
-  if (typeof videojs !== "undefined") {
-    setupVideoJsXhrHook();
-  } else {
-    window.addEventListener("load", setupVideoJsXhrHook);
-  }
-
-  // 🔁 Carica cataloghi da VixSrc e dettagli da TMDb
-  const cataloghi = await caricaTuttiICataloghi();
-
-  const film = cataloghi.movie;
-  const serie = cataloghi.tv;
-  const episodi = cataloghi.episode;
-
-  // 🎞️ Popola le sezioni
-  popolaSezioneCatalogo("trending", film);
-  popolaSezioneCatalogo("nowPlaying", film);
-  popolaSezioneCatalogo("popularMovies", film);
-  popolaSezioneCatalogo("onTheAir", serie);
-  popolaSezioneCatalogo("popularTV", serie);
-
-  // ▶️ Continua visione e preferiti
-  checkContinuaVisione([...film, ...serie]);
-  await loadContinuaDaCookie();
-  await loadPreferiti();
-});
+          items.forEach((item) => {
+            carousel.appendChild(createCard(item));
+          });
+          checkContinuaVisione(items);
+          await loadContinuaDaCookie();
+          await loadPreferiti();
+        }
+      });
     
     
     document.querySelectorAll(".arrow").forEach((btn) => {
@@ -2713,12 +2720,17 @@ async function caricaTuttiICataloghi() {
     });
   });
 });
+
+function scrollCarousel(id, direction) {
+  const carousel = document.getElementById(id);
+  if (carousel) {
+    carousel.scrollBy({ left: direction * 300, behavior: 'smooth' });
+  }
+}
     </script>
   </body>
 
 </html>
-
-
 
 
 
