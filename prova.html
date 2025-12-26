@@ -1245,42 +1245,36 @@
 
     <main>
       <div id="home">
-  <section class="hero">
-    <div class="hero-content">
-      <h1>Benvenuto/a su VixPrime</h1>
-      <p>Esporta e importa i tuoi preferiti su qualsiasi dispositivo</p>
+                <section class="hero">
+  <div class="hero-content">
+    <h1>Benvenuto/a su VixPrime</h1>
+    <p>Esporta e importa i tuoi preferiti su qualsiasi dispositivo</p>
 
-      <div class="backup-tools" style="margin-top: 2rem;">
-        <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
-          
-          <!-- Pulsante esportazione -->
-          <button onclick="esportaBackup()" class="btn btn-success">
-            📤 Esporta backup
-          </button>
+    <div class="backup-tools" style="margin-top: 2rem;">
+      <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
+        <button onclick="esportaBackup()" class="btn btn-success">
+          📤 Esporta backup
+        </button>
 
-          <!-- Campo input per incollare link o codice -->
-          <input
-            type="text"
-            id="backupInput"
-            class="form-control"
-            placeholder="Incolla qui il link o codice backup"
-          />
+        <input
+          type="text"
+          id="backupInput"
+          class="form-control"
+          placeholder="Incolla qui il link"
+        />
 
-          <!-- Pulsante importazione -->
-          <button
-            onclick="importaBackup(document.getElementById('backupInput').value)"
-            class="btn btn-primary"
-          >
-            📥 Importa backup
-          </button>
+        <button
+          onclick="importaBackup(document.getElementById('backupInput').value)"
+          class="btn btn-primary"
+        >
+          📥 Importa backup
+        </button>
 
-          <!-- Output link generato -->
-          <p id="codiceGenerato" style="text-align: center; word-break: break-all;"></p>
-        </div>
+        <p id="codiceGenerato" style="text-align: center;"></p>
       </div>
     </div>
-  </section>
-</div>
+  </div>
+</section>
         
        <!-- CONTINUA VISIONE -->
 <section id="continua-visione" style="display: none;">
@@ -1465,9 +1459,7 @@ let allowedEpisodes = [];
 async function loadAllowedContent() {
   try {
     const [moviesRes, tvRes, episodesRes] = await Promise.all([
-      fetch("movies.json"),
-      fetch("tv.json"),
-      fetch("episodes.json"),
+
     ]);
 
     allowedMovies = (await moviesRes.json()).map((m) => m.tmdb_id);
@@ -1760,10 +1752,15 @@ function removePreferito(item) {
     </div>
   `;
 
+// Gestione click sul tasto preferito (Cuore)
   card.querySelector(".fav-btn").addEventListener("click", (e) => {
     e.stopPropagation();
     addPreferito(item);
+    
+    // ✅ MODIFICA: Avvisa l'utente e ricarica per mostrare il titolo nella sezione preferiti
     alert(`⭐ "${rawTitle}" aggiunto ai preferiti`);
+    console.log("⭐ Nuovo preferito aggiunto, ricaricamento pagina...");
+    location.reload(); 
   });
 
   if (isRemovable) {
@@ -2446,6 +2443,8 @@ async function loadPreferiti() {
     const removeBtn = document.createElement("button");
     removeBtn.textContent = "Rimuovi dai preferiti";
     removeBtn.className = "remove-btn";
+    
+    // Stili (mantenuti come nel tuo codice originale)
     removeBtn.style.position = "absolute";
     removeBtn.style.bottom = "10px";
     removeBtn.style.left = "10px";
@@ -2463,105 +2462,113 @@ async function loadPreferiti() {
     removeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       removePreferito(item);
-      card.remove();
-
-      // ✅ Nasconde la sezione se non ci sono più preferiti
-      if (carousel.children.length === 1) {
-        document.getElementById("preferiti").style.display = "none";
-      }
+      
+      // ✅ MODIFICA: Invece di rimuovere solo la card, ricarichiamo tutto
+      console.log("⭐ Preferito rimosso, ricaricamento pagina...");
+      location.reload(); 
     });
 
     card.appendChild(removeBtn);
     carousel.appendChild(card);
   });
 
-  // ✅ Mostra la sezione se ci sono contenuti
+  // Mostra la sezione se ci sono contenuti
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
 }
-    
-
 
 // 📤 Esporta preferiti + continua visione (cookie) in JSON compresso base64 + link breve
-function esportaBackup() {
-  const payload = { 
-    preferiti: getPreferiti(), 
-    cookies: document.cookie
-      .split(";")
-      .map(c => c.trim())
-      .filter(c => c.startsWith("videoTime_")) 
-  };
-  const json = JSON.stringify(payload);
-  const compressed = LZString.compressToEncodedURIComponent(json);
-  const fullUrl = `${window.location.origin}${window.location.pathname}?backup=${compressed}`;
+      // --- LOGICA BACKUP (IMPORT/EXPORT) ---
 
-  const apiUrl = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(fullUrl)}`;
-  
-  fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`)
-    .then(res => res.json())
-    .then(data => {
-      const shortUrl = data.contents.trim();
-      navigator.clipboard.writeText(shortUrl);
-      document.getElementById("codiceGenerato").innerHTML = `✅ Link: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
-    })
-    .catch(() => {
-      prompt("Copia il link di backup manualmente:", fullUrl);
-    });
-}
+      function esportaBackup() {
+        const payload = { 
+          preferiti: getPreferiti(), 
+          cookies: document.cookie.split(";").map(c => c.trim()).filter(c => c.startsWith("videoTime_")) 
+        };
+        const json = JSON.stringify(payload);
+        const compressed = LZString.compressToEncodedURIComponent(json);
+        const fullUrl = `${window.location.origin}${window.location.pathname}?backup=${compressed}`;
+
+        const apiUrl = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(fullUrl)}`;
+        
+        fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`)
+          .then(res => res.json())
+          .then(data => {
+            const shortUrl = data.contents.trim();
+            navigator.clipboard.writeText(shortUrl);
+            document.getElementById("codiceGenerato").innerHTML = `✅ Link: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+          })
+          .catch(() => {
+            prompt("Copia il link di backup manualmente:", fullUrl);
+          });
+      }
 
 async function importaBackup(input) {
-  if (!input) return alert("Inserisci un codice o un link di backup");
+  if (!input) return;
   let str = input.trim();
 
-  // 1. GESTIONE INPUT TIPO URL
+  // 1. Estrazione del codice se l'input è un URL
   if (str.startsWith("http")) {
-    if (str.includes("backup=")) {
-      console.log("🔍 Estrazione codice da URL completo...");
-      str = str.split("backup=")[1].split("&")[0];
+    const urlParams = new URLSearchParams(str.split('?')[1]);
+    if (urlParams.has('backup')) {
+      str = urlParams.get('backup');
     } else {
-      window.location.href = str; 
+      // Se è un link breve non risolto, reindirizza
+      window.location.href = str;
       return;
     }
   }
 
-  console.log("📦 Tentativo di decodifica codice...");
+  console.log("📦 Decodifica in corso...");
 
   try {
-    const cleanStr = decodeURIComponent(str).replace(/ /g, "+");
-
-    const json = LZString.decompressFromEncodedURIComponent(cleanStr) || 
-                 LZString.decompressFromBase64(cleanStr);
+    // 2. Decompressione
+    // Nota: Non usare decodeURIComponent qui, lo fa già URLSearchParams o lo gestisce LZString
+    let json = LZString.decompressFromEncodedURIComponent(str);
     
-    if (!json) throw new Error("La stringa non sembra un backup valido.");
+    // Fallback se il primo metodo fallisce
+    if (!json) {
+        json = LZString.decompressFromBase64(str.replace(/ /g, "+"));
+    }
+
+    if (!json) throw new Error("Dati non decompressi");
 
     const data = JSON.parse(json);
 
-    if (data.preferiti && Array.isArray(data.preferiti)) {
+    // 3. Importazione Preferiti
+    if (data.preferiti) {
       localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
     }
 
+    // 4. Importazione Cookie (Continua Visione)
     if (data.cookies && Array.isArray(data.cookies)) {
       data.cookies.forEach(entry => {
         const parts = entry.split("=");
         if (parts.length >= 2) {
           const name = parts[0].trim();
-          const value = parts.slice(1).join("=").trim();
-          const d = new Date();
-          d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
-          document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/`;
+          const value = parts[1].trim();
+          setCookie(name, value, 365); // Usa la tua funzione setCookie esistente
         }
       });
     }
 
-    alert("✅ Backup importato! La pagina verrà aggiornata.");
-    window.location.href = window.location.origin + window.location.pathname;
+    console.log("✅ Backup caricato con successo");
+    
+    // Ricarica la pagina senza parametri nell'URL per pulizia
+    if (window.location.search.includes("backup=")) {
+        window.location.href = window.location.origin + window.location.pathname;
+    } else {
+        location.reload();
+    }
 
   } catch (err) {
-    console.error("❌ Errore critico:", err);
-    alert("❌ Errore: Il codice inserito non è valido o è corrotto.");
+    console.error("❌ Errore importazione:", err);
+    alert("Errore: Il backup è corrotto o non valido.");
   }
 }
+
+      // --- FINE LOGICA BACKUP ---
     
-    function scrollCarousel(carouselId, direction) {
+function scrollCarousel(carouselId, direction) {
   const carousel = document.getElementById(carouselId);
   if (!carousel) return;
 
@@ -2647,35 +2654,57 @@ document.querySelectorAll('.arrow').forEach(btn => {
     `;
       document.head.appendChild(style);
 
-      window.addEventListener("DOMContentLoaded", async () => {
-        await loadAllowedContent();
-        const corsSelect = document.getElementById("cors-select");
-        CORS_LIST.forEach((proxy) => {
-          const option = document.createElement("option");
-          option.value = proxy;
-          option.textContent = proxy.replace(/\/|\?|=/g, "");
-          corsSelect.appendChild(option);
-        });
-        corsSelect.value = CORS;
-        if (typeof videojs !== "undefined") {
-          setupVideoJsXhrHook();
-        } else {
-          window.addEventListener("load", setupVideoJsXhrHook);
-        }
+window.addEventListener("DOMContentLoaded", async () => {
+    // 1. GESTIONE AUTO-IMPORT BACKUP (Controlla URL all'apertura)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('backup')) {
+        const backupCode = urlParams.get('backup');
+        console.log("🚀 Rilevato backup nell'URL, avvio importazione automatica...");
+        // Chiamiamo la funzione importaBackup passandogli il codice
+        await importaBackup(backupCode);
+        return; // Fermiamo l'esecuzione perché importaBackup ricaricherà la pagina
+    }
 
-        for (const [key, endpoint] of Object.entries(endpoints)) {
-          const items = await fetchList(key);
-          const section = document.getElementById(key);
-          const carousel = section.querySelector(".carousel");
+    // 2. CONFIGURAZIONE CORS PROXY
+    const corsSelect = document.getElementById("cors-select");
+    CORS_LIST.forEach((proxy) => {
+        const option = document.createElement("option");
+        option.value = proxy;
+        option.textContent = proxy.replace(/\/|\?|=/g, "");
+        corsSelect.appendChild(option);
+    });
+    corsSelect.value = CORS;
 
-          items.forEach((item) => {
-            carousel.appendChild(createCard(item));
-          });
-          checkContinuaVisione(items);
-          await loadContinuaDaCookie();
-          await loadPreferiti();
+    // 3. SETUP VIDEO.JS (Se caricato)
+    if (typeof videojs !== "undefined") {
+        setupVideoJsXhrHook();
+    } else {
+        window.addEventListener("load", setupVideoJsXhrHook);
+    }
+
+    // 4. CARICAMENTO SEZIONI HOME DA TMDB
+    console.log("📡 Caricamento contenuti da TMDB...");
+    for (const [key, endpoint] of Object.entries(endpoints)) {
+        try {
+            const items = await fetchList(key);
+            const section = document.getElementById(key);
+            if (section) {
+                const carousel = section.querySelector(".carousel");
+                items.forEach((item) => {
+                    carousel.appendChild(createCard(item));
+                });
+            }
+        } catch (err) {
+            console.error(`Errore nel caricamento della sezione ${key}:`, err);
         }
-      });
+    }
+
+    // 5. CARICAMENTO DATI UTENTE (Preferiti e Cronologia)
+    await loadContinuaDaCookie();
+    await loadPreferiti();
+    
+    console.log("✅ Sito pronto!");
+});
     
     
     document.querySelectorAll(".arrow").forEach((btn) => {
@@ -2700,13 +2729,3 @@ function scrollCarousel(id, direction) {
   </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
