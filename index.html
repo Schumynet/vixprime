@@ -971,7 +971,7 @@
   .remove-btn,
   .fav-btn {
     font-size: 1.1rem;
-    padding: 10px 16px;
+    padding: 10px 10px;
   }
 
   .carousel,
@@ -1260,7 +1260,7 @@
           type="text"
           id="backupInput"
           class="form-control"
-          placeholder="Incolla qui il link TinyURL"
+          placeholder="Incolla qui il link"
         />
 
         <button
@@ -1459,9 +1459,7 @@ let allowedEpisodes = [];
 async function loadAllowedContent() {
   try {
     const [moviesRes, tvRes, episodesRes] = await Promise.all([
-      fetch("movies.json"),
-      fetch("tv.json"),
-      fetch("episodes.json"),
+
     ]);
 
     allowedMovies = (await moviesRes.json()).map((m) => m.tmdb_id);
@@ -1661,7 +1659,7 @@ async function loadAllowedContent() {
     const episodeCounts = {
       1: 44,
       2: 100,
-      3: 98,
+      3: 100,
     };
 
     const count = episodeCounts[seasonNum] || 0;
@@ -1754,10 +1752,15 @@ function removePreferito(item) {
     </div>
   `;
 
+// Gestione click sul tasto preferito (Cuore)
   card.querySelector(".fav-btn").addEventListener("click", (e) => {
     e.stopPropagation();
     addPreferito(item);
+    
+    // ✅ MODIFICA: Avvisa l'utente e ricarica per mostrare il titolo nella sezione preferiti
     alert(`⭐ "${rawTitle}" aggiunto ai preferiti`);
+    console.log("⭐ Nuovo preferito aggiunto, ricaricamento pagina...");
+    location.reload(); 
   });
 
   if (isRemovable) {
@@ -2436,123 +2439,124 @@ async function loadPreferiti() {
   items.forEach((item) => {
     const card = createCard(item, [], false);
 
-    // ✅ Pulsante per rimuovere dai preferiti
-    const removeBtn = document.createElement("button");
-    removeBtn.textContent = "Rimuovi dai preferiti";
-    removeBtn.className = "remove-btn";
-    removeBtn.style.position = "absolute";
-    removeBtn.style.bottom = "10px";
-    removeBtn.style.left = "10px";
-    removeBtn.style.background = "#e50914";
-    removeBtn.style.color = "white";
-    removeBtn.style.border = "none";
-    removeBtn.style.padding = "6px 12px";
-    removeBtn.style.borderRadius = "6px";
-    removeBtn.style.fontSize = "0.85rem";
-    removeBtn.style.fontWeight = "bold";
-    removeBtn.style.cursor = "pointer";
-    removeBtn.style.zIndex = "10";
-    removeBtn.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+   // ✅ Pulsante per rimuovere dai preferiti (stile coerente con "Rimuovi")
+const removeBtn = document.createElement("button");
+removeBtn.className = "remove-btn";
+removeBtn.title = "Rimuovi dai preferiti";
+removeBtn.innerHTML = "❌"; // oppure usa un'icona SVG se preferisci
+    
+ 
 
     removeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       removePreferito(item);
-      card.remove();
-
-      // ✅ Nasconde la sezione se non ci sono più preferiti
-      if (carousel.children.length === 1) {
-        document.getElementById("preferiti").style.display = "none";
-      }
+      
+      // ✅ MODIFICA: Invece di rimuovere solo la card, ricarichiamo tutto
+      console.log("⭐ Preferito rimosso, ricaricamento pagina...");
+      location.reload(); 
     });
 
     card.appendChild(removeBtn);
     carousel.appendChild(card);
   });
 
-  // ✅ Mostra la sezione se ci sono contenuti
+  // Mostra la sezione se ci sono contenuti
   document.getElementById("preferiti").style.display = items.length > 0 ? "block" : "none";
 }
-    
-
 
 // 📤 Esporta preferiti + continua visione (cookie) in JSON compresso base64 + link breve
-function esportaBackup() {
-  const preferiti = getPreferiti();
+      // --- LOGICA BACKUP (IMPORT/EXPORT) ---
 
-  const cookies = document.cookie
-    .split(";")
-    .map((c) => c.trim())
-    .filter((c) => c.startsWith("videoTime_"));
+      function esportaBackup() {
+        const payload = { 
+          preferiti: getPreferiti(), 
+          cookies: document.cookie.split(";").map(c => c.trim()).filter(c => c.startsWith("videoTime_")) 
+        };
+        const json = JSON.stringify(payload);
+        const compressed = LZString.compressToEncodedURIComponent(json);
+        const fullUrl = `${window.location.origin}${window.location.pathname}?backup=${compressed}`;
 
-  const payload = { preferiti, cookies };
-  const json = JSON.stringify(payload);
-  const compressed = LZString.compressToBase64(json);
-  const fullUrl = `${location.origin}${location.pathname}?backup=${encodeURIComponent(compressed)}`;
+        const apiUrl = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(fullUrl)}`;
+        
+        fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`)
+          .then(res => res.json())
+          .then(data => {
+            const shortUrl = data.contents.trim();
+            navigator.clipboard.writeText(shortUrl);
+            document.getElementById("codiceGenerato").innerHTML = `✅ Link: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+          })
+          .catch(() => {
+            prompt("Copia il link di backup manualmente:", fullUrl);
+          });
+      }
 
-  fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(fullUrl)}`)
-    .then((res) => res.text())
-    .then((shortUrl) => {
-      navigator.clipboard.writeText(shortUrl);
-      document.getElementById("codiceGenerato").innerHTML = `✅ Link breve copiato: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
-    })
-    .catch((err) => {
-      console.error("Errore shortener:", err);
-      prompt("🔗 Copia manualmente il link:", fullUrl);
-    });
-}
+async function importaBackup(input) {
+  if (!input) return;
+  let str = input.trim();
 
-function importaBackup(input) {
-  const isUrl = input.startsWith("http");
-
-  if (isUrl) {
-    // Caso: link TinyURL → HEAD per ottenere redirect
-    fetch(input, { method: "HEAD", redirect: "follow" })
-      .then((response) => {
-        const realUrl = response.url;
-        const params = new URL(realUrl).searchParams;
-        const base64 = params.get("backup");
-
-        if (!base64) {
-          alert("❌ Nessun backup trovato nel link.");
-          return;
-        }
-
-        importaBackup(base64); // richiamo ricorsivo con base64
-      })
-      .catch((err) => {
-        alert("❌ Errore nel backup: link non valido o danneggiato");
-        console.error("Errore importazione:", err);
-      });
-
-    return;
+  // 1. Estrazione del codice se l'input è un URL
+  if (str.startsWith("http")) {
+    const urlParams = new URLSearchParams(str.split('?')[1]);
+    if (urlParams.has('backup')) {
+      str = urlParams.get('backup');
+    } else {
+      // Se è un link breve non risolto, reindirizza
+      window.location.href = str;
+      return;
+    }
   }
 
-  // Caso: stringa base64 diretta
+  console.log("📦 Decodifica in corso...");
+
   try {
-    const json = LZString.decompressFromBase64(input.trim());
+    // 2. Decompressione
+    // Nota: Non usare decodeURIComponent qui, lo fa già URLSearchParams o lo gestisce LZString
+    let json = LZString.decompressFromEncodedURIComponent(str);
+    
+    // Fallback se il primo metodo fallisce
+    if (!json) {
+        json = LZString.decompressFromBase64(str.replace(/ /g, "+"));
+    }
+
+    if (!json) throw new Error("Dati non decompressi");
+
     const data = JSON.parse(json);
 
-    if (Array.isArray(data.preferiti)) {
+    // 3. Importazione Preferiti
+    if (data.preferiti) {
       localStorage.setItem("preferiti", JSON.stringify(data.preferiti));
     }
 
-    if (Array.isArray(data.cookies)) {
-      data.cookies.forEach((entry) => {
-        const [name, value] = entry.split("=");
-        if (name && value) {
-          setCookie(name.trim(), decodeURIComponent(value.trim()), 365);
+    // 4. Importazione Cookie (Continua Visione)
+    if (data.cookies && Array.isArray(data.cookies)) {
+      data.cookies.forEach(entry => {
+        const parts = entry.split("=");
+        if (parts.length >= 2) {
+          const name = parts[0].trim();
+          const value = parts[1].trim();
+          setCookie(name, value, 365); // Usa la tua funzione setCookie esistente
         }
       });
     }
 
-    alert("✅ Backup importato correttamente!");
+    console.log("✅ Backup caricato con successo");
+    
+    // Ricarica la pagina senza parametri nell'URL per pulizia
+    if (window.location.search.includes("backup=")) {
+        window.location.href = window.location.origin + window.location.pathname;
+    } else {
+        location.reload();
+    }
+
   } catch (err) {
-    alert("❌ Errore nel backup: formato non valido o danneggiato");
-    console.error("Errore importazione:", err);
+    console.error("❌ Errore importazione:", err);
+    alert("Errore: Il backup è corrotto o non valido.");
   }
 }
+
+      // --- FINE LOGICA BACKUP ---
     
-    function scrollCarousel(carouselId, direction) {
+function scrollCarousel(carouselId, direction) {
   const carousel = document.getElementById(carouselId);
   if (!carousel) return;
 
@@ -2638,35 +2642,57 @@ document.querySelectorAll('.arrow').forEach(btn => {
     `;
       document.head.appendChild(style);
 
-      window.addEventListener("DOMContentLoaded", async () => {
-        await loadAllowedContent();
-        const corsSelect = document.getElementById("cors-select");
-        CORS_LIST.forEach((proxy) => {
-          const option = document.createElement("option");
-          option.value = proxy;
-          option.textContent = proxy.replace(/\/|\?|=/g, "");
-          corsSelect.appendChild(option);
-        });
-        corsSelect.value = CORS;
-        if (typeof videojs !== "undefined") {
-          setupVideoJsXhrHook();
-        } else {
-          window.addEventListener("load", setupVideoJsXhrHook);
-        }
+window.addEventListener("DOMContentLoaded", async () => {
+    // 1. GESTIONE AUTO-IMPORT BACKUP (Controlla URL all'apertura)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('backup')) {
+        const backupCode = urlParams.get('backup');
+        console.log("🚀 Rilevato backup nell'URL, avvio importazione automatica...");
+        // Chiamiamo la funzione importaBackup passandogli il codice
+        await importaBackup(backupCode);
+        return; // Fermiamo l'esecuzione perché importaBackup ricaricherà la pagina
+    }
 
-        for (const [key, endpoint] of Object.entries(endpoints)) {
-          const items = await fetchList(key);
-          const section = document.getElementById(key);
-          const carousel = section.querySelector(".carousel");
+    // 2. CONFIGURAZIONE CORS PROXY
+    const corsSelect = document.getElementById("cors-select");
+    CORS_LIST.forEach((proxy) => {
+        const option = document.createElement("option");
+        option.value = proxy;
+        option.textContent = proxy.replace(/\/|\?|=/g, "");
+        corsSelect.appendChild(option);
+    });
+    corsSelect.value = CORS;
 
-          items.forEach((item) => {
-            carousel.appendChild(createCard(item));
-          });
-          checkContinuaVisione(items);
-          await loadContinuaDaCookie();
-          await loadPreferiti();
+    // 3. SETUP VIDEO.JS (Se caricato)
+    if (typeof videojs !== "undefined") {
+        setupVideoJsXhrHook();
+    } else {
+        window.addEventListener("load", setupVideoJsXhrHook);
+    }
+
+    // 4. CARICAMENTO SEZIONI HOME DA TMDB
+    console.log("📡 Caricamento contenuti da TMDB...");
+    for (const [key, endpoint] of Object.entries(endpoints)) {
+        try {
+            const items = await fetchList(key);
+            const section = document.getElementById(key);
+            if (section) {
+                const carousel = section.querySelector(".carousel");
+                items.forEach((item) => {
+                    carousel.appendChild(createCard(item));
+                });
+            }
+        } catch (err) {
+            console.error(`Errore nel caricamento della sezione ${key}:`, err);
         }
-      });
+    }
+
+    // 5. CARICAMENTO DATI UTENTE (Preferiti e Cronologia)
+    await loadContinuaDaCookie();
+    await loadPreferiti();
+    
+    console.log("✅ Sito pronto!");
+});
     
     
     document.querySelectorAll(".arrow").forEach((btn) => {
@@ -2691,13 +2717,3 @@ function scrollCarousel(id, direction) {
   </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
